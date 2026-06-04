@@ -1,5 +1,4 @@
 import Header from '@/components/Header/components';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import Footer from '@/components/footer/components';
 import NavMobile from '@/components/nav-mobile/components';
 import { Toaster } from '@/components/ui/toaster';
@@ -14,16 +13,12 @@ export default function LayoutWrapper({ children }) {
       <Suspense fallback={<CustomAnimation />}>
         <StateProvider>
           <Header />
-          <SidebarProvider defaultOpen>
-            <SidebarInset>
-              <div className="w-full min-h-screen flex flex-col justify-between bg-white text-black">
-                <main className="w-full flex-grow">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-            </SidebarInset>
-          </SidebarProvider>
+          <div className="w-full min-h-screen flex flex-col justify-between bg-white text-black">
+            <main className="w-full flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
           <NavMobile />
           <Toaster />
         </StateProvider>
