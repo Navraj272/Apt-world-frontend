@@ -1,5 +1,5 @@
 'use client';
-import { cross } from '@/assets/svg';
+// import { cross } from '@/assets/svg';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
@@ -10,7 +10,7 @@ const CustomDialog = ({ isOpen, handleClick, handleChange, content }) => {
       <DialogContent className="max-w-lg min-h-[100] mx-auto mb-6 rounded-lg shadow-lg border-none bg-[var(--dilog-background)] gap-4 w-auto px-5 py-4 ">
         <DialogTitle />
         <DialogHeader className="flex flex-row justify- absolute right-1 top-1">
-          <Image
+          {/* <Image
             src={cross}
             alt="close icon"
             onClick={handleClick}
@@ -18,7 +18,7 @@ const CustomDialog = ({ isOpen, handleClick, handleChange, content }) => {
             height={24}
             width={24}
             loading="lazy"
-          />
+          /> */}
         </DialogHeader>
         <div className="flex justify-center items-center p-0 text-white text-center">
           {content}

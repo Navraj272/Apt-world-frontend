@@ -13,17 +13,15 @@ export default function LayoutWrapper({ children }) {
     <>
       <Suspense fallback={<CustomAnimation />}>
         <StateProvider>
+          <Header />
           <SidebarProvider defaultOpen>
             <SidebarInset>
-
-              <div className="w-full">
-                <Header />
-                <div className="w-full px-[4vw]">
+              <div className="w-full min-h-screen flex flex-col justify-between bg-white text-black">
+                <main className="w-full flex-grow">
                   {children}
-                </div>
-               <Footer />
+                </main>
+                <Footer />
               </div>
-
             </SidebarInset>
           </SidebarProvider>
           <NavMobile />

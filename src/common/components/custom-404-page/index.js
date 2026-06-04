@@ -1,10 +1,10 @@
-import { Image404 } from '@/assets/png';
-import Image from 'next/image';
+// import { Image404 } from '@/assets/png';
+// import Image from 'next/image';
 
 function Custom404Page({ msg }) {
   return (
     <div className="flex flex-col items-center justify-center space-y-4">
-      <div className="w-72 h-72">
+      {/* <div className="w-72 h-72">
         <Image
           src={Image404}
           alt="not-found"
@@ -13,7 +13,7 @@ function Custom404Page({ msg }) {
           width={288}
            loading="lazy"
         />
-      </div>
+      </div> */}
       <p className="text-lg text-[var(--progress-bar)]">{msg}</p>
     </div>
   );
