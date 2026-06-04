@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { DialogTitle } from '@radix-ui/react-dialog';
-import Image from 'next/image';
+// import Image from 'next/image';
 const CustomDialog = ({ isOpen, handleClick, handleChange, content }) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleClick} className="">
