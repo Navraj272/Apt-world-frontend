@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@radix-ui/react-popover';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 

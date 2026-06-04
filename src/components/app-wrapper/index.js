@@ -15,12 +15,10 @@ export default function LayoutWrapper({ children }) {
           <Header />
           <SidebarProvider defaultOpen>
             <SidebarInset>
-              <div className="w-full">
-                <div className="w-full px-[4vw] bg-[hsl(var(--main-background))]">
-                  <div className="max-w-[1350px] w-full mt-[11px] gap-[24px] mx-auto">
-                    {children}
-                  </div>
-                </div>
+              <div className="w-full min-h-screen flex flex-col justify-between bg-white text-black">
+                <main className="w-full flex-grow">
+                  {children}
+                </main>
                 <Footer />
               </div>
             </SidebarInset>
