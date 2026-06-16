@@ -34,7 +34,7 @@ function FranchiseHero({ data }) {
           
           {/* Badge */}
           {badge && (
-            <div className="inline-flex items-center bg-[#E11922] px-4 py-1.5 rounded-sm">
+            <div className="inline-flex items-center bg-[#E11922] px-4 py-2 rounded-sm">
               <span className="font-montserrat text-[10px] sm:text-xs font-black tracking-[0.25em] text-white uppercase">
                 {badge}
               </span>
@@ -56,7 +56,7 @@ function FranchiseHero({ data }) {
             {primaryBtn && (
               <button
                 onClick={() => handleScroll(primaryBtn.targetId)}
-                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white bg-[#E11922] px-8 py-4.5 rounded-sm border border-transparent hover:bg-transparent hover:border-white hover:text-white transition-all duration-300 shadow-lg shadow-[#E11922]/15 uppercase"
+                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white bg-[#E11922] px-6 py-2 rounded-sm border border-transparent hover:bg-transparent hover:border-white hover:text-white transition-all duration-300 shadow-lg shadow-[#E11922]/15 uppercase"
               >
                 {primaryBtn.text}
               </button>
@@ -64,7 +64,7 @@ function FranchiseHero({ data }) {
             {secondaryBtn && (
               <button
                 onClick={() => handleScroll(secondaryBtn.targetId)}
-                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white border border-white/20 px-8 py-4.5 rounded-sm hover:bg-white hover:text-[#050D1A] hover:border-white transition-all duration-300 uppercase"
+                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white border border-white/20 px-6 py-2 rounded-sm hover:bg-white hover:text-[#050D1A] hover:border-white transition-all duration-300 uppercase"
               >
                 {secondaryBtn.text}
               </button>

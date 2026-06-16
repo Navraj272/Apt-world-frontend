@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { categoriesProducts, categoriesTree } from '@/common/categoriesData';
 
+const slugify = (text) => {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+};
+
 function CategoryPage() {
   const router = useRouter();
   const { categoryName, id } = router.query;
@@ -81,9 +89,10 @@ function CategoryPage() {
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
             {filteredProducts.map((product) => (
-              <div
+              <a
                 key={product.id}
-                className="bg-white border border-gray-100 hover:border-gray-300 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group p-4"
+                href={`/products/${slugify(product.title)}/${product.id}`}
+                className="bg-white border border-gray-100 hover:border-gray-300 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group p-4 cursor-pointer text-left block"
               >
                 {/* Image Box */}
                 <div className="relative aspect-square w-full bg-[#FAFBFB] rounded-sm overflow-hidden shrink-0 flex items-center justify-center p-4">
@@ -125,7 +134,7 @@ function CategoryPage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         ) : (

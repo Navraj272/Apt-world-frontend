@@ -114,73 +114,73 @@ export const categoriesTree = [
       }
     ]
   },
-  {
-    name: 'Automotive & Garage Equipment',
-    subcategories: [
-      {
-        name: 'Lifts',
-        items: [
-          { name: 'Hydraulic Jack', slug: 'hydraulic-jack', id: '45' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Hydraulic Equipment',
-    subcategories: [
-      {
-        name: 'Pumps',
-        items: [
-          { name: 'Hydraulic Hand Pump', slug: 'hydraulic-hand-pump', id: '46' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Water Pumps',
-    subcategories: [
-      {
-        name: 'Submersible',
-        items: [
-          { name: 'Submersible Pump', slug: 'submersible-pump', id: '47' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Welding Machine',
-    subcategories: [
-      {
-        name: 'Inverter',
-        items: [
-          { name: 'Arc Welder', slug: 'arc-welder', id: '48' },
-          { name: 'MIG Welder', slug: 'mig-welder', id: '49' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'High Pressure Washers',
-    subcategories: [
-      {
-        name: 'Electric Washers',
-        items: [
-          { name: 'Pressure Washer', slug: 'pressure-washer', id: '50' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Construction',
-    subcategories: [
-      {
-        name: 'Compactors',
-        items: [
-          { name: 'Plate Compactor', slug: 'plate-compactor', id: '51' }
-        ]
-      }
-    ]
-  }
+  // {
+  //   name: 'Automotive & Garage Equipment',
+  //   subcategories: [
+  //     {
+  //       name: 'Lifts',
+  //       items: [
+  //         { name: 'Hydraulic Jack', slug: 'hydraulic-jack', id: '45' }
+  //       ]
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: 'Hydraulic Equipment',
+  //   subcategories: [
+  //     {
+  //       name: 'Pumps',
+  //       items: [
+  //         { name: 'Hydraulic Hand Pump', slug: 'hydraulic-hand-pump', id: '46' }
+  //       ]
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: 'Water Pumps',
+  //   subcategories: [
+  //     {
+  //       name: 'Submersible',
+  //       items: [
+  //         { name: 'Submersible Pump', slug: 'submersible-pump', id: '47' }
+  //       ]
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: 'Welding Machine',
+  //   subcategories: [
+  //     {
+  //       name: 'Inverter',
+  //       items: [
+  //         { name: 'Arc Welder', slug: 'arc-welder', id: '48' },
+  //         { name: 'MIG Welder', slug: 'mig-welder', id: '49' }
+  //       ]
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: 'High Pressure Washers',
+  //   subcategories: [
+  //     {
+  //       name: 'Electric Washers',
+  //       items: [
+  //         { name: 'Pressure Washer', slug: 'pressure-washer', id: '50' }
+  //       ]
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: 'Construction',
+  //   subcategories: [
+  //     {
+  //       name: 'Compactors',
+  //       items: [
+  //         { name: 'Plate Compactor', slug: 'plate-compactor', id: '51' }
+  //       ]
+  //     }
+  //   ]
+  // }
 ];
 
 export const categoriesProducts = {

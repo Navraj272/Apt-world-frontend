@@ -1,6 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { productsData } from './productsData';
 
+const slugify = (text) => {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+};
+
 function ProductPage() {
   const [selectedCategory, setSelectedCategory] = useState('ALL PRODUCTS');
   const [sortBy, setSortBy] = useState('POPULARITY');
@@ -249,9 +257,10 @@ function ProductPage() {
         {paginatedProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {paginatedProducts.map((product) => (
-              <div
+              <a
                 key={product.id}
-                className="bg-white border border-gray-100 hover:border-gray-300 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                href={`/products/${slugify(product.title)}/${product.id}`}
+                className="bg-white border border-gray-100 hover:border-gray-300 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group cursor-pointer text-left block"
               >
                 {/* Image Area */}
                 <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden shrink-0">
@@ -307,7 +316,10 @@ function ProductPage() {
                     </div>
 
                     <button
-                      onClick={() => alert(`Enquiry request sent for ${product.title}`)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
                       className="bg-[#060F1E] text-white font-montserrat text-[9px] sm:text-[10px] font-bold tracking-widest px-4 py-2.5 rounded-sm hover:bg-[#E11922] transition-colors duration-300 shadow-md shadow-[#060F1E]/10 uppercase shrink-0"
                     >
                       ENQUIRE
@@ -315,7 +327,7 @@ function ProductPage() {
                   </div>
                 </div>
 
-              </div>
+              </a>
             ))}
           </div>
         ) : (
@@ -434,7 +446,6 @@ function ProductPage() {
                   download
                   onClick={(e) => {
                     e.preventDefault();
-                    alert('Industrial catalogue download initiated.');
                   }}
                   className="text-center font-montserrat text-xs font-bold tracking-widest text-white bg-[#E11922] px-8 py-4.5 rounded-sm hover:bg-transparent hover:border-[#E11922] hover:text-[#E11922] border border-transparent transition-all duration-300 shadow-lg shadow-[#E11922]/15 uppercase"
                 >

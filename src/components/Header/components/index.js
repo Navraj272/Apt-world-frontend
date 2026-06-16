@@ -14,6 +14,7 @@ function Header() {
   const isProducts = router.pathname.startsWith('/products');
   const isAboutUs = router.pathname === '/about-us';
   const isContact = router.pathname === '/contact';
+  const isFranchise = router.pathname === '/franchise';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,11 +37,7 @@ function Header() {
   const navLinks = [
     { name: 'Categories', href: '#', isDropdown: true },
     { name: 'Products', href: '/products', active: isProducts },
-    {
-      name: 'FRANCHISE',
-      href: '/franchise',
-      active: false,
-    },
+    { name: 'FRANCHISE', href: '/franchise', active: isFranchise },
     { name: 'Contact Us', href: '/contact', active: isContact },
     { name: 'About', href: '/about-us', active: isAboutUs },
   ];
@@ -56,7 +53,6 @@ function Header() {
 
   const handleLevel1Hover = (name) => {
     setActiveLevel1(name);
-    // Auto-select the first subcategory of the new category
     const subs =
       categoriesTree.find((cat) => cat.name === name)?.subcategories || [];
     if (subs.length > 0) {
@@ -74,7 +70,6 @@ function Header() {
           : 'bg-[#060F1E]/80 backdrop-blur-sm border-b border-white/5 py-4'
       }`}
     >
-      {/* Click-away Backdrop for Dropdown */}
       {isCategoriesOpen && (
         <div
           className="fixed inset-0 z-40 bg-transparent"
@@ -83,7 +78,6 @@ function Header() {
       )}
 
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center relative z-50">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-1 group">
           <span className="font-khand text-2xl sm:text-3xl font-extrabold tracking-wider text-white">
             APT{' '}
@@ -101,7 +95,7 @@ function Header() {
                 <button
                   key={link.name}
                   onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-                  className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 flex items-center gap-1 focus:outline-none ${
+                  className={`font-montserrat hover:bg-transparent text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 flex items-center gap-1 focus:outline-none ${
                     isCategoriesOpen
                       ? 'text-[#E11922]'
                       : 'text-gray-300 hover:text-white'
@@ -145,42 +139,6 @@ function Header() {
           })}
         </nav>
 
-        {/* Right Action Button & Search */}
-        <div className="hidden xl:flex items-center gap-4">
-          {/* Search Icon */}
-          <button
-            onClick={() => alert('Search functionality coming soon')}
-            className="text-gray-300 hover:text-white focus:outline-none p-1.5"
-            aria-label="Search"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-
-          {/* Cloud login button */}
-          <Link
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              alert('Cloud Login functionality coming soon');
-            }}
-            className="font-montserrat text-xs font-semibold tracking-wider text-white border border-gray-300/40 rounded-full px-5 py-2 hover:bg-white hover:text-[#060F1E] hover:border-white transition-all duration-300"
-          >
-            Cloud login
-          </Link>
-        </div>
-
         {/* Mobile menu button */}
         <div className="xl:hidden">
           <button
@@ -223,7 +181,6 @@ function Header() {
         </div>
       </div>
 
-      {/* 3-Panel Cascading Category Dropdown (Desktop Only) */}
       {isCategoriesOpen && (
         <div className="absolute left-0 top-full w-full bg-white border-t border-gray-100 shadow-2xl z-50 text-gray-900 grid grid-cols-1 md:grid-cols-3 max-h-[500px]">
           {/* Panel 1: Level 1 Categories */}
@@ -403,20 +360,6 @@ function Header() {
                 {link.name.toUpperCase()}
               </Link>
             ))}
-
-          <div className="pt-2 px-3 flex flex-col gap-3">
-            <Link
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setIsOpen(false);
-                alert('Cloud Login functionality coming soon');
-              }}
-              className="block text-center font-montserrat text-xs font-bold tracking-widest text-white border border-white/20 py-3 rounded-full hover:bg-white hover:text-[#060F1E]"
-            >
-              Cloud login
-            </Link>
-          </div>
         </div>
       </div>
     </header>
