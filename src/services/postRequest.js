@@ -6,3 +6,9 @@ export const createCategory = (data) =>
 
 export const createProduct = (data) =>
   postRequest(`${API_URL}/products`, data);
+
+export const createEnquiry = (data) =>
+  postRequest(`${API_URL}/enquiries`, data);
+
+export const createSubcategory = (data) =>
+  postRequest(`${API_URL}/subcategories`, data);

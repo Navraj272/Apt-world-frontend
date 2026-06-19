@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getAllProducts, getAllCategories } from '@/services/getRequests';
 import { createProduct } from '@/services/postRequest';
 import { updateProduct } from '@/services/putReguest';
+import { deleteProduct } from '@/services/deleteRequest';
 import { useToast } from '@/hooks/use-toast';
 
 export default function useProduct() {
@@ -23,10 +24,9 @@ export default function useProduct() {
     nameEn: '',
     descriptionEn: '',
     baseCode: '',
-    powerSpec: '',
-    voltageSpec: '',
-    weightSpec: '',
-    customSpecs: [] // array of { key: '', value: '' }
+    specs: [{ key: '', value: '' }], // Array of { key, value }
+    images: [], // Selected files (as base64 or URLs)
+    thumbnail: null
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -76,10 +76,9 @@ export default function useProduct() {
       nameEn: '',
       descriptionEn: '',
       baseCode: '',
-      powerSpec: '',
-      voltageSpec: '',
-      weightSpec: '',
-      customSpecs: []
+      specs: [{ key: '', value: '' }],
+      images: [],
+      thumbnail: null
     });
     setIsModalOpen(true);
   };
@@ -90,27 +89,17 @@ export default function useProduct() {
     
     // Parse specs
     const specs = product.specs || {};
-    const power = specs.power || '';
-    const voltage = specs.voltage || '';
-    const weight = specs.weight || '';
-    
-    // Parse any other custom specs
-    const custom = [];
-    Object.keys(specs).forEach(key => {
-      if (key !== 'power' && key !== 'voltage' && key !== 'weight') {
-        custom.push({ key, value: specs[key] });
-      }
-    });
+    const parsedSpecs = Object.entries(specs).map(([key, value]) => ({ key, value }));
+    if (parsedSpecs.length === 0) parsedSpecs.push({ key: '', value: '' });
 
     setFormData({
       categoryId: product.categoryId ? product.categoryId.toString() : '',
       nameEn: product.name?.en || '',
       descriptionEn: product.description?.en || '',
       baseCode: product.baseCode || '',
-      powerSpec: power,
-      voltageSpec: voltage,
-      weightSpec: weight,
-      customSpecs: custom
+      specs: parsedSpecs,
+      images: product.images || [],
+      thumbnail: product.thumbnail || null
     });
     setIsModalOpen(true);
   };
@@ -120,27 +109,51 @@ export default function useProduct() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Custom spec handlers
-  const addCustomSpec = () => {
+  // Spec handlers
+  const addSpec = () => {
     setFormData(prev => ({
       ...prev,
-      customSpecs: [...prev.customSpecs, { key: '', value: '' }]
+      specs: [...prev.specs, { key: '', value: '' }]
     }));
   };
 
-  const removeCustomSpec = (index) => {
+  const removeSpec = (index) => {
     setFormData(prev => ({
       ...prev,
-      customSpecs: prev.customSpecs.filter((_, idx) => idx !== index)
+      specs: prev.specs.filter((_, idx) => idx !== index)
     }));
   };
 
-  const handleCustomSpecChange = (index, field, value) => {
+  const handleSpecChange = (index, field, value) => {
     setFormData(prev => {
-      const newSpecs = [...prev.customSpecs];
+      const newSpecs = [...prev.specs];
       newSpecs[index] = { ...newSpecs[index], [field]: value };
-      return { ...prev, customSpecs: newSpecs };
+      return { ...prev, specs: newSpecs };
     });
+  };
+
+  const handleImageChange = async (e, isThumbnail = false) => {
+    const files = Array.from(e.target.files);
+    const base64Files = await Promise.all(files.map(file => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }));
+
+    if (isThumbnail) {
+      setFormData(prev => ({ ...prev, thumbnail: base64Files[0] }));
+    } else {
+      setFormData(prev => ({ ...prev, images: [...prev.images, ...base64Files] }));
+    }
+  };
+
+  const removeImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, idx) => idx !== index)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -173,27 +186,21 @@ export default function useProduct() {
     setSubmitting(true);
     try {
       // Build specs object
-      const specs = {};
-      if (formData.powerSpec.trim()) specs.power = formData.powerSpec.trim();
-      if (formData.voltageSpec.trim()) specs.voltage = formData.voltageSpec.trim();
-      if (formData.weightSpec.trim()) specs.weight = formData.weightSpec.trim();
-      
-      formData.customSpecs.forEach(spec => {
+      const finalSpecs = {};
+      formData.specs.forEach(spec => {
         if (spec.key.trim() && spec.value.trim()) {
-          specs[spec.key.trim()] = spec.value.trim();
+          finalSpecs[spec.key.trim()] = spec.value.trim();
         }
       });
 
       const payload = {
         categoryId: parseInt(formData.categoryId, 10),
-        name: {
-          en: formData.nameEn.trim()
-        },
-        description: {
-          en: formData.descriptionEn.trim()
-        },
+        name: { en: formData.nameEn.trim() },
+        description: { en: formData.descriptionEn.trim() },
         baseCode: formData.baseCode.trim(),
-        specs: specs
+        specs: finalSpecs,
+        images: formData.images,
+        thumbnail: formData.thumbnail
       };
 
       if (editingProduct) {
@@ -211,7 +218,7 @@ export default function useProduct() {
           description: 'Product created successfully.',
         });
       }
-      setIsModalOpen(false);
+    setIsModalOpen(false);
       fetchProducts();
     } catch (error) {
       console.error('Error submitting product:', error);
@@ -222,6 +229,18 @@ export default function useProduct() {
       });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await deleteProduct(id);
+      toast({ title: 'Success', description: 'Product deleted successfully.' });
+      fetchProducts();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast({ title: 'Error', description: 'Failed to delete product.', variant: 'destructive' });
     }
   };
 
@@ -256,10 +275,13 @@ export default function useProduct() {
     handleCreateOpen,
     handleEditOpen,
     handleInputChange,
-    addCustomSpec,
-    removeCustomSpec,
-    handleCustomSpecChange,
+    addSpec,
+    removeSpec,
+    handleSpecChange,
+    handleImageChange,
+    removeImage,
     handleSubmit,
+    handleDelete,
     refetch: fetchProducts
   };
 }

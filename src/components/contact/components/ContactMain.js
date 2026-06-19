@@ -1,4 +1,7 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
+import { createEnquiry } from '@/services/postRequest';
+import { useToast } from '@/hooks/use-toast';
 
 function ContactMain() {
   const [form, setForm] = useState({
@@ -10,6 +13,7 @@ function ContactMain() {
     consent: false,
   });
 
+  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const contactInfo = [
@@ -52,15 +56,31 @@ function ContactMain() {
     },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.consent) {
-      alert('Please consent to storing data before transmitting.');
+      toast({
+        title: 'Consent Required',
+        description: 'Please consent to storing data before transmitting.',
+        variant: 'destructive',
+      });
       return;
     }
     setIsSubmitting(true);
-    setTimeout(() => {
-      alert(`Message successfully transmitted! Reference ID: APT-${Math.floor(100000 + Math.random() * 900000)}`);
+    try {
+      await createEnquiry({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message: `${form.subject}: ${form.message}`,
+        type: 'general'
+      });
+      
+      toast({
+        title: 'Message Sent',
+        description: 'Your inquiry has been successfully transmitted.',
+      });
+
       setForm({
         name: '',
         email: '',
@@ -69,8 +89,16 @@ function ContactMain() {
         message: '',
         consent: false,
       });
+    } catch (error) {
+      console.error('Error submitting inquiry:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to transmit message. Please try again later.',
+        variant: 'destructive',
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (

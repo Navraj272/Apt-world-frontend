@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import CategoriesTab from './CategoriesTab';
+import SubcategoriesTab from './SubcategoriesTab';
 import ProductsTab from './ProductsTab';
 import EnquiriesTab from './EnquiriesTab';
 
@@ -82,8 +83,9 @@ const Admin = () => {
 
           {/* Tab switcher buttons */}
           <nav className="flex space-x-1 bg-[#050a16] border border-slate-800 p-1 rounded-sm">
-            {[
+             {[
               { id: 'category', label: 'Categories' },
+              { id: 'subcategory', label: 'Subcategories' },
               { id: 'product', label: 'Products' },
               { id: 'enquiry', label: 'Enquiries' }
             ].map((tab) => (
@@ -124,6 +126,7 @@ const Admin = () => {
       <main className="flex-grow p-6 overflow-y-auto bg-[#070e1e]">
         <div className="max-w-7xl mx-auto bg-[#091225]/45 border border-slate-800/60 p-6 md:p-8 rounded-sm shadow-xl min-h-[75vh]">
           {activeTab === 'category' && <CategoriesTab />}
+          {activeTab === 'subcategory' && <SubcategoriesTab />}
           {activeTab === 'product' && <ProductsTab />}
           {activeTab === 'enquiry' && <EnquiriesTab />}
         </div>

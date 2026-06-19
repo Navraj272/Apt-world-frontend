@@ -1,8 +1,9 @@
 import React from 'react';
-import useCategory from '../hook/useCategory';
+import useSubcategory from '../hook/useSubcategory';
 
-export default function CategoriesTab() {
+export default function SubcategoriesTab() {
   const {
+    subcategories,
     categories,
     loading,
     page,
@@ -13,7 +14,7 @@ export default function CategoriesTab() {
     setSearch,
     isModalOpen,
     setIsModalOpen,
-    editingCategory,
+    editingSubcategory,
     formData,
     submitting,
     handleCreateOpen,
@@ -21,15 +22,15 @@ export default function CategoriesTab() {
     handleInputChange,
     handleSubmit,
     handleDelete
-  } = useCategory();
+  } = useSubcategory();
 
   return (
     <div className="space-y-6">
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-white">Categories</h2>
-          <p className="text-xs text-slate-400 mt-1">Manage and organize product categories</p>
+          <h2 className="text-xl font-bold tracking-tight text-white">Subcategories</h2>
+          <p className="text-xs text-slate-400 mt-1">Manage hierarchical product subcategories</p>
         </div>
         <button
           onClick={handleCreateOpen}
@@ -38,7 +39,7 @@ export default function CategoriesTab() {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          <span>Create Category</span>
+          <span>Create Subcategory</span>
         </button>
       </div>
 
@@ -47,7 +48,7 @@ export default function CategoriesTab() {
         <div className="relative w-full max-w-sm">
           <input
             type="text"
-            placeholder="Search categories..."
+            placeholder="Search subcategories..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-[#050a16] border border-slate-800 text-slate-200 text-xs px-3 py-2.5 pl-9 rounded-sm focus:outline-none focus:border-slate-700 transition"
@@ -57,7 +58,7 @@ export default function CategoriesTab() {
           </svg>
         </div>
         <div className="ml-auto text-xs text-slate-400 font-medium">
-          Showing {categories.length} categories
+          Showing {subcategories.length} subcategories
         </div>
       </div>
 
@@ -69,9 +70,9 @@ export default function CategoriesTab() {
               <tr className="border-b border-slate-800 text-slate-400 text-xs font-semibold uppercase tracking-wider bg-[#0c1933]/50">
                 <th className="py-4 px-6 w-16">ID</th>
                 <th className="py-4 px-6">Name</th>
+                <th className="py-4 px-6">Parent Category</th>
                 <th className="py-4 px-6">Slug</th>
-                <th className="py-4 px-6">Description</th>
-                <th className="py-4 px-6 w-32 text-right">Actions</th>
+                <th className="py-4 px-6 w-24 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300 text-xs">
@@ -80,29 +81,33 @@ export default function CategoriesTab() {
                   <tr key={idx} className="animate-pulse">
                     <td className="py-4 px-6"><div className="h-4 bg-slate-800 rounded w-8"></div></td>
                     <td className="py-4 px-6"><div className="h-4 bg-slate-800 rounded w-28"></div></td>
+                    <td className="py-4 px-6"><div className="h-4 bg-slate-800 rounded w-32"></div></td>
                     <td className="py-4 px-6"><div className="h-4 bg-slate-800 rounded w-24"></div></td>
-                    <td className="py-4 px-6"><div className="h-4 bg-slate-800 rounded w-48"></div></td>
                     <td className="py-4 px-6 text-right"><div className="h-4 bg-slate-800 rounded w-12 ml-auto"></div></td>
                   </tr>
                 ))
-              ) : categories.length === 0 ? (
+              ) : subcategories.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="py-8 text-center text-slate-500 font-medium bg-[#091225]">
-                    No categories found.
+                    No subcategories found.
                   </td>
                 </tr>
               ) : (
-                categories.map((category) => (
-                  <tr key={category.id} className="hover:bg-[#0c1830] transition">
-                    <td className="py-4 px-6 font-semibold text-slate-400">#{category.id}</td>
-                    <td className="py-4 px-6 font-bold text-white">{category.name?.en || 'N/A'}</td>
-                    <td className="py-4 px-6 text-slate-400 font-mono">{category.slug || '-'}</td>
-                    <td className="py-4 px-6 text-slate-400 truncate max-w-xs">{category.description?.en || '-'}</td>
+                subcategories.map((sub) => (
+                  <tr key={sub.id} className="hover:bg-[#0c1830] transition">
+                    <td className="py-4 px-6 font-semibold text-slate-400">#{sub.id}</td>
+                    <td className="py-4 px-6 font-bold text-white">{sub.name?.en || 'N/A'}</td>
+                    <td className="py-4 px-6">
+                      <span className="bg-[#050a16] text-slate-300 border border-slate-800 px-2 py-1 rounded-sm text-[10px] font-bold uppercase">
+                        {sub.category?.name?.en || `Category #${sub.categoryId}`}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6 text-slate-400 font-mono">{sub.slug || '-'}</td>
                     <td className="py-4 px-6 text-right">
                       <div className="flex justify-end gap-2">
                         <button
-                          onClick={() => handleEditOpen(category)}
-                          className="text-slate-400 hover:text-white p-1.5 bg-[#050a16] border border-slate-800 rounded-sm hover:border-slate-600 transition"
+                          onClick={() => handleEditOpen(sub)}
+                          className="text-slate-400 hover:text-white p-1.5 bg-[#050a16] border border-slate-800 rounded-sm"
                           title="Edit"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -110,8 +115,8 @@ export default function CategoriesTab() {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleDelete(category.id)}
-                          className="text-slate-500 hover:text-red-500 p-1.5 bg-[#050a16] border border-slate-800 rounded-sm hover:border-red-900/30 transition"
+                          onClick={() => handleDelete(sub.id)}
+                          className="text-slate-500 hover:text-red-500 p-1.5 bg-[#050a16] border border-slate-800 rounded-sm transition-colors"
                           title="Delete"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -160,7 +165,7 @@ export default function CategoriesTab() {
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4 bg-[#0c1933]/50">
               <h3 className="font-bold text-sm uppercase tracking-wider text-white">
-                {editingCategory ? 'Edit Category' : 'Create Category'}
+                {editingSubcategory ? 'Edit Subcategory' : 'Create Subcategory'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -176,14 +181,34 @@ export default function CategoriesTab() {
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div className="space-y-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Category Name (EN) *
+                  Parent Category *
+                </label>
+                <select
+                  name="categoryId"
+                  value={formData.categoryId}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-[#050a16] border border-slate-800 text-slate-200 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-slate-700 transition"
+                >
+                  <option value="" disabled>Select parent category</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name?.en || `Category #${cat.id}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Subcategory Name (EN) *
                 </label>
                 <input
                   type="text"
                   name="nameEn"
                   value={formData.nameEn}
                   onChange={handleInputChange}
-                  placeholder="e.g. Power Tools"
+                  placeholder="e.g. Cordless Drills"
                   required
                   className="w-full bg-[#050a16] border border-slate-800 text-slate-200 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-slate-700 transition"
                 />
@@ -197,7 +222,7 @@ export default function CategoriesTab() {
                   name="descriptionEn"
                   value={formData.descriptionEn}
                   onChange={handleInputChange}
-                  placeholder="e.g. Heavy duty drills, saws, and power sanders"
+                  placeholder="e.g. Battery powered handheld drills"
                   rows="4"
                   className="w-full bg-[#050a16] border border-slate-800 text-slate-200 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-slate-700 transition resize-none"
                 />
@@ -220,7 +245,7 @@ export default function CategoriesTab() {
                   {submitting && (
                     <div className="w-3.5 h-3.5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
                   )}
-                  <span>{editingCategory ? 'Update' : 'Create'}</span>
+                  <span>{editingSubcategory ? 'Update' : 'Create'}</span>
                 </button>
               </div>
             </form>
