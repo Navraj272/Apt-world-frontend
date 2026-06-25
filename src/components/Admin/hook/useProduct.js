@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import { useState, useEffect, useCallback } from 'react';
-import { getAllProducts, getAllCategories } from '@/services/getRequests';
+import { getAllProducts, getAllCategories, getAllSubcategories } from '@/services/getRequests';
 import { createProduct } from '@/services/postRequest';
 import { updateProduct } from '@/services/putReguest';
 import { deleteProduct } from '@/services/deleteRequest';
@@ -10,6 +9,7 @@ export default function useProduct() {
   const { toast } = useToast();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,6 +21,7 @@ export default function useProduct() {
   const [editingProduct, setEditingProduct] = useState(null); // null means creating
   const [formData, setFormData] = useState({
     categoryId: '',
+    subcategoryId: '',
     nameEn: '',
     descriptionEn: '',
     baseCode: '',
@@ -39,6 +40,22 @@ export default function useProduct() {
       }
     } catch (error) {
       console.error('Error fetching categories for dropdown:', error);
+    }
+  }, []);
+
+  // Fetch subcategories for a specific category
+  const fetchSubcategoriesForCategory = useCallback(async (categoryId) => {
+    if (!categoryId) {
+      setSubcategories([]);
+      return;
+    }
+    try {
+      const response = await getAllSubcategories({ categoryId, limit: 100 });
+      if (response && response.data) {
+        setSubcategories(response.data.subcategories || []);
+      }
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
     }
   }, []);
 
@@ -68,11 +85,21 @@ export default function useProduct() {
     fetchAllCategoriesList();
   }, [fetchProducts, fetchAllCategoriesList]);
 
+  // Fetch subcategories whenever categoryId in formData changes
+  useEffect(() => {
+    if (formData.categoryId) {
+      fetchSubcategoriesForCategory(formData.categoryId);
+    } else {
+      setSubcategories([]);
+    }
+  }, [formData.categoryId, fetchSubcategoriesForCategory]);
+
   // Open modal for creating new product
   const handleCreateOpen = () => {
     setEditingProduct(null);
     setFormData({
-      categoryId: categories.length > 0 ? categories[0].id.toString() : '',
+      categoryId: '',
+      subcategoryId: '',
       nameEn: '',
       descriptionEn: '',
       baseCode: '',
@@ -94,6 +121,7 @@ export default function useProduct() {
 
     setFormData({
       categoryId: product.categoryId ? product.categoryId.toString() : '',
+      subcategoryId: product.subcategoryId ? product.subcategoryId.toString() : '',
       nameEn: product.name?.en || '',
       descriptionEn: product.description?.en || '',
       baseCode: product.baseCode || '',
@@ -106,7 +134,14 @@ export default function useProduct() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value };
+      // Reset subcategory if category changes
+      if (name === 'categoryId') {
+        newData.subcategoryId = '';
+      }
+      return newData;
+    });
   };
 
   // Spec handlers
@@ -195,6 +230,7 @@ export default function useProduct() {
 
       const payload = {
         categoryId: parseInt(formData.categoryId, 10),
+        subcategoryId: formData.subcategoryId ? parseInt(formData.subcategoryId, 10) : null,
         name: { en: formData.nameEn.trim() },
         description: { en: formData.descriptionEn.trim() },
         baseCode: formData.baseCode.trim(),
@@ -218,7 +254,7 @@ export default function useProduct() {
           description: 'Product created successfully.',
         });
       }
-    setIsModalOpen(false);
+      setIsModalOpen(false);
       fetchProducts();
     } catch (error) {
       console.error('Error submitting product:', error);
@@ -250,15 +286,18 @@ export default function useProduct() {
     const description = product.description?.en || '';
     const code = product.baseCode || '';
     const categoryName = product.category?.name?.en || '';
+    const subcategoryName = product.subcategory?.name?.en || '';
     return name.toLowerCase().includes(search.toLowerCase()) ||
            description.toLowerCase().includes(search.toLowerCase()) ||
            code.toLowerCase().includes(search.toLowerCase()) ||
-           categoryName.toLowerCase().includes(search.toLowerCase());
+           categoryName.toLowerCase().includes(search.toLowerCase()) ||
+           subcategoryName.toLowerCase().includes(search.toLowerCase());
   });
 
   return {
     products: filteredProducts,
     categories,
+    subcategories,
     loading,
     page,
     setPage,

@@ -5,6 +5,7 @@ export default function ProductsTab() {
   const {
     products,
     categories,
+    subcategories,
     loading,
     page,
     setPage,
@@ -120,7 +121,12 @@ export default function ProductsTab() {
                     </td>
                     <td className="py-4 px-6 text-slate-300 font-mono font-semibold uppercase">{product.baseCode || '-'}</td>
                     <td className="py-4 px-6">
-                      <span className="text-slate-300 font-medium">{product.category?.name?.en || 'Uncategorized'}</span>
+                      <div className="flex flex-col">
+                        <span className="text-slate-300 font-medium">{product.category?.name?.en || 'Uncategorized'}</span>
+                        {product.subcategory && (
+                          <span className="text-[10px] text-slate-500 italic mt-0.5">{product.subcategory?.name?.en}</span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex flex-wrap gap-1.5 max-w-xs">
@@ -234,6 +240,29 @@ export default function ProductsTab() {
                   </select>
                 </div>
 
+                {/* Subcategory Select */}
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Subcategory
+                  </label>
+                  <select
+                    name="subcategoryId"
+                    value={formData.subcategoryId}
+                    onChange={handleInputChange}
+                    disabled={!formData.categoryId || subcategories?.length === 0}
+                    className="w-full bg-[#050a16] border border-slate-800 text-slate-200 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-slate-700 transition disabled:opacity-50"
+                  >
+                    <option value="">No Subcategory</option>
+                    {subcategories?.map(sub => (
+                      <option key={sub.id} value={sub.id}>
+                        {sub.name?.en || `Subcategory #${sub.id}`}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Base Code */}
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
