@@ -36,3 +36,11 @@ export const updateEnquiry = (id, data) => {
 export const updateSettings = (data) => {
   return putRequest(`${API_URL}/settings/site-info`, data);
 };
+
+export const updateFranchiseLocation = (id, data) => {
+  if (typeof id === 'object' && id !== null) {
+    const { id: dataId, ...rest } = id;
+    return putRequest(`${API_URL}/franchise-locations/${dataId}`, rest);
+  }
+  return putRequest(`${API_URL}/franchise-locations/${id}`, data);
+};

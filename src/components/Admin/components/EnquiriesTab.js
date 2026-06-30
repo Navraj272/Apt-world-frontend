@@ -146,6 +146,14 @@ export default function EnquiriesTab() {
                             Qty: {enquiry.quantity || 1}
                           </div>
                         </>
+                      ) : enquiry.type === 'franchise_product' && enquiry.franchiseLocation ? (
+                        <>
+                          <div className="font-semibold text-slate-200">{enquiry.franchiseLocation.city}, {enquiry.franchiseLocation.state}</div>
+                          <div className="text-[10px] text-slate-400 mt-0.5 select-all">{enquiry.franchiseLocation.email}</div>
+                          <div className="inline-flex items-center text-[10px] text-amber-400 font-bold mt-1 bg-amber-500/10 px-1 py-0.5 rounded-[3px]">
+                            Photos sent via email
+                          </div>
+                        </>
                       ) : (
                         <span className="text-slate-500 italic">General Enquiry</span>
                       )}

@@ -4,6 +4,7 @@ import CategoriesTab from './CategoriesTab';
 import SubcategoriesTab from './SubcategoriesTab';
 import ProductsTab from './ProductsTab';
 import EnquiriesTab from './EnquiriesTab';
+import FranchiseLocationsTab from './FranchiseLocationsTab';
 
 const Admin = () => {
   const router = useRouter();
@@ -87,7 +88,8 @@ const Admin = () => {
               { id: 'category', label: 'Categories' },
               { id: 'subcategory', label: 'Subcategories' },
               { id: 'product', label: 'Products' },
-              { id: 'enquiry', label: 'Enquiries' }
+              { id: 'enquiry', label: 'Enquiries' },
+              { id: 'franchise', label: 'Franchise Locations' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -129,6 +131,7 @@ const Admin = () => {
           {activeTab === 'subcategory' && <SubcategoriesTab />}
           {activeTab === 'product' && <ProductsTab />}
           {activeTab === 'enquiry' && <EnquiriesTab />}
+          {activeTab === 'franchise' && <FranchiseLocationsTab />}
         </div>
       </main>
     </div>

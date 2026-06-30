@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import GlobalSearch from '@/components/GlobalSearch';
@@ -7,12 +7,15 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isFranchiseDropdownOpen, setIsFranchiseDropdownOpen] = useState(false);
+  const [isMobileFranchiseOpen, setIsMobileFranchiseOpen] = useState(false);
   const router = useRouter();
+  const franchiseDropdownRef = useRef(null);
 
   const isProducts = router.pathname.startsWith('/products') || router.pathname.startsWith('/categories');
   const isAboutUs = router.pathname === '/about-us';
   const isContact = router.pathname === '/contact';
-  const isFranchise = router.pathname === '/franchise';
+  const isFranchise = router.pathname.startsWith('/franchise');
   const isRental = router.pathname.startsWith('/rental');
 
   useEffect(() => {
@@ -30,12 +33,26 @@ function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [isSearchOpen]);
 
+  useEffect(() => {
+    const handleOutside = (e) => {
+      if (franchiseDropdownRef.current && !franchiseDropdownRef.current.contains(e.target)) {
+        setIsFranchiseDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
+  }, []);
+
   const navLinks = [
     { name: 'Products', href: '/products', active: isProducts },
     { name: 'Rental', href: '/rental', active: isRental },
-    { name: 'FRANCHISE', href: '/franchise', active: isFranchise },
     { name: 'Contact Us', href: '/contact', active: isContact },
     { name: 'About', href: '/about-us', active: isAboutUs },
+  ];
+
+  const franchiseOptions = [
+    { name: 'Become a Franchise', href: '/franchise' },
+    { name: 'Franchise Locator', href: '/franchise/locator' },
   ];
 
   return (
@@ -60,22 +77,81 @@ function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
-                  link.active
-                    ? 'text-[var(--apt-red)]'
-                    : 'text-[#404040] hover:text-[var(--apt-navy)]'
+            <Link
+              href="/products"
+              className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
+                isProducts ? 'text-[var(--apt-red)]' : 'text-[#404040] hover:text-[var(--apt-navy)]'
+              }`}
+            >
+              PRODUCTS
+              {isProducts && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />}
+            </Link>
+            <Link
+              href="/rental"
+              className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
+                isRental ? 'text-[var(--apt-red)]' : 'text-[#404040] hover:text-[var(--apt-navy)]'
+              }`}
+            >
+              RENTAL
+              {isRental && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />}
+            </Link>
+
+            {/* Franchise Dropdown */}
+            <div className="relative" ref={franchiseDropdownRef}>
+              <button
+                onClick={() => setIsFranchiseDropdownOpen((prev) => !prev)}
+                className={`flex items-center gap-1 font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
+                  isFranchise ? 'text-[var(--apt-red)]' : 'text-[#404040] hover:text-[var(--apt-navy)]'
                 }`}
               >
-                {link.name.toUpperCase()}
-                {link.active && (
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />
-                )}
-              </Link>
-            ))}
+                FRANCHISE
+                <svg
+                  className={`w-3 h-3 transition-transform duration-200 ${isFranchiseDropdownOpen ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+                {isFranchise && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />}
+              </button>
+
+              {isFranchiseDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl overflow-hidden py-2 z-50">
+                  {franchiseOptions.map((opt) => (
+                    <Link
+                      key={opt.href}
+                      href={opt.href}
+                      onClick={() => setIsFranchiseDropdownOpen(false)}
+                      className={`block px-4 py-2.5 font-montserrat text-xs font-semibold tracking-wide transition-colors ${
+                        router.pathname === opt.href
+                          ? 'text-[var(--apt-red)] bg-red-50/30'
+                          : 'text-[#404040] hover:bg-gray-50 hover:text-[var(--apt-navy)]'
+                      }`}
+                    >
+                      {opt.name.toUpperCase()}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Link
+              href="/contact"
+              className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
+                isContact ? 'text-[var(--apt-red)]' : 'text-[#404040] hover:text-[var(--apt-navy)]'
+              }`}
+            >
+              CONTACT US
+              {isContact && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />}
+            </Link>
+            <Link
+              href="/about-us"
+              className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
+                isAboutUs ? 'text-[var(--apt-red)]' : 'text-[#404040] hover:text-[var(--apt-navy)]'
+              }`}
+            >
+              ABOUT
+              {isAboutUs && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />}
+            </Link>
           </nav>
 
           {/* Right: Search + Mobile menu */}
@@ -142,7 +218,53 @@ function Header() {
               SEARCH PRODUCTS
             </button>
 
-            {navLinks.map((link) => (
+            {navLinks.slice(0, 2).map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`block px-3 py-2.5 rounded-xl font-montserrat text-sm font-medium tracking-wider transition-colors ${
+                  link.active
+                    ? 'bg-[var(--apt-red)]/10 text-[var(--apt-red)]'
+                    : 'text-[#404040] hover:bg-gray-50 hover:text-[var(--apt-navy)]'
+                }`}
+              >
+                {link.name.toUpperCase()}
+              </Link>
+            ))}
+
+            {/* Mobile Franchise accordion */}
+            <button
+              onClick={() => setIsMobileFranchiseOpen((prev) => !prev)}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-montserrat text-sm font-medium tracking-wider transition-colors ${
+                isFranchise ? 'bg-[var(--apt-red)]/10 text-[var(--apt-red)]' : 'text-[#404040] hover:bg-gray-50 hover:text-[var(--apt-navy)]'
+              }`}
+            >
+              FRANCHISE
+              <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${isMobileFranchiseOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {isMobileFranchiseOpen && (
+              <div className="pl-4 space-y-1">
+                {franchiseOptions.map((opt) => (
+                  <Link
+                    key={opt.href}
+                    href={opt.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`block px-3 py-2 rounded-xl font-montserrat text-xs font-medium tracking-wider transition-colors ${
+                      router.pathname === opt.href
+                        ? 'text-[var(--apt-red)]'
+                        : 'text-[#697486] hover:bg-gray-50 hover:text-[var(--apt-navy)]'
+                    }`}
+                  >
+                    {opt.name.toUpperCase()}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {navLinks.slice(2).map((link) => (
               <Link
                 key={link.name}
                 href={link.href}

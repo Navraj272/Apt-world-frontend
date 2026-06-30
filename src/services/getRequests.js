@@ -25,3 +25,9 @@ export const getEnquiryList = (payload) =>
 
 export const getGlobalSettings = () =>
   unwrap(getRequest(`${API_URL}/settings`));
+
+export const getAllFranchiseLocations = (payload) =>
+  unwrap(getRequest(`${API_URL}/franchise-locations`, payload));
+
+export const getFranchiseLocationCities = (state) =>
+  unwrap(getRequest(`${API_URL}/franchise-locations/cities`, { state }));

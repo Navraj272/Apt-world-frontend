@@ -17,3 +17,9 @@ export const createEnquiry = (data) =>
 
 export const createSubcategory = (data) =>
   unwrap(postRequest(`${API_URL}/subcategories`, data));
+
+export const createFranchiseLocation = (data) =>
+  unwrap(postRequest(`${API_URL}/franchise-locations`, data));
+
+export const createFranchiseProductEnquiry = (formData) =>
+  unwrap(postRequest(`${API_URL}/enquiries`, formData));

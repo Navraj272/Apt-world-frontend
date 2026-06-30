@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const equipmentData = [
   {
@@ -110,10 +110,13 @@ Electric boom lifts are ideal for indoor applications, maintenance work, and cle
 ];
 
 function RentalPage() {
+  const [activeId, setActiveId] = useState(equipmentData[0].id);
+  const active = equipmentData.find((eq) => eq.id === activeId) || equipmentData[0];
+
   return (
     <div className="w-full min-h-screen bg-white text-[var(--apt-navy)] pt-24 font-montserrat">
 
-      <section className="relative bg-[var(--apt-navy)] text-white py-20 sm:py-28 overflow-hidden">
+      <section className="relative bg-[var(--apt-navy)] text-white py-16 sm:py-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src="/assets/images/rental/boom-lift.jpg"
@@ -137,109 +140,101 @@ function RentalPage() {
         </div>
       </section>
 
-      <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative">
-        {/* Subtle industrial background watermark */}
-        <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
-          <svg className="w-full h-full opacity-[0.02]" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <pattern id="rental-grid-bg" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="var(--apt-navy)" strokeWidth="0.5"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#rental-grid-bg)" />
-          </svg>
+      <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative">
+        {/* Equipment tab bar */}
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 mb-10 scrollbar-hide border-b border-gray-100">
+          {equipmentData.map((eq) => (
+            <button
+              key={eq.id}
+              onClick={() => setActiveId(eq.id)}
+              className={`shrink-0 font-montserrat text-[10px] sm:text-xs font-bold tracking-widest px-5 py-3 rounded-t-xl transition-all duration-200 border-b-2 uppercase ${
+                activeId === eq.id
+                  ? 'text-[var(--apt-red)] border-[var(--apt-red)]'
+                  : 'text-gray-400 border-transparent hover:text-[var(--apt-navy)]'
+              }`}
+            >
+              {eq.title}
+            </button>
+          ))}
         </div>
-        <div className="relative z-10 space-y-24 sm:space-y-32">
-          {equipmentData.map((eq, index) => {
-            const ImageContent = (
-              <div className="relative overflow-hidden rounded-sm bg-gray-100 shadow-lg group">
-                <img
-                  src={eq.image}
-                  alt={eq.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute bottom-3 right-3 bg-[var(--apt-navy)]/80 backdrop-blur-sm px-3 py-1.5 rounded-sm border border-white/10 select-none pointer-events-none">
-                  <span className="font-khand text-xs sm:text-sm font-bold tracking-wider text-white leading-none">
-                    APT <span className="text-[var(--apt-red)]">WORLD</span>
-                  </span>
-                </div>
+
+        {/* Active equipment panel */}
+        <div key={active.id} className="animate-fadeIn">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+            <div className="w-full h-[320px] sm:h-[420px] relative overflow-hidden rounded-2xl bg-gray-100 shadow-lg group flex items-center justify-center">
+              <img
+                src={active.image}
+                alt={active.title}
+                className="max-w-full max-h-full w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute bottom-3 right-3 bg-[var(--apt-navy)]/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10 select-none pointer-events-none">
+                <span className="font-khand text-xs sm:text-sm font-bold tracking-wider text-white leading-none">
+                  APT <span className="text-[var(--apt-red)]">WORLD</span>
+                </span>
               </div>
-            );
+            </div>
 
-            const TextContent = (
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <span className="font-khand text-6xl sm:text-7xl font-black text-[var(--apt-red)]/10 leading-none select-none">
-                    {String(eq.id).padStart(2, '0')}
-                  </span>
-                  <h2 className="font-khand text-3xl sm:text-4xl font-black uppercase tracking-tight text-[#1a1a1a] -mt-3">
-                    {eq.title}
-                  </h2>
-                  <div className="w-16 h-[3px] bg-[var(--apt-red)]" />
-                </div>
-                <div className="space-y-4">
-                  {eq.description.split('\n\n').map((paragraph, i) => (
-                    <p key={i} className="font-montserrat text-xs sm:text-sm text-gray-600 leading-relaxed font-medium">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <h2 className="font-khand text-3xl sm:text-4xl font-black uppercase tracking-tight text-[#1a1a1a]">
+                  {active.title}
+                </h2>
+                <div className="w-16 h-[3px] bg-[var(--apt-red)]" />
               </div>
-            );
-
-            return (
-              <div key={eq.id}>
-                <div className={`grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center ${index % 2 === 1 ? '' : ''}`}>
-                  {index % 2 === 0 ? (
-                    <>
-                      <div className="aspect-[4/3] w-full">{ImageContent}</div>
-                      <div>{TextContent}</div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="lg:order-2 aspect-[4/3] w-full">{ImageContent}</div>
-                      <div className="lg:order-1">{TextContent}</div>
-                    </>
-                  )}
-                </div>
-
-                <div className="mt-10 overflow-x-auto">
-                  <div className="inline-block min-w-full align-middle">
-                    <table className="min-w-full border-collapse">
-                      <thead>
-                        <tr className="bg-[var(--apt-navy)]">
-                          {eq.specs.head.map((h, i) => (
-                            <th key={i} className="font-montserrat text-[10px] sm:text-xs font-bold tracking-wider text-white px-4 py-3.5 text-left uppercase whitespace-nowrap border-r border-white/5 last:border-r-0">
-                              {h}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {eq.specs.rows.map((row, ri) => (
-                          <tr key={ri} className={`${ri % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-red-50/30 transition-colors`}>
-                            {row.map((cell, ci) => (
-                              <td key={ci} className="font-montserrat text-[11px] sm:text-xs font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 whitespace-nowrap">
-                                {cell}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                {eq.note && (
-                  <p className="mt-4 font-montserrat text-[11px] sm:text-xs text-gray-500 italic font-medium">
-                    Note: {eq.note}
+              <div className="space-y-3">
+                {active.description.split('\n\n').map((paragraph, i) => (
+                  <p key={i} className="font-montserrat text-xs sm:text-sm text-gray-600 leading-relaxed font-medium">
+                    {paragraph}
                   </p>
-                )}
+                ))}
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          <div className="mt-10 rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+            <div className="max-h-[420px] overflow-y-auto overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead className="sticky top-0 z-10">
+                  <tr className="bg-[var(--apt-navy)]">
+                    {active.specs.head.map((h, i) => (
+                      <th key={i} className="font-montserrat text-[10px] sm:text-xs font-bold tracking-wider text-white px-4 py-3.5 text-left uppercase whitespace-nowrap border-r border-white/5 last:border-r-0">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {active.specs.rows.map((row, ri) => (
+                    <tr key={ri} className={`${ri % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-red-50/30 transition-colors`}>
+                      {row.map((cell, ci) => (
+                        <td key={ci} className="font-montserrat text-[11px] sm:text-xs font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 whitespace-nowrap">
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {active.note && (
+            <p className="mt-4 font-montserrat text-[11px] sm:text-xs text-gray-500 italic font-medium">
+              Note: {active.note}
+            </p>
+          )}
         </div>
       </section>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.25s ease-out;
+        }
+      `}</style>
 
       <section className="bg-white border-t border-gray-100 py-16 sm:py-24">
         <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">

@@ -9,3 +9,6 @@ export const deleteSubcategory = (id) =>
 
 export const deleteProduct = (id) =>
   deleteRequest(`${API_URL}/products/${id}`);
+
+export const deleteFranchiseLocation = (id) =>
+  deleteRequest(`${API_URL}/franchise-locations/${id}`);
