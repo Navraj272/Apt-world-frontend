@@ -4,11 +4,11 @@ function FranchiseModels({ data, onSelectModel }) {
   const { title, subtitle, items } = data;
 
   return (
-    <section id="franchise-models" className="bg-[#050D1A] text-white py-16 sm:py-24">
+    <section id="franchise-models" className="bg-[var(--apt-navy)] text-white py-16 sm:py-24">
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading with Red Vertical Accent Line on Left */}
-        <div className="border-l-4 border-[#E11922] pl-4 mb-12 sm:mb-16">
+        <div className="border-l-4 border-[var(--apt-red)] pl-4 mb-12 sm:mb-16">
           <h2 className="font-khand text-4xl sm:text-5xl font-extrabold uppercase tracking-tight text-white leading-none">
             {title}
           </h2>
@@ -28,13 +28,13 @@ function FranchiseModels({ data, onSelectModel }) {
                 onClick={() => onSelectModel(item.id)}
                 className={`relative flex flex-col justify-between p-8 sm:p-10 rounded-sm border transition-all duration-300 cursor-pointer group shadow-lg ${
                   isRedTheme
-                    ? 'bg-[#E11922] border-transparent hover:shadow-[#E11922]/10 hover:-translate-y-1'
+                    ? 'bg-[var(--apt-red)] border-transparent hover:shadow-[var(--apt-red)]/10 hover:-translate-y-1'
                     : 'bg-[#0A1322] border-white/5 hover:border-white/15 hover:shadow-black/30 hover:-translate-y-1'
                 }`}
               >
                 {/* Overlapping "MOST POPULAR" Badge for Platinum */}
                 {item.isPopular && (
-                  <div className="absolute -top-3.5 right-8 bg-[#E11922] text-white px-3 py-1.5 rounded-sm shadow-md border border-white/20 select-none">
+                  <div className="absolute -top-3.5 right-8 bg-[var(--apt-red)] text-white px-3 py-1.5 rounded-2xl shadow-md border border-white/20 select-none">
                     <span className="font-montserrat text-[9px] font-black tracking-[0.2em] uppercase">
                       MOST POPULAR
                     </span>
@@ -74,7 +74,7 @@ function FranchiseModels({ data, onSelectModel }) {
                       <li key={idx} className="flex items-center gap-3">
                         {/* Custom Checkmark Circle SVG */}
                         {isRedTheme ? (
-                          <span className="inline-flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-white text-[#E11922]">
+                          <span className="inline-flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-white text-[var(--apt-red)]">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
@@ -107,8 +107,8 @@ function FranchiseModels({ data, onSelectModel }) {
                     }}
                     className={`w-full font-montserrat text-xs sm:text-sm font-bold tracking-widest py-3 rounded-sm border uppercase transition-all duration-300 ${
                       isRedTheme
-                        ? 'bg-[#050D1A] text-white border-transparent hover:bg-[#050D1A]/80 shadow-lg shadow-black/20'
-                        : 'bg-transparent text-white border-white/20 hover:bg-white hover:text-[#050D1A] hover:border-white'
+                        ? 'bg-[var(--apt-navy)] text-white border-transparent hover:bg-[var(--apt-navy)]/80 shadow-lg shadow-black/20'
+                        : 'bg-transparent text-white border-white/20 hover:bg-white hover:text-[var(--apt-navy)] hover:border-white'
                     }`}
                   >
                     {item.buttonText}

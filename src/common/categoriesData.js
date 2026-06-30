@@ -1,5 +1,10 @@
-// Structured category data for dropdown navigation and category product pages.
-// ESLint compliant with single quotes.
+const slugify = (text) => {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+};
 
 export const categoriesTree = [
   {
@@ -7,6 +12,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Cutting & Grinding',
+        slug: slugify('Cutting & Grinding'),
         items: [
           { name: 'Grinders', slug: 'grinders', id: 'sc-1' },
           { name: 'Chopsaws', slug: 'chopsaws', id: 'sc-8' },
@@ -17,6 +23,7 @@ export const categoriesTree = [
       },
       {
         name: 'Drilling & Breaking',
+        slug: slugify('Drilling & Breaking'),
         items: [
           { name: 'Drills', slug: 'drills', id: 'sc-4' },
           { name: 'Rotary Hammers', slug: 'rotary-hammers', id: 'sc-5' },
@@ -27,6 +34,7 @@ export const categoriesTree = [
       },
       {
         name: 'Surface & Woodworking',
+        slug: slugify('Surface & Woodworking'),
         items: [
           { name: 'Planers', slug: 'planers', id: 'sc-6' },
           { name: 'Jigsaws', slug: 'jigsaws', id: 'sc-7' },
@@ -37,6 +45,7 @@ export const categoriesTree = [
       },
       {
         name: 'Specialized',
+        slug: slugify('Specialized'),
         items: [
           { name: 'Heat Guns', slug: 'heat-guns', id: 'sc-14' },
           { name: 'Concrete Vibrators', slug: 'concrete-vibrators', id: 'sc-15' },
@@ -52,6 +61,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Washers & Vacuums',
+        slug: slugify('Washers & Vacuums'),
         items: [
           { name: 'Cold Water Pressure Washers', slug: 'cold-water-pressure-washers', id: 'sc-21' },
           { name: 'Ultra High Pressure Washers', slug: 'ultra-high-pressure-washers', id: 'sc-24' },
@@ -61,6 +71,7 @@ export const categoriesTree = [
       },
       {
         name: 'Floor Care',
+        slug: slugify('Floor Care'),
         items: [
           { name: 'Walk Behind Scrubber Driers', slug: 'walk-behind-scrubber-driers', id: 'sc-25' },
           { name: 'Ride on Scrubber Driers', slug: 'ride-on-scrubber-driers', id: 'sc-26' },
@@ -70,6 +81,7 @@ export const categoriesTree = [
       },
       {
         name: 'Advanced Cleaning',
+        slug: slugify('Advanced Cleaning'),
         items: [
           { name: 'Steam Cleaners', slug: 'steam-cleaners', id: 'sc-29' },
           { name: 'Carpet Care', slug: 'carpet-care', id: 'sc-30' },
@@ -85,6 +97,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Cordless Drills',
+        slug: slugify('Cordless Drills'),
         items: [
           { name: 'Impact Drills', slug: 'impact-drills', id: 'sc-34' },
           { name: 'Impact Drill Kit Sets', slug: 'impact-drill-kit-sets', id: 'sc-35' },
@@ -94,6 +107,7 @@ export const categoriesTree = [
       },
       {
         name: 'Cordless Tools',
+        slug: slugify('Cordless Tools'),
         items: [
           { name: 'Cordless Ratchet Wrenches', slug: 'cordless-ratchet-wrenches', id: 'sc-36' },
           { name: 'Cordless Screwdrivers', slug: 'cordless-screwdrivers', id: 'sc-37' },
@@ -103,6 +117,7 @@ export const categoriesTree = [
       },
       {
         name: 'Cutting & Heavy Duty',
+        slug: slugify('Cutting & Heavy Duty'),
         items: [
           { name: 'Cordless Angle Grinders', slug: 'cordless-angle-grinders', id: 'sc-46' },
           { name: 'Cordless Chainsaws', slug: 'cordless-chainsaws', id: 'sc-43' },
@@ -113,6 +128,7 @@ export const categoriesTree = [
       },
       {
         name: 'Garden & Specialized',
+        slug: slugify('Garden & Specialized'),
         items: [
           { name: 'Cordless Pruners', slug: 'cordless-pruners', id: 'sc-41' },
           { name: 'Iron Sheet Scissors', slug: 'cordless-iron-sheet-scissors', id: 'sc-42' },
@@ -128,6 +144,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Land Preparation',
+        slug: slugify('Land Preparation'),
         items: [
           { name: 'Weeders', slug: 'weeders', id: 'sc-52' },
           { name: 'Multifunction Cultivators', slug: 'multifunction-cultivators', id: 'sc-53' },
@@ -137,6 +154,7 @@ export const categoriesTree = [
       },
       {
         name: 'Sprayers & Dusters',
+        slug: slugify('Sprayers & Dusters'),
         items: [
           { name: 'Knapsack Power Sprayers', slug: 'knapsack-power-sprayers', id: 'sc-55' },
           { name: 'Mist Dusters', slug: 'mist-dusters', id: 'sc-56' },
@@ -147,6 +165,7 @@ export const categoriesTree = [
       },
       {
         name: 'Harvesting & Care',
+        slug: slugify('Harvesting & Care'),
         items: [
           { name: 'Water Pumps & Lawn Mowers', slug: 'water-pumps-lawn-mowers', id: 'sc-54' },
           { name: 'Chainsaws', slug: 'chainsaws', id: 'sc-60' },
@@ -157,6 +176,7 @@ export const categoriesTree = [
       },
       {
         name: 'Modern Agri Tools',
+        slug: slugify('Modern Agri Tools'),
         items: [
           { name: 'Leaf Blowers', slug: 'leaf-blowers', id: 'sc-65' },
           { name: 'Battery Pruning Machines', slug: 'battery-pruning-machines', id: 'sc-67' },
@@ -172,6 +192,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Hoists & Blocks',
+        slug: slugify('Hoists & Blocks'),
         items: [
           { name: 'Chain Blocks', slug: 'chain-blocks', id: 'sc-71' },
           { name: 'Ratchet Lever Hoists', slug: 'ratchet-lever-hoists', id: 'sc-72' },
@@ -182,6 +203,7 @@ export const categoriesTree = [
       },
       {
         name: 'Cranes & Winches',
+        slug: slugify('Cranes & Winches'),
         items: [
           { name: 'Engine Cranes', slug: 'engine-cranes', id: 'sc-73' },
           { name: 'Electric Trolleys', slug: 'electric-trolleys', id: 'sc-75' },
@@ -197,6 +219,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Scissor Lifts',
+        slug: slugify('Scissor Lifts'),
         items: [
           { name: 'Manual Scissor Lifts', slug: 'manual-scissor-lifts', id: 'sc-81' },
           { name: 'Electric Scissor Lifts (Battery)', slug: 'electric-scissor-lifts', id: 'sc-82' }
@@ -204,6 +227,7 @@ export const categoriesTree = [
       },
       {
         name: 'Masts & Booms',
+        slug: slugify('Masts & Booms'),
         items: [
           { name: 'Boom Lifts (Self Propelled)', slug: 'boom-lifts', id: 'sc-83' },
           { name: 'Spider Lifts', slug: 'spider-lifts', id: 'sc-84' },
@@ -220,6 +244,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Rebar & Bending',
+        slug: slugify('Rebar & Bending'),
         items: [
           { name: 'Stirrup Bending Machines', slug: 'stirrup-bending-machines', id: 'sc-89' },
           { name: 'Decoiling Machines', slug: 'decoiling-machines', id: 'sc-90' },
@@ -230,6 +255,7 @@ export const categoriesTree = [
       },
       {
         name: 'Straightening & Threading',
+        slug: slugify('Straightening & Threading'),
         items: [
           { name: 'Rebar Straightening', slug: 'rebar-straightening-machines', id: 'sc-94' },
           { name: 'Rebar Threading', slug: 'rebar-threading-machines', id: 'sc-95' },
@@ -239,6 +265,7 @@ export const categoriesTree = [
       },
       {
         name: 'Compaction & Rolling',
+        slug: slugify('Compaction & Rolling'),
         items: [
           { name: 'Plate Compactors', slug: 'plate-compactors', id: 'sc-98' },
           { name: 'Tamping Rammers', slug: 'tamping-rammers', id: 'sc-99' },
@@ -247,6 +274,7 @@ export const categoriesTree = [
       },
       {
         name: 'Concreting & Finishing',
+        slug: slugify('Concreting & Finishing'),
         items: [
           { name: 'Concrete Cutters', slug: 'concrete-cutters', id: 'sc-101' },
           { name: 'Concrete Roller Screed', slug: 'concrete-roller-screed', id: 'sc-102' },
@@ -264,6 +292,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Sealing & Capping',
+        slug: slugify('Sealing & Capping'),
         items: [
           { name: 'Capping Machines', slug: 'capping-machines', id: 'sc-108' },
           { name: 'Carton Sealers', slug: 'carton-sealers', id: 'sc-109' },
@@ -275,6 +304,7 @@ export const categoriesTree = [
       },
       {
         name: 'Filling & Bagger',
+        slug: slugify('Filling & Bagger'),
         items: [
           { name: 'FFS (Bagger) Machines', slug: 'ffs-bagger-machines', id: 'sc-112' },
           { name: 'Flow Wrap Machines', slug: 'flow-wrap-machines', id: 'sc-113' },
@@ -285,6 +315,7 @@ export const categoriesTree = [
       },
       {
         name: 'Labeling & Weighing',
+        slug: slugify('Labeling & Weighing'),
         items: [
           { name: 'Labeling Machines', slug: 'labeling-machines', id: 'sc-117' },
           { name: 'Multi Head Weighers', slug: 'multi-head-weighers', id: 'sc-121' },
@@ -295,6 +326,7 @@ export const categoriesTree = [
       },
       {
         name: 'Handling & Shrink',
+        slug: slugify('Handling & Shrink'),
         items: [
           { name: 'Conveyors', slug: 'conveyors', id: 'sc-110' },
           { name: 'Material Handling Machines', slug: 'material-handling-machines', id: 'sc-118' },
@@ -310,6 +342,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Arc & Gas Welding',
+        slug: slugify('Arc & Gas Welding'),
         items: [
           { name: 'ARC Welding Machines', slug: 'arc-welding-machines', id: 'sc-132' },
           { name: 'MIG and MAG Welding', slug: 'mig-and-mag-welding-machines', id: 'sc-135' },
@@ -318,6 +351,7 @@ export const categoriesTree = [
       },
       {
         name: 'Advanced Cutting',
+        slug: slugify('Advanced Cutting'),
         items: [
           { name: 'CNC Cutting Machines', slug: 'cnc-cutting-machines', id: 'sc-133' },
           { name: 'Laser Welding Machines', slug: 'laser-welding-machines', id: 'sc-134' },
@@ -332,6 +366,7 @@ export const categoriesTree = [
     subcategories: [
       {
         name: 'Pallet Trucks',
+        slug: slugify('Pallet Trucks'),
         items: [
           { name: 'Hand Pallet Trucks', slug: 'hand-pallet-trucks', id: 'sc-138' },
           { name: 'Battery Pallet Trucks (BOPT)', slug: 'battery-pallet-trucks', id: 'sc-139' },
@@ -342,6 +377,7 @@ export const categoriesTree = [
       },
       {
         name: 'Stackers & Forklifts',
+        slug: slugify('Stackers & Forklifts'),
         items: [
           { name: 'Manual Stackers', slug: 'manual-stackers', id: 'sc-142' },
           { name: 'Semi Electric Stackers', slug: 'semi-electric-stackers', id: 'sc-150' },
@@ -353,6 +389,7 @@ export const categoriesTree = [
       },
       {
         name: 'Storage & Access',
+        slug: slugify('Storage & Access'),
         items: [
           { name: 'Roller Conveyors', slug: 'roller-conveyors', id: 'sc-141' },
           { name: 'Mobile Loading Docks', slug: 'mobile-loading-dock-ramps', id: 'sc-145' },
@@ -365,16 +402,4 @@ export const categoriesTree = [
   }
 ];
 
-export const categoriesProducts = {
-  'default': [
-    {
-      id: 201,
-      name: 'Premium Industrial Rotary Hammer',
-      sku: 'IND-RH-720',
-      category: 'General Tools',
-      image: '/assets/png/products/rotary_hammer.png',
-      badge: 'IN STOCK',
-      badgeType: 'success'
-    }
-  ]
-};
+export const categoriesProducts = {};

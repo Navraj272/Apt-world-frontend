@@ -49,7 +49,7 @@ function WhyChooseUsSection() {
   ];
 
   return (
-    <section id="about" className="bg-[#050D1A] text-white py-20 sm:py-28 overflow-hidden border-b border-white/5">
+    <section id="about" className="bg-[var(--apt-navy)] text-white py-20 sm:py-28 overflow-hidden border-b border-white/5">
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-center">
           
@@ -68,7 +68,7 @@ function WhyChooseUsSection() {
               
               {/* Red overlapping badge */}
               <div 
-                className="absolute -bottom-6 -right-4 sm:-right-6 lg:-right-8 bg-[#E11922] text-white p-6 sm:p-8 rounded-sm shadow-xl z-10 flex flex-col justify-center items-center text-center min-w-[150px] sm:min-w-[170px]"
+                className="absolute -bottom-6 -right-4 sm:-right-6 lg:-right-8 bg-[var(--apt-red)] text-white p-6 sm:p-8 rounded-sm shadow-xl z-10 flex flex-col justify-center items-center text-center min-w-[150px] sm:min-w-[170px]"
                 style={{
                   clipPath: 'polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%)'
                 }}
@@ -89,7 +89,7 @@ function WhyChooseUsSection() {
           {/* Right Column: Title and 2x2 Feature Grid */}
           <div className="lg:col-span-7 space-y-8">
             <div className="space-y-4">
-              <span className="font-montserrat text-xs sm:text-sm font-black tracking-[0.2em] text-[#E11922] uppercase">
+              <span className="font-montserrat text-xs sm:text-sm font-black tracking-[0.2em] text-[var(--apt-red)] uppercase">
                 OUR FOUNDATION
               </span>
               <h2 className="font-khand text-4xl sm:text-5xl lg:text-6xl font-extrabold uppercase tracking-tight text-white leading-none">
@@ -105,11 +105,11 @@ function WhyChooseUsSection() {
               {features.map((feature) => (
                 <div key={feature.id} className="flex items-start gap-4 group">
                   {/* Icon with hover rotation/color effect */}
-                  <div className="p-2.5 bg-white/5 border border-white/10 rounded-sm text-[#E11922] group-hover:bg-[#E11922] group-hover:text-white group-hover:border-[#E11922] transition-all duration-300 shrink-0">
+                  <div className="p-2.5 bg-white/5 border border-white/10 rounded-sm text-[var(--apt-red)] group-hover:bg-[var(--apt-red)] group-hover:text-white group-hover:border-[var(--apt-red)] transition-all duration-300 shrink-0">
                     {feature.icon}
                   </div>
                   <div className="space-y-1.5">
-                    <h4 className="font-khand text-lg sm:text-xl font-bold tracking-wide text-white uppercase group-hover:text-[#E11922] transition-colors duration-300">
+                    <h4 className="font-khand text-lg sm:text-xl font-bold tracking-wide text-white uppercase group-hover:text-[var(--apt-red)] transition-colors duration-300">
                       {feature.title}
                     </h4>
                     <p className="font-montserrat text-xs sm:text-sm text-gray-400 font-medium leading-relaxed">

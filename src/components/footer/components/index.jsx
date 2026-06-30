@@ -1,8 +1,9 @@
 import React from 'react';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer id="contact" className="bg-[#040A14] text-white pt-16 sm:pt-20 pb-8 border-t border-white/5 relative z-20">
+    <footer id="contact" className="bg-[var(--apt-navy)] text-white pt-16 sm:pt-20 pb-8 border-t border-white/5 relative z-20">
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Footer Links Grid */}
@@ -11,7 +12,7 @@ const Footer = () => {
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-4 space-y-6">
             <span className="font-khand text-2xl font-extrabold tracking-wider text-white">
-              APT <span className="text-[#E11922]">WORLD</span>
+              APT <span className="text-[var(--apt-red)]">WORLD</span>
             </span>
             <p className="font-montserrat text-xs sm:text-sm text-gray-400 font-medium leading-relaxed max-w-[320px]">
               Leading provider of industrial tools and equipment across India. Engineered for power, designed for precision, and trusted by professionals.
@@ -20,7 +21,7 @@ const Footer = () => {
             <div className="flex items-center gap-4">
               <a
                 href="#"
-                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#E11922] hover:border-[#E11922] text-gray-300 hover:text-white transition-all duration-300"
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-[var(--apt-red)] hover:border-[var(--apt-red)] text-gray-300 hover:text-white transition-all duration-300"
                 aria-label="Website"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,7 +30,7 @@ const Footer = () => {
               </a>
               <a
                 href="#"
-                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#E11922] hover:border-[#E11922] text-gray-300 hover:text-white transition-all duration-300"
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-[var(--apt-red)] hover:border-[var(--apt-red)] text-gray-300 hover:text-white transition-all duration-300"
                 aria-label="LinkedIn"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -38,7 +39,7 @@ const Footer = () => {
               </a>
               <a
                 href="tel:+919999999999"
-                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#E11922] hover:border-[#E11922] text-gray-300 hover:text-white transition-all duration-300"
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-[var(--apt-red)] hover:border-[var(--apt-red)] text-gray-300 hover:text-white transition-all duration-300"
                 aria-label="Phone Support"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,20 +54,26 @@ const Footer = () => {
             <h3 className="font-khand text-sm sm:text-base font-extrabold tracking-widest text-white uppercase">
               PRODUCTS
             </h3>
-            <ul className="space-y-3 font-montserrat text-xs sm:text-sm text-gray-400 font-semibold">
-              <li>
-                <a href="#products" className="hover:text-[#E11922] transition-colors duration-200">Power Tools</a>
-              </li>
-              <li>
-                <a href="#products" className="hover:text-[#E11922] transition-colors duration-200">Welding Equipment</a>
-              </li>
-              <li>
-                <a href="#products" className="hover:text-[#E11922] transition-colors duration-200">Cleaning Solutions</a>
-              </li>
-              <li>
-                <a href="#products" className="hover:text-[#E11922] transition-colors duration-200">Agri Machinery</a>
-              </li>
-            </ul>
+              <ul className="space-y-3 font-montserrat text-xs sm:text-sm text-gray-400 font-semibold">
+                <li>
+                  <Link href="/products" className="hover:text-[var(--apt-red)] transition-colors duration-200">All Products</Link>
+                </li>
+                <li>
+                  <Link href="/rental" className="hover:text-[var(--apt-red)] transition-colors duration-200">Rental Equipment</Link>
+                </li>
+                <li>
+                  <Link href="/categories/power-tools" className="hover:text-[var(--apt-red)] transition-colors duration-200">Power Tools</Link>
+                </li>
+                <li>
+                  <Link href="/categories/welding-machines" className="hover:text-[var(--apt-red)] transition-colors duration-200">Welding Machines</Link>
+                </li>
+                <li>
+                  <Link href="/categories/cleaning-solutions" className="hover:text-[var(--apt-red)] transition-colors duration-200">Cleaning Solutions</Link>
+                </li>
+                <li>
+                  <Link href="/categories/agriculture-machines" className="hover:text-[var(--apt-red)] transition-colors duration-200">Agri Machinery</Link>
+                </li>
+              </ul>
           </div>
 
           {/* Column 3: Quick Links */}
@@ -76,16 +83,19 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3 font-montserrat text-xs sm:text-sm text-gray-400 font-semibold">
               <li>
-                <a href="#franchise" className="hover:text-[#E11922] transition-colors duration-200">Franchise Model</a>
+                <Link href="/rental" className="hover:text-[var(--apt-red)] transition-colors duration-200">Rental Equipment</Link>
               </li>
               <li>
-                <a href="#services" className="hover:text-[#E11922] transition-colors duration-200">Service Support</a>
+                <Link href="/franchise" className="hover:text-[var(--apt-red)] transition-colors duration-200">Franchise Model</Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#E11922] transition-colors duration-200">Privacy Policy</a>
+                <Link href="/contact" className="hover:text-[var(--apt-red)] transition-colors duration-200">Contact Support</Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#E11922] transition-colors duration-200">Terms of Service</a>
+                <Link href="/about-us" className="hover:text-[var(--apt-red)] transition-colors duration-200">About Us</Link>
+              </li>
+              <li>
+                <a href="mailto:info.aptworld@gmail.com" className="hover:text-[var(--apt-red)] transition-colors duration-200">info.aptworld@gmail.com</a>
               </li>
             </ul>
           </div>
@@ -104,11 +114,11 @@ const Footer = () => {
                 type="email"
                 placeholder="Email address"
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-sm py-3.5 pl-4 pr-14 text-white text-xs sm:text-sm font-montserrat focus:outline-none focus:border-[#E11922]/50 placeholder-gray-500"
+                className="w-full bg-white/5 border border-white/10 rounded-sm py-3.5 pl-4 pr-14 text-white text-xs sm:text-sm font-montserrat focus:outline-none focus:border-[var(--apt-red)]/50 placeholder-gray-500"
               />
               <button
                 type="submit"
-                className="absolute right-1 top-1 bottom-1 bg-[#E11922] text-white px-4 rounded-sm flex items-center justify-center hover:bg-white hover:text-black transition-colors duration-300"
+                className="absolute right-1 top-1 bottom-1 bg-[var(--apt-red)] text-white px-4 rounded-sm flex items-center justify-center hover:bg-white hover:text-black transition-colors duration-300"
                 aria-label="Subscribe"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,7 +133,7 @@ const Footer = () => {
         {/* Bottom copyright and credits */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 font-montserrat text-[10px] sm:text-xs text-gray-500 font-semibold tracking-wider uppercase text-center sm:text-left">
           <div>
-            © 2026 APT WORLD. All rights reserved. Industrial excellence since 1989.
+            &copy; {new Date().getFullYear()} APT WORLD. All rights reserved. Industrial excellence since 1989.
           </div>
           <div className="flex items-center gap-2">
             <span>DESIGNED BY <a href="#" className="text-gray-400 hover:text-white transition-colors">RED-DOT</a></span>

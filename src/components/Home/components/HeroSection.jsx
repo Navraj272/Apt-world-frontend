@@ -4,7 +4,7 @@ function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-[95vh] flex items-center justify-center bg-[#050D1A] text-white pt-24 pb-16 overflow-hidden"
+      className="relative min-h-[95vh] flex items-center justify-center bg-[var(--apt-navy)] text-white pt-24 pb-16 overflow-hidden"
     >
       {/* Background Image with Dark Overlays */}
       <div className="absolute inset-0 z-0">
@@ -14,15 +14,15 @@ function HeroSection() {
           className="w-full h-full object-cover object-center opacity-30 select-none pointer-events-none"
         />
         {/* Radial vignette overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050D1A] via-transparent to-[#050D1A]/85 z-10" />
-        <div className="absolute inset-0 bg-radial-gradient(ellipse_at_center,transparent_20%,#050D1A_95%) z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--apt-navy)] via-transparent to-[var(--apt-navy)]/85 z-10" />
+        <div className="absolute inset-0 z-10" style={{ background: 'radial-gradient(ellipse at center, transparent 20%, var(--apt-navy) 95%)' }} />
       </div>
 
       {/* Main Content Area */}
       <div className="relative z-20 max-w-[1350px] w-full mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
         <div className="max-w-[850px] space-y-6 sm:space-y-8">
           {/* Top Badge */}
-          <div className="inline-flex items-center bg-[#E11922] px-4 py-1.5 rounded-sm">
+          <div className="inline-flex items-center bg-[var(--apt-red)] px-4 py-1.5 rounded-sm">
             <span className="font-montserrat text-[10px] sm:text-xs font-black tracking-[0.2em] text-white uppercase">
               LET'S BUILD THE
             </span>
@@ -30,7 +30,7 @@ function HeroSection() {
 
           {/* Heading */}
           <h1 className="font-khand text-5xl sm:text-7xl md:text-8xl font-extrabold uppercase leading-[0.9] tracking-tight text-white">
-            <span className="text-[#E11922]">APT</span> WORLD <br />
+            <span className="text-[var(--apt-red)]">APT</span> WORLD <br />
             <span className="text-white">INDUSTRIAL FORCE</span>
           </h1>
 
@@ -43,8 +43,8 @@ function HeroSection() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-10 pt-4">
             {/* Button */}
             <a
-              href="#products"
-              className="inline-flex items-center justify-between font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white bg-[#E11922] pl-6 pr-4 py-2 rounded-sm border border-transparent hover:bg-transparent hover:border-white hover:text-white transition-all duration-300 group shadow-lg shadow-[#E11922]/15 w-fit"
+              href="/products"
+              className="inline-flex items-center justify-between font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white bg-[var(--apt-red)] pl-6 pr-4 py-2 rounded-sm border border-transparent hover:bg-transparent hover:border-white hover:text-white transition-all duration-300 group shadow-lg shadow-[var(--apt-red)]/15 w-fit"
             >
               EXPLORE PRODUCTS
               <svg
@@ -82,12 +82,12 @@ function HeroSection() {
 
       {/* Floating Scroll Indicator */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center">
-        <a href="#products" className="text-white/40 hover:text-white transition-colors duration-300 flex flex-col items-center gap-1 group">
+        <a href="#catalogue" className="text-white/40 hover:text-white transition-colors duration-300 flex flex-col items-center gap-1 group">
           <span className="font-montserrat text-[9px] font-bold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             SCROLL
           </span>
           <svg
-            className="w-5 h-5 animate-bounce text-[#E11922]"
+            className="w-5 h-5 animate-bounce text-[var(--apt-red)]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

@@ -25,12 +25,12 @@ export default function useCategory() {
     setLoading(true);
     try {
       const response = await getAllCategories({ pageNo: page, limit: 10 });
-      if (response && response.data) {
-        setCategories(response.data.categories || []);
-        setTotalPages(response.data.totalPages || 1);
+      if (response && response.categories) {
+        setCategories(response.categories || []);
+        setTotalPages(response.totalPages || 1);
         setTotalItems(
-          response.data.total ||
-            (response.data.categories ? response.data.categories.length : 0)
+          response.total ||
+            (response.categories ? response.categories.length : 0)
         );
       }
     } catch (error) {

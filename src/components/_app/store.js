@@ -7,5 +7,5 @@ export default createWithStore(
     {
         profile: profileStore,
     },
-    { storeKey: '__SPEEDCASINO_APP_STORE__' },
+    { storeKey: '__APT_WORLD_APP_STORE__' },
 );

@@ -9,7 +9,7 @@ function BottomBanner() {
   ];
 
   return (
-    <section className="bg-[#050D1A] border-t border-b border-white/5 py-8 text-center select-none">
+    <section className="bg-[var(--apt-navy)] border-t border-b border-white/5 py-8 text-center select-none">
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-around gap-6 sm:gap-4 flex-wrap">
           {pillars.map((pillar, idx) => (

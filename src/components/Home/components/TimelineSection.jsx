@@ -73,15 +73,15 @@ function TimelineSection() {
   };
 
   return (
-    <section id="services" className="bg-[#F8F9FA] text-black py-20 sm:py-28 overflow-hidden">
+    <section id="services" className="bg-[var(--apt-offwhite)] text-black py-20 sm:py-28 overflow-hidden">
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title */}
         <div className="text-center space-y-3 pb-16 sm:pb-20">
-          <span className="font-montserrat text-xs sm:text-sm font-black tracking-[0.2em] text-[#E11922] uppercase">
+          <span className="font-montserrat text-xs sm:text-sm font-black tracking-[0.2em] text-[var(--apt-red)] uppercase">
             SCALING OPERATIONS
           </span>
-          <h2 className="font-khand text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-gray-900 leading-none">
+          <h2 className="font-khand text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-[#1a1a1a] leading-none">
             EXPANSION TIMELINE
           </h2>
         </div>
@@ -95,21 +95,21 @@ function TimelineSection() {
             {steps.map((step) => (
               <div
                 key={step.id}
-                className="group bg-white p-6 sm:p-8 border border-gray-100 rounded-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[260px] relative hover:-translate-y-1 hover:border-[#E11922]/20"
+                className="group bg-white p-6 sm:p-8 border border-gray-100 rounded-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[260px] relative hover:-translate-y-1 hover:border-[var(--apt-red)]/20"
               >
                 {/* Timeline connector visual dots for large screens */}
-                <div className="absolute top-1/2 -right-2 w-4 h-4 rounded-full border-4 border-white bg-gray-300 z-20 -translate-y-1/2 hidden xl:group-hover:bg-[#E11922] transition-colors duration-300 xl:block" />
+                <div className="absolute top-1/2 -right-2 w-4 h-4 rounded-full border-4 border-white bg-gray-300 z-20 -translate-y-1/2 hidden xl:group-hover:bg-[var(--apt-red)] transition-colors duration-300 xl:block" />
 
                 {/* Card Header (Step Number Box) */}
                 <div className="flex justify-between items-start">
-                  <div className="bg-[#050D1A] text-white font-outfit text-xs font-black tracking-widest px-3 py-1.5 rounded-sm">
+                  <div className="bg-[var(--apt-navy)] text-white font-outfit text-xs font-black tracking-widest px-3 py-1.5 rounded-sm">
                     {step.id}
                   </div>
                 </div>
 
                 {/* Step Details */}
                 <div className="my-6 space-y-2.5">
-                  <h3 className="font-khand text-xl sm:text-2xl font-extrabold tracking-wide text-gray-900 group-hover:text-[#E11922] transition-colors duration-300">
+                  <h3 className="font-khand text-xl sm:text-2xl font-extrabold tracking-wide text-[#1a1a1a] group-hover:text-[var(--apt-red)] transition-colors duration-300">
                     {step.title}
                   </h3>
                   <p className="font-montserrat text-xs sm:text-sm text-gray-500 font-medium leading-relaxed">

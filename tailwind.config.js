@@ -12,29 +12,29 @@ module.exports = {
     extend: {
       backgroundImage: {
         'button-gray-background':
-          'linear-gradient(98.51deg, #FFFFFF -92.7%, rgba(255, 255, 255, 0.05) 23.72%, rgba(255, 255, 255, 0.09) 68.89%, rgba(255, 255, 255, 0.07) 100%)',
-        'button-bg': 'linear-gradient(180deg, #EA9000 0%, #C16201 100%)',
+          'linear-gradient(98.51deg, #fffbeb -92.7%, rgba(255, 255, 255, 0.05) 23.72%, rgba(255, 255, 255, 0.09) 68.89%, rgba(255, 255, 255, 0.07) 100%)',
+        'button-bg': 'linear-gradient(180deg, #dc2626 0%, #991b1b 100%)',
         'button-green-background':
-          'linear-gradient(179.21deg, #0FA40D 0.61%, #006300 83.91%)',
+          'linear-gradient(179.21deg, #dc2626 0.61%, #7f1d1d 83.91%)',
         'vip-background':
-          'radial-gradient(128.27% 437.03% at 93.88% -18.38%, rgba(11, 24, 54, 0.5) 0%, rgba(2, 17, 53, 0.5) 29.74%, rgba(13, 30, 68, 0.5) 50.97%, rgba(1, 14, 44, 0.5) 100%)',
+          'radial-gradient(128.27% 437.03% at 93.88% -18.38%, rgba(64, 64, 64, 0.5) 0%, rgba(38, 38, 38, 0.5) 29.74%, rgba(64, 64, 64, 0.5) 50.97%, rgba(0, 0, 0, 0.5) 100%)',
         'progress-bar-inducator':
-          'linear-gradient(180deg, #EA9000 0%, #C16201 100%)',
+          'linear-gradient(180deg, #dc2626 0%, #991b1b 100%)',
         'buy-blue-background':
-          ' linear-gradient(180deg, #006FFD 0%, #004297 100%)',
+          ' linear-gradient(180deg, #404040 0%, #171717 100%)',
         'select-button-background':
-          'linear-gradient(180deg, rgba(234, 144, 0, 0) 0%, rgba(234, 144, 0, 0.5) 100%)',
+          'linear-gradient(180deg, rgba(220, 38, 38, 0) 0%, rgba(220, 38, 38, 0.5) 100%)',
         'vip-capsule-background':
-          'linear-gradient(180deg, #041D57 0%, #21213B 100%)',
-        'border-gradient': 'linear-gradient(180deg, #52a862 0%, #815e0e 100%)',
+          'linear-gradient(180deg, #404040 0%, #262626 100%)',
+        'border-gradient': 'linear-gradient(180deg, #dc2626 0%, #404040 100%)',
         'vip-button-background':
-          'linear-gradient(180deg, #161F45 0%, #1F203D 100%)',
+          'linear-gradient(180deg, #404040 0%, #262626 100%)',
         'custom-popover-gradient':
-          'linear-gradient(180deg, #1B2846 0%, #061D54 42.08%, #0B1836 100%)',
+          'linear-gradient(180deg, #404040 0%, #262626 42.08%, #000000 100%)',
         'blue-gradient':
-          'linear-gradient(97.58deg, #051D55 -70.97%, #030F2D 206.59%)',
+          'linear-gradient(97.58deg, #404040 -70.97%, #171717 206.59%)',
         'leaderboard-background':
-          'linear-gradient(180deg, #162A59 0%, #010E2C 100%)',
+          'linear-gradient(180deg, #404040 0%, #000000 100%)',
         'daily-bonus-background': 'var(--daily-bonus-background)',
         'day-background': 'var(--day-background)',
         'day-text-background': 'var(--day-text-background)',
@@ -64,6 +64,12 @@ module.exports = {
         opacity: 'opacity',
       },
       colors: {
+        'apt-red': '#dc2626',
+        'apt-offwhite': '#fffbeb',
+        'apt-slate': '#404040',
+        'apt-navy': '#404040',
+        'apt-dark': '#404040',
+        white: '#fffbeb',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         vipPopupText: 'var(--vip-popup-text)',
@@ -121,6 +127,10 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         glowYellow: {
           '0%, 100%': {
             boxShadow:
@@ -169,6 +179,7 @@ module.exports = {
       },
 
       animation: {
+        fadeIn: 'fadeIn 0.5s ease-out',
         shake: 'shake 1.2s ease-in-out infinite',
         glowYellow: 'glowYellow 1.2s ease-in-out infinite',
         glowYellow2: 'glowYellow2 1.2s ease-in-out infinite',

@@ -1,4 +1,4 @@
-const url = process.env.NEXT_PUBLIC_ASSETS_BASE_URL;
+const url = process.env.NEXT_PUBLIC_ASSETS_BASE_URL || '';
 
 const check = `${url}/assets/svg/check.svg`;
 const chevronDown = `${url}/assets/svg/chevronDown.svg`;

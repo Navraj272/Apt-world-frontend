@@ -5,36 +5,53 @@ function FranchiseHero({ data }) {
 
   const handleScroll = (id) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section
-      className="relative min-h-[90vh] flex items-center justify-start bg-[#050D1A] text-white pt-28 pb-20 overflow-hidden"
-    >
-      {/* Background Image with Premium Dark Red-Navy Industrial Overlay */}
+    <section className="relative min-h-[90vh] flex items-center justify-start bg-[var(--apt-navy)] text-white pt-28 pb-20 overflow-hidden">
+      {/* Layered Background */}
       <div className="absolute inset-0 z-0">
         <img
           src="/assets/png/hero_industrial_bg.png"
           alt="Franchise Industrial Background"
-          className="w-full h-full object-cover object-center opacity-40 select-none pointer-events-none"
+          className="w-full h-full object-cover object-center opacity-35 select-none pointer-events-none"
+          style={{ transform: 'scale(1.05)' }}
         />
-        {/* Sleek radial and linear gradients for premium styling */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050D1A] via-[#050D1A]/80 to-transparent z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050D1A] via-transparent to-[#050D1A]/90 z-10" />
-        {/* Subtle red ambient glow to match industrial vibe */}
-        <div className="absolute -left-20 top-20 w-[400px] h-[400px] bg-[#E11922] opacity-[0.08] blur-[150px] rounded-full pointer-events-none z-10" />
+        {/* Strong left-to-right gradient for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--apt-navy)] via-[var(--apt-navy)]/75 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--apt-navy)] via-transparent to-[var(--apt-navy)]/80 z-10" />
+        {/* Red ambient glow bottom-left */}
+        <div className="absolute -left-32 bottom-0 w-[500px] h-[400px] bg-[var(--apt-red)] opacity-[0.07] blur-[120px] rounded-full pointer-events-none z-10" />
+        {/* Diagonal light beam */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none opacity-[0.04]"
+          style={{
+            background: 'linear-gradient(135deg, transparent 40%, var(--apt-red) 50%, transparent 60%)',
+          }}
+        />
       </div>
 
-      {/* Hero Content */}
+      {/* Decorative grid lines */}
+      <div className="absolute inset-0 z-10 pointer-events-none opacity-[0.03]">
+        <svg width="100%" height="100%">
+          <defs>
+            <pattern id="hero-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hero-grid)" />
+        </svg>
+      </div>
+
+      {/* Content */}
       <div className="relative z-20 max-w-[1350px] w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-[850px] space-y-6 sm:space-y-8 text-left">
-          
-          {/* Badge */}
+        <div className="max-w-[820px] space-y-7 sm:space-y-8">
+
+          {/* Animated badge */}
           {badge && (
-            <div className="inline-flex items-center bg-[#E11922] px-4 py-2 rounded-sm">
+            <div className="inline-flex items-center gap-2 bg-[var(--apt-red)] px-4 py-2 rounded-full shadow-lg shadow-[var(--apt-red)]/25">
+              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
               <span className="font-montserrat text-[10px] sm:text-xs font-black tracking-[0.25em] text-white uppercase">
                 {badge}
               </span>
@@ -46,17 +63,20 @@ function FranchiseHero({ data }) {
             {title}
           </h1>
 
+          {/* Red accent underline */}
+          <div className="w-20 h-1 bg-[var(--apt-red)] rounded-full" />
+
           {/* Description */}
-          <p className="font-montserrat text-sm sm:text-lg text-gray-300 font-medium leading-relaxed max-w-[650px]">
+          <p className="font-montserrat text-sm sm:text-lg text-gray-300 font-medium leading-relaxed max-w-[620px]">
             {description}
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-4">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-5 pt-2">
             {primaryBtn && (
               <button
                 onClick={() => handleScroll(primaryBtn.targetId)}
-                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white bg-[#E11922] px-6 py-2 rounded-sm border border-transparent hover:bg-transparent hover:border-white hover:text-white transition-all duration-300 shadow-lg shadow-[#E11922]/15 uppercase"
+                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white bg-[var(--apt-red)] px-7 py-3 rounded-xl border border-transparent hover:bg-white hover:text-[var(--apt-red)] transition-all duration-300 shadow-lg shadow-[var(--apt-red)]/20 uppercase"
               >
                 {primaryBtn.text}
               </button>
@@ -64,13 +84,37 @@ function FranchiseHero({ data }) {
             {secondaryBtn && (
               <button
                 onClick={() => handleScroll(secondaryBtn.targetId)}
-                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white border border-white/20 px-6 py-2 rounded-sm hover:bg-white hover:text-[#050D1A] hover:border-white transition-all duration-300 uppercase"
+                className="font-montserrat text-xs sm:text-sm font-bold tracking-widest text-white border border-white/25 px-7 py-3 rounded-xl hover:bg-white hover:text-[var(--apt-navy)] hover:border-white transition-all duration-300 uppercase"
               >
                 {secondaryBtn.text}
               </button>
             )}
           </div>
 
+          {/* Quick stats row */}
+          <div className="flex flex-wrap gap-8 pt-4 border-t border-white/10">
+            {[
+              { value: '150+', label: 'FRANCHISE PARTNERS' },
+              { value: '₹15L', label: 'MIN INVESTMENT' },
+              { value: '25+', label: 'YEARS OF LEGACY' },
+            ].map((stat, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-px h-8 bg-[var(--apt-red)]" />
+                <div>
+                  <div className="font-outfit text-xl sm:text-2xl font-black text-white leading-none">{stat.value}</div>
+                  <div className="font-montserrat text-[8px] sm:text-[9px] font-bold tracking-widest text-gray-500 uppercase mt-0.5">{stat.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1">
+        <div className="w-5 h-8 border-2 border-white/20 rounded-full flex items-start justify-center p-1">
+          <div className="w-1 h-2 bg-[var(--apt-red)] rounded-full animate-bounce" />
         </div>
       </div>
     </section>

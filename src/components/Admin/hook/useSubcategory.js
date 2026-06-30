@@ -25,8 +25,8 @@ export default function useSubcategory() {
   const fetchCategories = useCallback(async () => {
     try {
       const response = await getAllCategories({ limit: 100 });
-      if (response && response.data) {
-        setCategories(response.data.categories || []);
+      if (response && response.categories) {
+        setCategories(response.categories || []);
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -36,11 +36,13 @@ export default function useSubcategory() {
   const fetchSubcategories = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getAllSubcategories({ pageNo: page, limit: 10 });
-      if (response && response.data) {
-        setSubcategories(response.data.subcategories || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalItems(response.data.total || response.data.subcategories?.length || 0);
+      const params = { pageNo: page, limit: 10 };
+      if (search.trim()) params.search = search.trim();
+      const response = await getAllSubcategories(params);
+      if (response && response.subcategories) {
+        setSubcategories(response.subcategories || []);
+        setTotalPages(response.totalPages || 1);
+        setTotalItems(response.total || response.subcategories?.length || 0);
       }
     } catch (error) {
       console.error('Error fetching subcategories:', error);
@@ -52,12 +54,16 @@ export default function useSubcategory() {
     } finally {
       setLoading(false);
     }
-  }, [page, toast]);
+  }, [page, search, toast]);
 
   useEffect(() => {
     fetchSubcategories();
     fetchCategories();
   }, [fetchSubcategories, fetchCategories]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
   const handleCreateOpen = () => {
     setEditingSubcategory(null);
@@ -132,19 +138,8 @@ export default function useSubcategory() {
     }
   };
 
-  const filteredSubcategories = subcategories.filter((sub) => {
-    const name = sub.name?.en || '';
-    const description = sub.description?.en || '';
-    const categoryName = sub.category?.name?.en || '';
-    return (
-      name.toLowerCase().includes(search.toLowerCase()) ||
-      description.toLowerCase().includes(search.toLowerCase()) ||
-      categoryName.toLowerCase().includes(search.toLowerCase())
-    );
-  });
-
   return {
-    subcategories: filteredSubcategories,
+    subcategories,
     categories,
     loading,
     page,

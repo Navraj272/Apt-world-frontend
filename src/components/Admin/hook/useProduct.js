@@ -35,10 +35,11 @@ export default function useProduct() {
   const fetchAllCategoriesList = useCallback(async () => {
     try {
       const response = await getAllCategories({ limit: 100 });
-      if (response && response.data) {
-        setCategories(response.data.categories || []);
+      if (response && response.categories) {
+        setCategories(response.categories || []);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching categories for dropdown:', error);
     }
   }, []);
@@ -51,10 +52,11 @@ export default function useProduct() {
     }
     try {
       const response = await getAllSubcategories({ categoryId, limit: 100 });
-      if (response && response.data) {
-        setSubcategories(response.data.subcategories || []);
+      if (response && response.subcategories) {
+        setSubcategories(response.subcategories || []);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching subcategories:', error);
     }
   }, []);
@@ -63,12 +65,13 @@ export default function useProduct() {
     setLoading(true);
     try {
       const response = await getAllProducts({ pageNo: page, limit: 10 });
-      if (response && response.data) {
-        setProducts(response.data.products || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalItems(response.data.total || (response.data.products ? response.data.products.length : 0));
+      if (response && response.products) {
+        setProducts(response.products || []);
+        setTotalPages(response.totalPages || 1);
+        setTotalItems(response.total || (response.products ? response.products.length : 0));
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching products:', error);
       toast({
         title: 'Error',
@@ -257,6 +260,7 @@ export default function useProduct() {
       setIsModalOpen(false);
       fetchProducts();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error submitting product:', error);
       toast({
         title: 'Error',
@@ -275,6 +279,7 @@ export default function useProduct() {
       toast({ title: 'Success', description: 'Product deleted successfully.' });
       fetchProducts();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error deleting product:', error);
       toast({ title: 'Error', description: 'Failed to delete product.', variant: 'destructive' });
     }
