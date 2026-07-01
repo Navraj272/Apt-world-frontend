@@ -1,17 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 function HeroSection() {
+  const [usersCount, setUsersCount] = useState(0);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+    // Count up animation from 0 to 5000
+    let start = 0;
+    const end = 5000;
+    const duration = 1500;
+    const steps = 60;
+    const stepTime = duration / steps;
+    const increment = Math.ceil(end / steps);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setUsersCount(end);
+        clearInterval(timer);
+      } else {
+        setUsersCount(start);
+      }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleMouseMove = (e) => {
+    const { clientX, clientY, currentTarget } = e;
+    const rect = currentTarget.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width - 0.5) * 20; // max 20px translation
+    const y = ((clientY - rect.top) / rect.height - 0.5) * 20;
+    setMousePos({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePos({ x: 0, y: 0 });
+  };
+
   return (
     <section
       id="home"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="relative min-h-[95vh] flex items-center justify-center bg-[var(--apt-navy)] text-white pt-24 pb-16 overflow-hidden"
     >
-      {/* Background Image with Dark Overlays */}
+      {/* Background Image with Dark Overlays and Parallax */}
       <div className="absolute inset-0 z-0">
         <img
           src="/assets/png/hero_industrial_bg.png"
           alt="Industrial Manufacturing Background"
-          className="w-full h-full object-cover object-center opacity-30 select-none pointer-events-none"
+          className="w-full h-full object-cover object-center opacity-30 select-none pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `scale(1.08) translate(${mousePos.x}px, ${mousePos.y}px)`,
+          }}
         />
         {/* Radial vignette overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--apt-navy)] via-transparent to-[var(--apt-navy)]/85 z-10" />
@@ -22,25 +66,41 @@ function HeroSection() {
       <div className="relative z-20 max-w-[1350px] w-full mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
         <div className="max-w-[850px] space-y-6 sm:space-y-8">
           {/* Top Badge */}
-          <div className="inline-flex items-center bg-[var(--apt-red)] px-4 py-1.5 rounded-sm">
+          <div 
+            className={`inline-flex items-center bg-[var(--apt-red)] px-4 py-1.5 rounded-sm transition-all duration-1000 ease-out transform ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+            }`}
+          >
             <span className="font-montserrat text-[10px] sm:text-xs font-black tracking-[0.2em] text-white uppercase">
               LET'S BUILD THE
             </span>
           </div>
 
           {/* Heading */}
-          <h1 className="font-khand text-5xl sm:text-7xl md:text-8xl font-extrabold uppercase leading-[0.9] tracking-tight text-white">
+          <h1 
+            className={`font-khand text-5xl sm:text-7xl md:text-8xl font-extrabold uppercase leading-[0.9] tracking-tight text-white transition-all duration-1000 delay-150 ease-out transform ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
             <span className="text-[var(--apt-red)]">APT</span> WORLD <br />
             <span className="text-white">INDUSTRIAL FORCE</span>
           </h1>
 
           {/* Description */}
-          <p className="font-montserrat text-sm sm:text-lg text-gray-300 font-medium leading-relaxed max-w-[680px]">
+          <p 
+            className={`font-montserrat text-sm sm:text-lg text-gray-300 font-medium leading-relaxed max-w-[680px] transition-all duration-1000 delay-300 ease-out transform ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
             Engineering precision tools and high-performance equipment for India's evolving industrial landscape. Leading the charge with legacy expertise and cutting-edge technology.
           </p>
 
           {/* Call to Actions & Stats Group */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-10 pt-4">
+          <div 
+            className={`flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-10 pt-4 transition-all duration-1000 delay-500 ease-out transform ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
             {/* Button */}
             <a
               href="/products"
@@ -63,9 +123,9 @@ function HeroSection() {
             </a>
 
             {/* Stat Box */}
-            <div className="flex items-center gap-3">
-              <span className="font-outfit text-3xl sm:text-4xl font-extrabold tracking-tight text-white border-r border-white/20 pr-4">
-                5,000+
+            <div className="flex items-center gap-3 group/stat cursor-default">
+              <span className="font-outfit text-3xl sm:text-4xl font-extrabold tracking-tight text-white border-r border-white/20 pr-4 transition-all duration-300 group-hover/stat:text-[var(--apt-red)] group-hover/stat:border-[var(--apt-red)]/35">
+                {usersCount.toLocaleString()}+
               </span>
               <div className="flex flex-col">
                 <span className="font-montserrat text-[10px] sm:text-xs font-bold tracking-wider text-gray-400 uppercase leading-none">
