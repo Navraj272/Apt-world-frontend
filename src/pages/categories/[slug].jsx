@@ -257,7 +257,7 @@ function CategoryPage() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse shadow-sm">
+              <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.06)]">
                 <div className="aspect-[4/3] bg-gray-200" />
                 <div className="p-5 space-y-3">
                   <div className="h-2.5 bg-gray-200 rounded-full w-1/3" />
@@ -282,7 +282,7 @@ function CategoryPage() {
                 <a
                   key={product.id}
                   href={`/products/${slugify(productName || product.baseCode)}/${product.id}`}
-                  className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer border border-transparent hover:border-[var(--apt-red)]/10"
+                  className="bg-white rounded-2xl shadow-[0_2px_14px_rgba(6,15,30,0.06)] hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer border border-gray-200 hover:border-[var(--apt-red)]/30"
                 >
                   <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden shrink-0">
                     <img

@@ -1,67 +1,124 @@
 /* eslint-disable no-console */
-import React, { useState } from 'react';
-import { createEnquiry } from '@/services/postRequest';
+import React, { useState, useEffect } from 'react';
+import { createEnquiry, createFranchiseProductEnquiry } from '@/services/postRequest';
+import { getAllFranchiseLocations, getAllCategories, getAllSubcategories } from '@/services/getRequests';
 import { useToast } from '@/hooks/use-toast';
+import { INDIAN_STATES } from '@/constants/indianStates';
+
+const fieldClass = 'w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all';
+const smallFieldClass = 'w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all';
+const labelClass = 'font-montserrat text-[9px] font-black tracking-wider text-gray-400 uppercase';
+const smallLabelClass = 'font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase';
 
 function ContactMain() {
   const [form, setForm] = useState({
     name: '',
     email: '',
     phone: '',
-    subject: 'General Inquiry',
+    subject: 'Product Enquiry',
     message: '',
     consent: false,
+    // Rental fields
     rentalEquipment: '',
     rentalLiftType: '',
     rentalPowerSource: '',
     rentalHeight: '',
+    rentalSwl: '',
+    rentalState: '',
+    rentalCity: '',
     rentalDuration: '',
     rentalQuantity: '1',
   });
 
+  // Product enquiry fields
+  const [productCity, setProductCity] = useState('');
+  const [nearbyFranchises, setNearbyFranchises] = useState([]);
+  const [nearbyFranchisesLoading, setNearbyFranchisesLoading] = useState(false);
+  const [selectedFranchiseId, setSelectedFranchiseId] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [productCategoryId, setProductCategoryId] = useState('');
+  const [productSubcategoryId, setProductSubcategoryId] = useState('');
+  const [productPhotos, setProductPhotos] = useState([]);
+
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isRental = form.subject === 'Equipment Rental';
+  const isProductEnquiry = form.subject === 'Product Enquiry';
 
-  const contactInfo = [
-    {
-      title: 'PRIMARY LINE',
-      value: '9699429699',
-      icon: (
-        <svg className="w-5 h-5 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
-      ),
-    },
-    {
-      title: 'SALES INQUIRIES',
-      value: 'info.aptworld@gmail.com',
-      icon: (
-        <svg className="w-5 h-5 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-    },
-    {
-      title: 'HEADQUARTERS',
-      value: 'INDORE, MP, INDIA',
-      icon: (
-        <svg className="w-5 h-5 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-    },
-    {
-      title: 'OPERATIONAL HOURS',
-      value: 'MON-SAT: 09:00 - 19:00',
-      icon: (
-        <svg className="w-5 h-5 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-    },
-  ];
+  useEffect(() => {
+    getAllCategories({ limit: 100 })
+      .then((res) => setCategories(res?.categories || []))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!productCategoryId) {
+      setSubcategories([]);
+      setProductSubcategoryId('');
+      return;
+    }
+    setProductSubcategoryId('');
+    getAllSubcategories({ categoryId: productCategoryId, limit: 100 })
+      .then((res) => setSubcategories(res?.subcategories || []))
+      .catch(() => {});
+  }, [productCategoryId]);
+
+  useEffect(() => {
+    if (!isProductEnquiry || productCity.trim().length < 3) {
+      setNearbyFranchises([]);
+      setSelectedFranchiseId(null);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setNearbyFranchisesLoading(true);
+      try {
+        const res = await getAllFranchiseLocations({ city: productCity.trim(), isActive: true, limit: 10 });
+        setNearbyFranchises(res?.franchiseLocations || []);
+      } catch {
+        setNearbyFranchises([]);
+      } finally {
+        setNearbyFranchisesLoading(false);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [productCity, isProductEnquiry]);
+
+  const handlePhotoChange = (e) => {
+    const incoming = Array.from(e.target.files);
+    setProductPhotos((prev) => [...prev, ...incoming].slice(0, 5));
+    e.target.value = '';
+  };
+
+  const removePhoto = (idx) => {
+    setProductPhotos((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const resetForm = () => {
+    setForm({
+      name: '',
+      email: '',
+      phone: '',
+      subject: 'Product Enquiry',
+      message: '',
+      consent: false,
+      rentalEquipment: '',
+      rentalLiftType: '',
+      rentalPowerSource: '',
+      rentalHeight: '',
+      rentalSwl: '',
+      rentalState: '',
+      rentalCity: '',
+      rentalDuration: '',
+      rentalQuantity: '1',
+    });
+    setProductCity('');
+    setNearbyFranchises([]);
+    setSelectedFranchiseId(null);
+    setProductCategoryId('');
+    setProductSubcategoryId('');
+    setProductPhotos([]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,47 +132,62 @@ function ContactMain() {
     }
     setIsSubmitting(true);
     try {
-      let message = `${form.subject}: ${form.message}`;
-      if (isRental) {
-        message = [
-          `Equipment: ${form.rentalEquipment}`,
-          `Lift Type: ${form.rentalLiftType}`,
-          `Power Source: ${form.rentalPowerSource}`,
-          `Working Height: ${form.rentalHeight}m`,
-          `Rental Duration: ${form.rentalDuration}`,
-          `Quantity: ${form.rentalQuantity}`,
-          '',
-          form.message,
-        ].join('\n');
+      if (isProductEnquiry) {
+        const categoryName = categories.find((c) => String(c.id) === String(productCategoryId))?.name?.en;
+        const subcategoryName = subcategories.find((s) => String(s.id) === String(productSubcategoryId))?.name?.en;
+        let finalMessage = form.message;
+        const tags = [
+          productCity.trim() && `City: ${productCity.trim()}`,
+          categoryName && `Category: ${categoryName}`,
+          subcategoryName && `Subcategory: ${subcategoryName}`,
+        ].filter(Boolean);
+        if (tags.length) finalMessage = `${tags.join(' | ')}\n\n${finalMessage}`;
+
+        const formData = new FormData();
+        formData.append('name', form.name);
+        formData.append('email', form.email);
+        formData.append('phone', form.phone);
+        formData.append('type', 'franchise_product');
+        if (selectedFranchiseId) formData.append('franchiseLocationId', selectedFranchiseId);
+        formData.append('message', finalMessage);
+        productPhotos.forEach((file) => formData.append('images', file));
+
+        await createFranchiseProductEnquiry(formData);
+      } else {
+        let message = `${form.subject}: ${form.message}`;
+        if (isRental) {
+          message = [
+            `Equipment: ${form.rentalEquipment}`,
+            `Lift Type: ${form.rentalLiftType}`,
+            `Power Source: ${form.rentalPowerSource}`,
+            `Working Height: ${form.rentalHeight}m`,
+            `Safe Working Load: ${form.rentalSwl}kg`,
+            `State: ${form.rentalState}`,
+            `City: ${form.rentalCity}`,
+            `Rental Duration: ${form.rentalDuration}`,
+            `Quantity: ${form.rentalQuantity}`,
+            '',
+            form.message,
+          ].join('\n');
+        }
+
+        await createEnquiry({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          message,
+          type: isRental ? 'rental' : 'general',
+        });
       }
 
-      await createEnquiry({
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        message,
-        type: isRental ? 'rental' : 'general'
-      });
-      
       toast({
         title: 'Message Sent',
-        description: 'Your inquiry has been successfully transmitted.',
+        description: isProductEnquiry && selectedFranchiseId
+          ? 'Your product enquiry has been sent to the selected franchise and our head office.'
+          : 'Your inquiry has been successfully transmitted.',
       });
 
-      setForm({
-        name: '',
-        email: '',
-        phone: '',
-        subject: 'General Inquiry',
-        message: '',
-        consent: false,
-        rentalEquipment: '',
-        rentalLiftType: '',
-        rentalPowerSource: '',
-        rentalHeight: '',
-        rentalDuration: '',
-        rentalQuantity: '1',
-      });
+      resetForm();
     } catch (error) {
       console.error('Error submitting inquiry:', error);
       toast({
@@ -132,7 +204,7 @@ function ContactMain() {
     <section className="bg-white py-16 sm:py-24 text-[var(--apt-navy)]">
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          
+
           {/* LEFT COLUMN: Reach Out To Us */}
           <div className="lg:col-span-5 space-y-8">
             <div className="space-y-2">
@@ -140,28 +212,9 @@ function ContactMain() {
                 REACH OUT TO US
               </h2>
               <div className="w-16 h-[3px] bg-[var(--apt-red)]" />
-            </div>
-
-            {/* Info Cards */}
-            <div className="space-y-4">
-              {contactInfo.map((info, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white border border-gray-100 p-4 rounded-sm flex items-center gap-5 shadow-sm hover:shadow-md transition-all duration-300"
-                >
-                  <div className="w-12 h-12 bg-[var(--apt-navy)] rounded-sm flex items-center justify-center shrink-0 shadow-md">
-                    {info.icon}
-                  </div>
-                  <div className="space-y-1">
-                    <span className="font-montserrat text-[9px] sm:text-[10px] font-black tracking-widest text-gray-400 block">
-                      {info.title}
-                    </span>
-                    <span className="font-khand text-lg sm:text-xl font-bold tracking-wide text-[var(--apt-navy)] block uppercase">
-                      {info.value}
-                    </span>
-                  </div>
-                </div>
-              ))}
+              <p className="font-montserrat text-xs sm:text-sm text-gray-500 leading-relaxed max-w-[420px]">
+                Whether you need bulk procurement, equipment on rent, or have a question about a product — our team typically responds within one business day. Find our full contact details at the top of this page.
+              </p>
             </div>
 
             {/* Industrial Background Card */}
@@ -211,30 +264,26 @@ function ContactMain() {
                   {/* Name and Email Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5">
-                      <label className="font-montserrat text-[9px] font-black tracking-wider text-gray-400 uppercase">
-                        Full Name
-                      </label>
+                      <label className={labelClass}>Full Name</label>
                       <input
                         type="text"
                         required
                         placeholder="John Doe"
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all"
+                        className={fieldClass}
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-montserrat text-[9px] font-black tracking-wider text-gray-400 uppercase">
-                        Email Address
-                      </label>
+                      <label className={labelClass}>Email Address</label>
                       <input
                         type="email"
                         required
                         placeholder="john@example.com"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all"
+                        className={fieldClass}
                       />
                     </div>
                   </div>
@@ -242,35 +291,28 @@ function ContactMain() {
                   {/* Phone and Subject Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5">
-                      <label className="font-montserrat text-[9px] font-black tracking-wider text-gray-400 uppercase">
-                        Phone Number
-                      </label>
+                      <label className={labelClass}>Phone Number</label>
                       <input
                         type="tel"
                         required
                         placeholder="+91 0000 000 000"
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all"
+                        className={fieldClass}
                       />
                     </div>
 
                     <div className="space-y-1.5 relative">
-                      <label className="font-montserrat text-[9px] font-black tracking-wider text-gray-400 uppercase">
-                        Subject
-                      </label>
+                      <label className={labelClass}>Subject</label>
                       <select
                         value={form.subject}
                         onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                        className="w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-bold tracking-wide transition-all appearance-none cursor-pointer"
+                        className={`${fieldClass} font-bold tracking-wide appearance-none cursor-pointer`}
                       >
-                        <option>General Inquiry</option>
+                        <option>Product Enquiry</option>
                         <option>Equipment Rental</option>
-                        <option>Franchise Partnership</option>
                         <option>Bulk Procurement</option>
-                        <option>Technical Support</option>
                       </select>
-                      {/* Dropdown Chevron */}
                       <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.375rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
@@ -285,9 +327,8 @@ function ContactMain() {
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase">Equipment Type</label>
-                          <select value={form.rentalEquipment} onChange={(e) => setForm({ ...form, rentalEquipment: e.target.value })}
-                            className="w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all appearance-none cursor-pointer">
+                          <label className={smallLabelClass}>Equipment Type</label>
+                          <select value={form.rentalEquipment} onChange={(e) => setForm({ ...form, rentalEquipment: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Equipment</option>
                             <option>Boom Lift</option>
                             <option>Scissor Lift</option>
@@ -297,9 +338,8 @@ function ContactMain() {
                           </select>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase">Lift Type</label>
-                          <select value={form.rentalLiftType} onChange={(e) => setForm({ ...form, rentalLiftType: e.target.value })}
-                            className="w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all appearance-none cursor-pointer">
+                          <label className={smallLabelClass}>Lift Type</label>
+                          <select value={form.rentalLiftType} onChange={(e) => setForm({ ...form, rentalLiftType: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Lift Type</option>
                             <option>Telescopic</option>
                             <option>Articulated</option>
@@ -309,9 +349,8 @@ function ContactMain() {
                           </select>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase">Power Source</label>
-                          <select value={form.rentalPowerSource} onChange={(e) => setForm({ ...form, rentalPowerSource: e.target.value })}
-                            className="w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all appearance-none cursor-pointer">
+                          <label className={smallLabelClass}>Power Source</label>
+                          <select value={form.rentalPowerSource} onChange={(e) => setForm({ ...form, rentalPowerSource: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Power Source</option>
                             <option>Diesel</option>
                             <option>Electric</option>
@@ -320,14 +359,16 @@ function ContactMain() {
                           </select>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase">Working Height (m)</label>
-                          <input type="number" min="1" placeholder="e.g. 26" value={form.rentalHeight} onChange={(e) => setForm({ ...form, rentalHeight: e.target.value })}
-                            className="w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all placeholder-gray-400" />
+                          <label className={smallLabelClass}>Working Height (m)</label>
+                          <input type="number" min="1" placeholder="e.g. 26" value={form.rentalHeight} onChange={(e) => setForm({ ...form, rentalHeight: e.target.value })} className={`${smallFieldClass} placeholder-gray-400`} />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase">Rental Duration</label>
-                          <select value={form.rentalDuration} onChange={(e) => setForm({ ...form, rentalDuration: e.target.value })}
-                            className="w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all appearance-none cursor-pointer">
+                          <label className={smallLabelClass}>Safe Working Load (kg)</label>
+                          <input type="number" min="1" placeholder="e.g. 230" value={form.rentalSwl} onChange={(e) => setForm({ ...form, rentalSwl: e.target.value })} className={`${smallFieldClass} placeholder-gray-400`} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className={smallLabelClass}>Rental Duration</label>
+                          <select value={form.rentalDuration} onChange={(e) => setForm({ ...form, rentalDuration: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Duration</option>
                             <option>Daily</option>
                             <option>Weekly</option>
@@ -337,9 +378,121 @@ function ContactMain() {
                           </select>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase">Quantity</label>
-                          <input type="number" min="1" placeholder="1" value={form.rentalQuantity} onChange={(e) => setForm({ ...form, rentalQuantity: e.target.value })}
-                            className="w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all placeholder-gray-400" />
+                          <label className={smallLabelClass}>State</label>
+                          <select value={form.rentalState} onChange={(e) => setForm({ ...form, rentalState: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
+                            <option value="">Select State</option>
+                            {INDIAN_STATES.map((s) => (
+                              <option key={s} value={s}>{s}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className={smallLabelClass}>City</label>
+                          <input type="text" placeholder="e.g. Indore" value={form.rentalCity} onChange={(e) => setForm({ ...form, rentalCity: e.target.value })} className={`${smallFieldClass} placeholder-gray-400`} />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className={smallLabelClass}>Quantity</label>
+                          <input type="number" min="1" placeholder="1" value={form.rentalQuantity} onChange={(e) => setForm({ ...form, rentalQuantity: e.target.value })} className={`${smallFieldClass} placeholder-gray-400`} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Product Enquiry-specific fields */}
+                  {isProductEnquiry && (
+                    <div className="space-y-4 p-4 bg-[var(--apt-offwhite)] rounded-sm border border-gray-200">
+                      <p className="font-montserrat text-[9px] font-black tracking-wider text-[var(--apt-red)] uppercase">
+                        Product Requirements
+                      </p>
+
+                      <div className="space-y-1.5">
+                        <label className={smallLabelClass}>Your City</label>
+                        <input
+                          type="text"
+                          placeholder="Type your city to find a nearby franchise..."
+                          value={productCity}
+                          onChange={(e) => setProductCity(e.target.value)}
+                          className={`${smallFieldClass} placeholder-gray-400`}
+                        />
+                      </div>
+
+                      {productCity.trim().length >= 3 && (
+                        <div className="space-y-2">
+                          <p className="text-[9px] font-bold tracking-wider text-gray-500 uppercase">Nearby Franchises</p>
+                          {nearbyFranchisesLoading ? (
+                            <div className="text-[11px] text-gray-400">Searching...</div>
+                          ) : nearbyFranchises.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {nearbyFranchises.map((f) => (
+                                <button
+                                  type="button"
+                                  key={f.id}
+                                  onClick={() => setSelectedFranchiseId(selectedFranchiseId === f.id ? null : f.id)}
+                                  className={`text-left p-3 rounded-xl border transition-all ${
+                                    selectedFranchiseId === f.id
+                                      ? 'border-[var(--apt-red)] bg-red-50/40'
+                                      : 'border-gray-200 bg-white hover:border-gray-300'
+                                  }`}
+                                >
+                                  <div className="font-khand text-sm font-bold uppercase text-[var(--apt-navy)]">{f.city}, {f.state}</div>
+                                  <div className="text-[10px] text-gray-500 truncate">{f.address}</div>
+                                  {f.contactName && <div className="text-[10px] text-gray-400">{f.contactName} &middot; {f.phone}</div>}
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-[11px] text-gray-400">No franchise found nearby — your enquiry will go directly to our head office.</p>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <label className={smallLabelClass}>Category (optional)</label>
+                          <select value={productCategoryId} onChange={(e) => setProductCategoryId(e.target.value)} className={`${smallFieldClass} appearance-none cursor-pointer`}>
+                            <option value="">Not Necessary</option>
+                            {categories.map((c) => (
+                              <option key={c.id} value={c.id}>{c.name?.en || c.slug}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className={smallLabelClass}>Subcategory (optional)</label>
+                          <select disabled={!productCategoryId} value={productSubcategoryId} onChange={(e) => setProductSubcategoryId(e.target.value)} className={`${smallFieldClass} appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}>
+                            <option value="">{productCategoryId ? 'Not Necessary' : 'Select category first'}</option>
+                            {subcategories.map((s) => (
+                              <option key={s.id} value={s.id}>{s.name?.en || s.slug}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className={smallLabelClass}>Photos (optional, up to 5)</label>
+                        <p className="text-[10px] text-gray-400 mb-1">Add photos of the product or its intended use.</p>
+                        <div className="flex flex-wrap gap-3">
+                          {productPhotos.map((file, idx) => (
+                            <div key={idx} className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 group">
+                              <img src={URL.createObjectURL(file)} alt={`Upload ${idx + 1}`} className="w-full h-full object-cover" />
+                              <button
+                                type="button"
+                                onClick={() => removePhoto(idx)}
+                                className="absolute top-0.5 right-0.5 w-4 h-4 bg-black/60 hover:bg-[var(--apt-red)] rounded-full flex items-center justify-center text-white transition-colors"
+                              >
+                                <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                          {productPhotos.length < 5 && (
+                            <label className="w-16 h-16 rounded-xl border-2 border-dashed border-gray-300 hover:border-[var(--apt-red)]/50 flex items-center justify-center cursor-pointer transition-colors bg-white">
+                              <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                              </svg>
+                              <input type="file" accept="image/*" multiple onChange={handlePhotoChange} className="hidden" />
+                            </label>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -347,16 +500,16 @@ function ContactMain() {
 
                   {/* Message Field */}
                   <div className="space-y-1.5">
-                    <label className="font-montserrat text-[9px] font-black tracking-wider text-gray-400 uppercase">
-                      Message
+                    <label className={labelClass}>
+                      {isProductEnquiry ? 'What product do you need? Where will it be used?' : 'Message'}
                     </label>
                     <textarea
                       required
                       rows="5"
-                      placeholder="Describe your requirement in detail.."
+                      placeholder={isProductEnquiry ? 'Describe the product you are looking for and what it will be used for...' : 'Describe your requirement in detail..'}
                       value={form.message}
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      className="w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all resize-none"
+                      className={`${fieldClass} resize-none`}
                     />
                   </div>
 

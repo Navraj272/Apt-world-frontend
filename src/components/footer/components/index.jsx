@@ -139,6 +139,8 @@ const Footer = () => {
             <span>DESIGNED BY <a href="#" className="text-gray-400 hover:text-white transition-colors">RED-DOT</a></span>
             <span className="text-white/20">|</span>
             <span>DEVELOPED BY <a href="#" className="text-gray-400 hover:text-white transition-colors">APT</a></span>
+            <span className="text-white/20">|</span>
+            <a href="/admin" className="text-gray-600 hover:text-[var(--apt-red)] transition-colors tracking-widest">ADMIN</a>
           </div>
         </div>
 
