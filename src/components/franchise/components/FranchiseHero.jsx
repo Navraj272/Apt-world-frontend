@@ -94,12 +94,12 @@ function FranchiseHero({ data }) {
           {/* Quick stats row */}
           <div className="flex flex-wrap gap-8 pt-4 border-t border-white/10">
             {[
-              { value: '150+', label: 'FRANCHISE PARTNERS' },
-              { value: '₹15L', label: 'MIN INVESTMENT' },
+              // { value: '150+', label: 'FRANCHISE PARTNERS' },
+              // { value: '₹15L', label: 'MIN INVESTMENT' },
               { value: '25+', label: 'YEARS OF LEGACY' },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-px h-8 bg-[var(--apt-red)]" />
+                {/* <div className="w-px h-8 bg-[var(--apt-red)]" /> */}
                 <div>
                   <div className="font-outfit text-xl sm:text-2xl font-black text-white leading-none">{stat.value}</div>
                   <div className="font-montserrat text-[8px] sm:text-[9px] font-bold tracking-widest text-gray-500 uppercase mt-0.5">{stat.label}</div>
