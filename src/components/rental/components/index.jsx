@@ -238,18 +238,20 @@ function RentalPage() {
 
       <section className="bg-white border-t border-gray-100 py-16 sm:py-24">
         <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div
-            className="relative text-white p-8 sm:p-12 md:p-16 border border-white/5 shadow-2xl overflow-hidden rounded-sm"
-            style={{
-              background: 'repeating-linear-gradient(45deg, var(--apt-navy), var(--apt-navy) 12px, #0A1425 12px, #0A1425 24px)',
-              clipPath: 'polygon(0 0, 100% 0, 100% 90%, 98% 100%, 0 100%)'
-            }}
-          >
-            <div className="absolute inset-0 opacity-5 pointer-events-none select-none">
+          <div className="relative bg-gradient-to-br from-[var(--apt-navy)] to-[#262626] text-white p-8 sm:p-12 md:p-16 border border-white/10 shadow-2xl overflow-hidden rounded-2xl group transition-all duration-500 hover:border-white/15">
+            {/* Glowing Accent Strip on Left */}
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[var(--apt-red)] to-red-600 rounded-l-2xl" />
+
+            {/* Background Orbs / Glows */}
+            <div className="absolute -left-12 -top-12 w-64 h-64 bg-red-600/5 blur-[80px] rounded-full pointer-events-none z-0" />
+            <div className="absolute -right-16 -bottom-16 w-80 h-80 bg-[var(--apt-red)]/10 blur-[100px] rounded-full pointer-events-none z-0" />
+
+            {/* Grid Pattern Background */}
+            <div className="absolute inset-0 opacity-[0.04] pointer-events-none select-none z-0">
               <svg width="100%" height="100%">
                 <defs>
                   <pattern id="rental-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1" />
                   </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill="url(#rental-grid)" />
@@ -257,27 +259,41 @@ function RentalPage() {
             </div>
 
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-10">
-              <div className="space-y-4 max-w-[650px]">
+              <div className="space-y-4 max-w-[700px]">
+                {/* Visual Category Badge */}
+                <div className="inline-flex items-center gap-2 bg-red-500/10 px-3 py-1.5 rounded-full border border-red-500/20 mb-1">
+                  <span className="w-1.5 h-1.5 bg-[var(--apt-red)] rounded-full animate-pulse" />
+                  <span className="font-montserrat text-[10px] sm:text-xs font-black tracking-[0.2em] text-[var(--apt-red)] uppercase">
+                    Tailored Solutions
+                  </span>
+                </div>
+
                 <h2 className="font-khand text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-white leading-none">
-                  NEED A CUSTOM SOLUTION?
+                  NEED A <span className="text-[var(--apt-red)]">CUSTOM SOLUTION</span>?
                 </h2>
-                <p className="font-montserrat text-xs sm:text-sm text-gray-400 font-medium leading-relaxed">
+                <p className="font-montserrat text-xs sm:text-sm text-gray-300 font-medium leading-relaxed">
                   Contact our rental consultants for customized fleet requirements, long-term rental agreements, and site-specific equipment recommendations.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0">
                 <a
                   href="/contact"
-                  className="text-center font-montserrat text-xs font-bold tracking-widest text-white bg-[var(--apt-red)] px-8 py-[1.125rem] rounded-sm hover:bg-transparent hover:border-[var(--apt-red)] hover:text-[var(--apt-red)] border border-transparent transition-all duration-300 shadow-lg shadow-[var(--apt-red)]/15 uppercase"
+                  className="group text-center font-montserrat text-xs font-bold tracking-widest text-white bg-[var(--apt-red)] px-8 py-4 rounded-xl hover:bg-white hover:text-[var(--apt-red)] transition-all duration-300 shadow-lg shadow-[var(--apt-red)]/15 hover:shadow-[var(--apt-red)]/30 hover:-translate-y-0.5 uppercase flex items-center justify-center gap-2.5"
                 >
-                  REQUEST RENTAL
+                  <span>REQUEST RENTAL</span>
+                  <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
                 </a>
                 <a
                   href="/contact"
-                  className="text-center font-montserrat text-xs font-bold tracking-widest text-white border border-white/20 px-8 py-[1.125rem] rounded-sm hover:bg-white hover:text-[var(--apt-navy)] hover:border-white transition-all duration-300 uppercase"
+                  className="group text-center font-montserrat text-xs font-bold tracking-widest text-white border border-white/20 px-8 py-4 rounded-xl hover:bg-white hover:text-[var(--apt-navy)] hover:border-white transition-all duration-300 hover:-translate-y-0.5 uppercase flex items-center justify-center gap-2.5"
                 >
-                  CONTACT SALES
+                  <span>CONTACT SALES</span>
+                  <svg className="w-4 h-4 text-white/50 group-hover:text-[var(--apt-navy)] transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
                 </a>
               </div>
             </div>

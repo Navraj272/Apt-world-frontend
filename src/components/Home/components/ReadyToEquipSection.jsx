@@ -2,7 +2,7 @@ import React from 'react';
 
 function ReadyToEquipSection() {
   return (
-    <section id="franchise" className="bg-[var(--apt-offwhite)] py-16 sm:py-24">
+    <section id="franchise" className="bg-[var(--apt-offwhite)] py-12 sm:py-14">
       <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Angled Banner Container */}

@@ -143,7 +143,7 @@ function TrustedClientsSection() {
       </div>
 
       {/* Stats strip */}
-      <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
+      <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
         <div className="grid grid-cols-3 gap-6 sm:gap-12 border-t border-gray-100 pt-12">
           {[
             { value: '25+', label: 'ENTERPRISE CLIENTS' },

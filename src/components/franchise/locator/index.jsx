@@ -8,8 +8,8 @@ import {
 import { createFranchiseProductEnquiry } from '@/services/postRequest';
 import { INDIAN_STATES } from '@/constants/indianStates';
 
-const inputClass = 'w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3.5 text-xs font-medium placeholder-gray-400 transition-all';
-const labelClass = 'font-montserrat text-[10px] font-black tracking-wider text-gray-400 uppercase';
+const inputClass = 'w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:bg-white focus:outline-none rounded-xl px-4 py-3.5 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]';
+const labelClass = 'block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5';
 
 function FranchiseLocator() {
   // Listing + filters
@@ -173,7 +173,7 @@ function FranchiseLocator() {
               </svg>
             </div>
             <h2 className="font-khand text-3xl font-extrabold uppercase tracking-tight text-[var(--apt-navy)]">Enquiry Sent</h2>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="text-sm text-[#4B5563] leading-relaxed">
               Thank you, {name}. Your product enquiry has been sent to the <strong className="text-[var(--apt-navy)]">{selectedFranchise.city}, {selectedFranchise.state}</strong> franchise as well as the APT World head office. They will reach out to you shortly.
             </p>
             <button
@@ -192,7 +192,7 @@ function FranchiseLocator() {
         <div className="max-w-[700px] mx-auto px-4 sm:px-6 lg:px-8">
           <button
             onClick={closeEnquiry}
-            className="font-montserrat text-[10px] font-bold tracking-widest text-gray-500 hover:text-[var(--apt-red)] uppercase mb-6 flex items-center gap-1.5"
+            className="font-montserrat text-[10px] font-bold tracking-widest text-[#4B5563] hover:text-[var(--apt-red)] uppercase mb-6 flex items-center gap-1.5"
           >
             ← Back to Franchise List
           </button>
@@ -231,7 +231,7 @@ function FranchiseLocator() {
                 <button
                   type="submit"
                   disabled={!step1Valid}
-                  className="w-full bg-[var(--apt-red)] text-white font-montserrat text-xs sm:text-sm font-bold tracking-widest py-3.5 rounded-xl border border-transparent hover:bg-[var(--apt-navy)] transition-all duration-300 shadow-md shadow-[var(--apt-red)]/15 uppercase disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full bg-[var(--apt-red)] text-white font-montserrat text-xs sm:text-sm font-bold tracking-widest py-3.5 rounded-xl border border-transparent hover:bg-[var(--apt-navy)] hover:shadow-lg hover:shadow-[var(--apt-red)]/15 active:scale-[0.98] transition-all duration-300 uppercase disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Continue
                 </button>
@@ -242,7 +242,7 @@ function FranchiseLocator() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex items-center justify-between">
                   <h2 className="font-khand text-2xl sm:text-3xl font-extrabold uppercase tracking-tight">Product Enquiry</h2>
-                  <button type="button" onClick={() => setStep(1)} className="font-montserrat text-[10px] font-bold tracking-widest text-gray-500 hover:text-[var(--apt-red)] uppercase shrink-0">
+                  <button type="button" onClick={() => setStep(1)} className="font-montserrat text-[10px] font-bold tracking-widest text-[#4B5563] hover:text-[var(--apt-red)] uppercase shrink-0">
                     ← Edit Details
                   </button>
                 </div>
@@ -322,7 +322,7 @@ function FranchiseLocator() {
                 <button
                   type="submit"
                   disabled={submitting || !message.trim()}
-                  className="w-full bg-[var(--apt-red)] text-white font-montserrat text-xs sm:text-sm font-bold tracking-widest py-3.5 rounded-xl border border-transparent hover:bg-[var(--apt-navy)] transition-all duration-300 shadow-md shadow-[var(--apt-red)]/15 uppercase disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full bg-[var(--apt-red)] text-white font-montserrat text-xs sm:text-sm font-bold tracking-widest py-3.5 rounded-xl border border-transparent hover:bg-[var(--apt-navy)] hover:shadow-lg hover:shadow-[var(--apt-red)]/15 active:scale-[0.98] transition-all duration-300 uppercase disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {submitting ? 'Sending Enquiry...' : 'Send Enquiry'}
                 </button>
@@ -392,7 +392,7 @@ function FranchiseLocator() {
           {(filterState || filterCity) && (
             <button
               onClick={() => { setFilterState(''); setFilterCity(''); }}
-              className="font-montserrat text-[10px] font-bold tracking-widest text-gray-500 hover:text-[var(--apt-red)] uppercase shrink-0 px-2 py-3.5"
+              className="font-montserrat text-[10px] font-bold tracking-widest text-[#4B5563] hover:text-[var(--apt-red)] uppercase shrink-0 px-2 py-3.5"
             >
               Clear Filters
             </button>
@@ -413,7 +413,7 @@ function FranchiseLocator() {
                 <h3 className="font-khand text-lg font-bold uppercase tracking-wide text-[var(--apt-navy)] mb-2">
                   {f.city}, {f.state}
                 </h3>
-                <p className="text-xs text-gray-500 leading-relaxed mb-3 flex-1">{f.address}</p>
+                <p className="text-xs text-[#4B5563] leading-relaxed mb-3 flex-1">{f.address}</p>
                 {f.contactName && <p className="text-[11px] font-bold text-gray-700 mb-0.5">{f.contactName}</p>}
                 <p className="text-[11px] text-gray-400 mb-4">{f.phone}</p>
                 <button

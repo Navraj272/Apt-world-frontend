@@ -12,7 +12,7 @@ function FranchiseModels({ data, onSelectModel }) {
           <h2 className="font-khand text-4xl sm:text-5xl font-extrabold uppercase tracking-tight text-white leading-none">
             {title}
           </h2>
-          <p className="font-montserrat text-xs sm:text-sm text-gray-400 font-medium mt-2">
+          <p className="font-montserrat text-xs sm:text-sm text-gray-300 font-medium mt-2">
             {subtitle}
           </p>
         </div>
@@ -28,14 +28,14 @@ function FranchiseModels({ data, onSelectModel }) {
                 onClick={() => onSelectModel(item.id)}
                 className={`relative flex flex-col justify-between p-8 sm:p-10 rounded-sm border transition-all duration-300 cursor-pointer group shadow-lg ${
                   isRedTheme
-                    ? 'bg-[var(--apt-red)] border-transparent hover:shadow-[var(--apt-red)]/10 hover:-translate-y-1'
-                    : 'bg-[#0A1322] border-white/5 hover:border-white/15 hover:shadow-black/30 hover:-translate-y-1'
+                    ? 'bg-[var(--apt-red)] border-transparent hover:-translate-y-1 hover:shadow-[var(--apt-red)]/25'
+                    : 'bg-zinc-900 border-white/5 hover:border-white/15 hover:shadow-black/40 hover:-translate-y-1'
                 }`}
               >
                 {/* Overlapping "MOST POPULAR" Badge for Platinum */}
                 {item.isPopular && (
-                  <div className="absolute -top-3.5 right-8 bg-[var(--apt-red)] text-white px-3 py-1.5 rounded-2xl shadow-md border border-white/20 select-none">
-                    <span className="font-montserrat text-[9px] font-black tracking-[0.2em] uppercase">
+                  <div className="absolute -top-3.5 right-8 bg-zinc-900 text-white px-3 pb-1.5 rounded-2xl shadow-md border border-transparent select-none">
+                    <span className="font-montserrat text-[9px] font-black tracking-[0.2em] items-center uppercase">
                       MOST POPULAR
                     </span>
                   </div>
@@ -51,7 +51,7 @@ function FranchiseModels({ data, onSelectModel }) {
                       </h3>
                       <p
                         className={`font-montserrat text-[10px] sm:text-xs font-black tracking-widest uppercase mt-1.5 ${
-                          isRedTheme ? 'text-white/80' : 'text-[#EA9000]'
+                          isRedTheme ? 'text-white/80' : 'text-[var(--apt-red)]'
                         }`}
                       >
                         {item.level}
@@ -80,7 +80,7 @@ function FranchiseModels({ data, onSelectModel }) {
                             </svg>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-green-500/10 text-green-500">
+                          <span className="inline-flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-[var(--apt-red)]/15 text-[var(--apt-red)]">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
@@ -105,10 +105,10 @@ function FranchiseModels({ data, onSelectModel }) {
                       e.stopPropagation(); // Avoid triggering parent click twice
                       onSelectModel(item.id);
                     }}
-                    className={`w-full font-montserrat text-xs sm:text-sm font-bold tracking-widest py-3 rounded-sm border uppercase transition-all duration-300 ${
+                    className={`w-full font-montserrat text-xs sm:text-sm font-bold tracking-widest py-3 rounded-sm uppercase transition-all duration-300 ${
                       isRedTheme
-                        ? 'bg-[var(--apt-navy)] text-white border-transparent hover:bg-[var(--apt-navy)]/80 shadow-lg shadow-black/20'
-                        : 'bg-transparent text-white border-white/20 hover:bg-white hover:text-[var(--apt-navy)] hover:border-white'
+                        ? 'bg-zinc-900 text-white border border-white/10 hover:border-white/30 hover:bg-[#1f2937] shadow-xl shadow-black/30 hover:shadow-black/50'
+                        : 'bg-[var(--apt-red)] text-white hover:bg-white hover:text-[var(--apt-red)] border border-transparent shadow-lg shadow-[var(--apt-red)]/20 hover:scale-[1.02]'
                     }`}
                   >
                     {item.buttonText}
