@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export default function Error({ error, reset }) {
   console.log('error, reset: ', error, reset);

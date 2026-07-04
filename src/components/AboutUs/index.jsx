@@ -1,13 +1,6 @@
 import React from 'react';
 
 function AboutUs() {
-  const stats = [
-    { value: '25,000+', label: 'ITEMS IN INVENTORY' },
-    // { value: '150+', label: 'RETAIL STORES' },
-    // { value: '12', label: 'GLOBAL PARTNERS' },
-    { value: '25+', label: 'YEARS OF EXPERTISE' },
-  ];
-
   const values = [
     {
       title: 'INTEGRITY',

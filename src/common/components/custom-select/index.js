@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation'; // Next.js router import
+import { useRouter } from 'next/router';
 import {
   Select,
   SelectContent,
