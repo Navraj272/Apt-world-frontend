@@ -5,10 +5,10 @@ import { getAllFranchiseLocations, getAllCategories, getAllSubcategories } from 
 import { useToast } from '@/hooks/use-toast';
 import { INDIAN_STATES } from '@/constants/indianStates';
 
-const fieldClass = 'w-full bg-[var(--apt-offwhite)] text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all';
-const smallFieldClass = 'w-full bg-white text-[var(--apt-navy)] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-xl px-3 py-2.5 text-xs font-montserrat font-semibold transition-all';
-const labelClass = 'font-montserrat text-[9px] font-black tracking-wider text-gray-400 uppercase';
-const smallLabelClass = 'font-montserrat text-[8px] font-bold tracking-wider text-gray-500 uppercase';
+const fieldClass = 'w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]';
+const smallFieldClass = 'w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:bg-white focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]';
+const labelClass = 'block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5';
+const smallLabelClass = 'block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5';
 
 function ContactMain() {
   const [form, setForm] = useState({
@@ -242,14 +242,9 @@ function ContactMain() {
           </div>
 
           {/* RIGHT COLUMN: Send A Message */}
-          <div className="lg:col-span-7" style={{ filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.06))' }}>
-            {/* 45-degree Clipped Card Container */}
-            <div
-              className="bg-white border border-gray-100 p-8 sm:p-10 md:p-12"
-              style={{
-                clipPath: 'polygon(0 0, 92% 0, 100% 8%, 100% 100%, 0 100%)',
-              }}
-            >
+          <div className="lg:col-span-7">
+            {/* Premium Card Container */}
+            <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-8 sm:p-10 md:p-12">
               <div className="space-y-8">
                 {/* Section Title */}
                 <div className="space-y-2">
@@ -313,7 +308,7 @@ function ContactMain() {
                         <option>Equipment Rental</option>
                         <option>Bulk Procurement</option>
                       </select>
-                      <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.375rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                      <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
                     </div>
@@ -321,12 +316,12 @@ function ContactMain() {
 
                   {/* Rental-specific fields */}
                   {isRental && (
-                    <div className="space-y-4 p-4 bg-[var(--apt-offwhite)] rounded-sm border border-gray-200">
+                    <div className="space-y-4 p-4 bg-[var(--apt-offwhite)] rounded-2xl border border-gray-200">
                       <p className="font-montserrat text-[9px] font-black tracking-wider text-[var(--apt-red)] uppercase">
                         Rental Requirements
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                           <label className={smallLabelClass}>Equipment Type</label>
                           <select value={form.rentalEquipment} onChange={(e) => setForm({ ...form, rentalEquipment: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Equipment</option>
@@ -336,8 +331,11 @@ function ContactMain() {
                             <option>Spider Lift</option>
                             <option>Mast Climber</option>
                           </select>
+                          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                           <label className={smallLabelClass}>Lift Type</label>
                           <select value={form.rentalLiftType} onChange={(e) => setForm({ ...form, rentalLiftType: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Lift Type</option>
@@ -347,8 +345,11 @@ function ContactMain() {
                             <option>Vertical Mast</option>
                             <option>Spider (Tracked)</option>
                           </select>
+                          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                           <label className={smallLabelClass}>Power Source</label>
                           <select value={form.rentalPowerSource} onChange={(e) => setForm({ ...form, rentalPowerSource: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Power Source</option>
@@ -357,6 +358,9 @@ function ContactMain() {
                             <option>Bi-Energy (Diesel / Electric)</option>
                             <option>AC / Diesel</option>
                           </select>
+                          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
                         </div>
                         <div className="space-y-1.5">
                           <label className={smallLabelClass}>Working Height (m)</label>
@@ -366,7 +370,7 @@ function ContactMain() {
                           <label className={smallLabelClass}>Safe Working Load (kg)</label>
                           <input type="number" min="1" placeholder="e.g. 230" value={form.rentalSwl} onChange={(e) => setForm({ ...form, rentalSwl: e.target.value })} className={`${smallFieldClass} placeholder-gray-400`} />
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                           <label className={smallLabelClass}>Rental Duration</label>
                           <select value={form.rentalDuration} onChange={(e) => setForm({ ...form, rentalDuration: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select Duration</option>
@@ -376,8 +380,11 @@ function ContactMain() {
                             <option>Quarterly</option>
                             <option>Yearly</option>
                           </select>
+                          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                           <label className={smallLabelClass}>State</label>
                           <select value={form.rentalState} onChange={(e) => setForm({ ...form, rentalState: e.target.value })} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Select State</option>
@@ -385,6 +392,9 @@ function ContactMain() {
                               <option key={s} value={s}>{s}</option>
                             ))}
                           </select>
+                          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
                         </div>
                         <div className="space-y-1.5">
                           <label className={smallLabelClass}>City</label>
@@ -400,7 +410,7 @@ function ContactMain() {
 
                   {/* Product Enquiry-specific fields */}
                   {isProductEnquiry && (
-                    <div className="space-y-4 p-4 bg-[var(--apt-offwhite)] rounded-sm border border-gray-200">
+                    <div className="space-y-4 p-4 bg-[var(--apt-offwhite)] rounded-2xl border border-gray-200">
                       <p className="font-montserrat text-[9px] font-black tracking-wider text-[var(--apt-red)] uppercase">
                         Product Requirements
                       </p>
@@ -447,7 +457,7 @@ function ContactMain() {
                       )}
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                           <label className={smallLabelClass}>Category (optional)</label>
                           <select value={productCategoryId} onChange={(e) => setProductCategoryId(e.target.value)} className={`${smallFieldClass} appearance-none cursor-pointer`}>
                             <option value="">Not Necessary</option>
@@ -455,8 +465,11 @@ function ContactMain() {
                               <option key={c.id} value={c.id}>{c.name?.en || c.slug}</option>
                             ))}
                           </select>
+                          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
                         </div>
-                        <div className="space-y-1.5">
+                        <div className="space-y-1.5 relative">
                           <label className={smallLabelClass}>Subcategory (optional)</label>
                           <select disabled={!productCategoryId} value={productSubcategoryId} onChange={(e) => setProductSubcategoryId(e.target.value)} className={`${smallFieldClass} appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}>
                             <option value="">{productCategoryId ? 'Not Necessary' : 'Select category first'}</option>
@@ -464,6 +477,9 @@ function ContactMain() {
                               <option key={s.id} value={s.id}>{s.name?.en || s.slug}</option>
                             ))}
                           </select>
+                          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
                         </div>
                       </div>
 
@@ -514,30 +530,26 @@ function ContactMain() {
                   </div>
 
                   {/* Consent Checkbox */}
-                  <div className="flex items-start gap-3 py-2">
+                  <div className="flex items-start gap-3 cursor-pointer select-none">
                     <input
                       type="checkbox"
                       id="consent"
                       required
                       checked={form.consent}
                       onChange={(e) => setForm({ ...form, consent: e.target.checked })}
-                      className="mt-0.5 w-4 h-4 accent-[var(--apt-red)] cursor-pointer rounded-xl border-gray-300"
+                      className="mt-0.5 w-4 h-4 rounded border-[#dfd9ce] text-[var(--apt-red)] focus:ring-[var(--apt-red)] accent-[var(--apt-red)] cursor-pointer"
                     />
-                    <label htmlFor="consent" className="font-montserrat text-[10px] sm:text-xs font-medium text-gray-500 select-none cursor-pointer leading-tight">
+                    <label htmlFor="consent" className="font-montserrat text-[10px] sm:text-xs font-medium text-gray-500 cursor-pointer leading-tight">
                       I consent to APT WORLD storing my data to process this inquiry.
                     </label>
                   </div>
 
-                  {/* Angled Transmit Button */}
-                  <div className="pt-2">
+                  {/* Transmit Button */}
+                  <div className="pt-0">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-[var(--apt-red)] text-white font-montserrat text-xs font-bold tracking-widest px-8 py-4 border border-transparent hover:bg-[var(--apt-navy)] hover:shadow-lg transition-all duration-300 shadow-md shadow-[var(--apt-red)]/15 uppercase"
-                      style={{
-                        clipPath: 'polygon(0 0, 100% 0, 95% 100%, 0 100%)',
-                        minWidth: '220px',
-                      }}
+                      className="w-full sm:w-auto min-w-[220px] bg-[var(--apt-red)] text-white font-montserrat text-xs font-bold tracking-widest py-3.5 px-8 rounded-xl border border-transparent hover:bg-[var(--apt-navy)] hover:shadow-lg hover:shadow-[var(--apt-red)]/15 active:scale-[0.98] transition-all duration-300 uppercase"
                     >
                       {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT MESSAGE'}
                     </button>

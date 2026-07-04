@@ -272,7 +272,7 @@ export default function ProductDetailPage() {
             <div className="pt-2">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full sm:w-auto font-montserrat text-xs font-bold tracking-widest text-white bg-[var(--apt-navy)] hover:bg-[var(--apt-red)] px-10 py-[1.125rem] rounded-sm transition-all duration-300 shadow-lg shadow-[var(--apt-navy)]/10 uppercase"
+                className="w-full sm:w-auto font-montserrat text-xs font-bold tracking-widest text-white bg-[var(--apt-navy)] hover:bg-[var(--apt-red)] px-10 py-4 rounded-xl transition-all duration-300 shadow-lg shadow-[var(--apt-navy)]/10 uppercase"
               >
                 ENQUIRE NOW
               </button>
@@ -286,7 +286,7 @@ export default function ProductDetailPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-[var(--apt-navy)]/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
 
-          <div className="relative w-full max-w-md bg-white border border-gray-200 rounded-sm shadow-2xl overflow-hidden p-6 sm:p-8 z-10 animate-scale-up text-left">
+          <div className="relative w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden p-6 sm:p-8 z-10 animate-scale-up text-left border-t-[5px] border-t-[var(--apt-red)]">
             <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
                 <h3 className="font-khand text-2xl font-black tracking-wide text-[#1a1a1a] uppercase">
                 SEND ENQUIRY
@@ -298,35 +298,40 @@ export default function ProductDetailPage() {
 
             <form onSubmit={handleEnquirySubmit} className="space-y-4">
               <div>
-                <label className="block font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Enquiry Type</label>
-                <select
-                  value={enquiryType}
-                  onChange={(e) => setEnquiryType(e.target.value)}
-                  className="w-full bg-[var(--apt-offwhite)] text-[#1a1a1a] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-sm px-4 py-2.5 text-xs font-semibold transition-colors appearance-none"
-                >
-                  <option value="product">Purchase Enquiry</option>
-                  <option value="rental">Rental Enquiry</option>
-                </select>
+                <label className="block font-montserrat text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Enquiry Type</label>
+                <div className="relative">
+                  <select
+                    value={enquiryType}
+                    onChange={(e) => setEnquiryType(e.target.value)}
+                    className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-semibold tracking-wide transition-all appearance-none cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                  >
+                    <option value="product">Purchase Enquiry</option>
+                    <option value="rental">Rental Enquiry</option>
+                  </select>
+                  <svg className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
               <div>
-                <label className="block font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
-                <input type="text" required value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} className="w-full bg-[var(--apt-offwhite)] text-[#1a1a1a] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-sm px-4 py-2.5 text-xs font-semibold placeholder-gray-400 transition-colors" placeholder="John Doe" />
+                <label className="block font-montserrat text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                <input type="text" required value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]" placeholder="John Doe" />
               </div>
               <div>
-                <label className="block font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Email Address</label>
-                <input type="email" required value={formData.email} onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))} className="w-full bg-[var(--apt-offwhite)] text-[#1a1a1a] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-sm px-4 py-2.5 text-xs font-semibold placeholder-gray-400 transition-colors" placeholder="john@example.com" />
+                <label className="block font-montserrat text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Email Address</label>
+                <input type="email" required value={formData.email} onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))} className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]" placeholder="john@example.com" />
               </div>
               <div>
-                <label className="block font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number (Optional)</label>
-                <input type="tel" value={formData.phone} onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))} className="w-full bg-[var(--apt-offwhite)] text-[#1a1a1a] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-sm px-4 py-2.5 text-xs font-semibold placeholder-gray-400 transition-colors" placeholder="+91 XXXXX XXXXX" />
+                <label className="block font-montserrat text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Phone Number (Optional)</label>
+                <input type="tel" value={formData.phone} onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))} className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]" placeholder="+91 XXXXX XXXXX" />
               </div>
               <div>
-                <label className="block font-montserrat text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Message Details</label>
-                <textarea rows={4} required value={formData.message} onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))} className="w-full bg-[var(--apt-offwhite)] text-[#1a1a1a] border border-gray-200 focus:border-gray-400 focus:outline-none rounded-sm px-4 py-2.5 text-xs font-semibold placeholder-gray-400 transition-colors resize-none" />
+                <label className="block font-montserrat text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Message Details</label>
+                <textarea rows={4} required value={formData.message} onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))} className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all resize-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]" />
               </div>
               <div className="pt-2 flex items-center justify-end gap-3">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="font-montserrat text-[10px] font-bold tracking-widest text-gray-500 hover:text-black px-5 py-3 uppercase">CANCEL</button>
-                <button type="submit" disabled={submitting} className="font-montserrat text-[10px] font-bold tracking-widest text-white bg-[var(--apt-red)] hover:bg-black px-6 py-3 rounded-sm transition-all duration-300 disabled:opacity-50 uppercase">
+                <button type="submit" disabled={submitting} className="font-montserrat text-[10px] font-bold tracking-widest text-white bg-[var(--apt-red)] hover:bg-[var(--apt-navy)] px-6 py-3.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-[var(--apt-red)]/15 active:scale-[0.98] disabled:opacity-50 uppercase">
                   {submitting ? 'SENDING...' : 'SUBMIT ENQUIRY'}
                 </button>
               </div>

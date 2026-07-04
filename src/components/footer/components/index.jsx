@@ -136,11 +136,7 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} APT WORLD. All rights reserved. Industrial excellence since 1989.
           </div>
           <div className="flex items-center gap-2">
-            <span>DESIGNED BY <a href="#" className="text-gray-400 hover:text-white transition-colors">RED-DOT</a></span>
-            <span className="text-white/20">|</span>
-            <span>DEVELOPED BY <a href="#" className="text-gray-400 hover:text-white transition-colors">APT</a></span>
-            <span className="text-white/20">|</span>
-            <a href="/admin" className="text-gray-600 hover:text-[var(--apt-red)] transition-colors tracking-widest">ADMIN</a>
+            <a href="/admin" className="text-gray-500 hover:text-[var(--apt-red)] transition-colors tracking-widest">ADMIN</a>
           </div>
         </div>
 

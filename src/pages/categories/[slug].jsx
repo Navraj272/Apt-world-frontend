@@ -138,7 +138,7 @@ function CategoryPage() {
       <section className="relative bg-[var(--apt-navy)] text-white py-16 sm:py-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="/assets/png/hero_industrial_bg.png"
+            src="/assets/png/banner2.png"
             alt="Industrial Background"
             className="w-full h-full object-cover object-center opacity-15 grayscale select-none pointer-events-none"
           />

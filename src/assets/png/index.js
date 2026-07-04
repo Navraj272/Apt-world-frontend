@@ -59,14 +59,6 @@ const leaderIcon3 = `${url}/assets/png/leader-icon-3.png`;
 const leaderIcon4 = `${url}/assets/png/leader-icon4.png`;
 const leaderIcon5 = `${url}/assets/png/leader-icon-5.png`;
 const yellowGiftIcon = `${url}/assets/png/yellow-gift.png`;
-//halloween
-// const sidebarHalloweenImage = '/assets/png/sidebarHalloweenImage.png';
-// const mainHalloweenBg = '/assets/png/mainHalloweenBg.webp';
-// const ghost1 = '/assets/png/ghost1.png';
-// const ghost2 = '/assets/png/ghost2.png';
-// const spiderWeb = '/assets/png/spiderWeb.png';
-// const footerHllowenImage = '/assets/png/footerHllowenImage.png';
-// const footerHalloweenThemeImage = '/assets/png/footerHalloweenThemeImage.png';
 const giftIcon1 = '/assets/gift-icon1.png';
 const giftIcon2 = '/assets/gift-icon2.png';
 const christmasMobileLogo = '/assets/christmas-mobile-logo.png';
@@ -93,8 +85,12 @@ const popupBox = '/assets/popup-box.png';
 const popupCoinsR = '/assets/popup-coins1.png';
 const popupCoinsL = '/assets/popup-coins2.png';
 const telegramVip = '/assets/png/telegram-vip.png';
+const banner1 = '/assets/png/banner1.png';
+const banner2 = '/assets/png/banner2.png';
 
 export {
+  banner1,
+  banner2,
   playStoreIcon,
   claimedIcon,
   homeIconGameplay,

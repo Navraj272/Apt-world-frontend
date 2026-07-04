@@ -26,7 +26,7 @@ function FranchiseModal({ isOpen, onClose, children }) {
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--apt-navy)]/80 backdrop-blur-sm animate-fade-in"
     >
       {/* Modal Content Container */}
-      <div className="relative bg-white w-full max-w-[780px] max-h-[90vh] overflow-y-auto rounded-sm shadow-2xl border-t-[5px] border-t-[var(--apt-red)] p-6 sm:p-10 transform scale-100 transition-all duration-300 animate-scale-up scrollbarcontainer">
+      <div className="relative bg-white w-full max-w-[780px] max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border-t-[5px] border-t-[var(--apt-red)] p-6 sm:p-10 transform scale-100 transition-all duration-300 animate-scale-up scrollbarcontainer">
         
         {/* Sleek Close X Button */}
         <button

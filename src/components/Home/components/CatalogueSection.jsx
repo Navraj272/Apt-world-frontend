@@ -132,7 +132,7 @@ function CatalogueSection() {
         {/* Top Header Row */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 sm:pb-8 border-b border-gray-100 mb-8 sm:mb-10">
           <div className="space-y-2">
-            <span className="font-montserrat text-xs sm:text-sm font-black tracking-[0.2em] text-[var(--apt-red)] uppercase">
+            <span className="font-montserrat text-sm sm:text-base font-black tracking-[0.2em] text-[var(--apt-red)] uppercase">
               PRODUCT PORTFOLIO
             </span>
             <h2 className="font-khand text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-[#1a1a1a] leading-none">
@@ -144,21 +144,18 @@ function CatalogueSection() {
           </p>
         </div>
 
-        {/* 4-column Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* Centered Flex Grid */}
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
           {sectors.map((sector) => (
             <div
               key={sector.id}
-              className="group relative flex flex-col justify-between p-5 sm:p-6 bg-white border border-gray-100 rounded-2xl transition-all duration-300 hover:border-[var(--apt-red)]/40 hover:shadow-xl hover:shadow-[var(--apt-red)]/5 hover:-translate-y-1"
+              className="group relative flex flex-col justify-between p-5 sm:p-6 bg-white border border-gray-100 rounded-2xl transition-all duration-300 hover:border-[var(--apt-red)]/40 hover:shadow-xl hover:shadow-[var(--apt-red)]/5 hover:-translate-y-1 w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]"
             >
               {/* Card Header (Icon & Count) */}
               <div className="flex items-center justify-between">
                 <div className="p-2.5 bg-[var(--apt-offwhite)] rounded-xl group-hover:bg-[var(--apt-red)]/10 transition-colors duration-300">
                   {sector.icon}
                 </div>
-                <span className="font-outfit text-[10px] font-bold tracking-widest text-gray-400 group-hover:text-[var(--apt-red)]/80 transition-colors duration-300">
-                  {sector.count}
-                </span>
               </div>
 
               {/* Title & Description */}
@@ -166,7 +163,7 @@ function CatalogueSection() {
                 <h3 className="font-khand text-xl sm:text-2xl font-extrabold tracking-wide text-[#1a1a1a] group-hover:text-[var(--apt-red)] transition-colors duration-300">
                   {sector.title}
                 </h3>
-                <p className="font-montserrat text-[11px] sm:text-xs text-gray-500 font-medium leading-relaxed">
+                <p className="font-montserrat text-xs sm:text-[13px] text-neutral-600 group-hover:text-neutral-900 font-semibold leading-relaxed transition-colors duration-300">
                   {sector.description}
                 </p>
               </div>

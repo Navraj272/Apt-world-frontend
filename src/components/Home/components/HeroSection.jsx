@@ -11,7 +11,7 @@ function HeroSection() {
         <img
           src="/assets/png/hero_industrial_bg.png"
           alt="Industrial Manufacturing Background"
-          className="w-full h-full object-cover object-center opacity-30 select-none pointer-events-none"
+          className="w-full h-full object-cover object-center opacity-100 select-none pointer-events-none"
         />
         {/* Radial vignette overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--apt-navy)] via-transparent to-[var(--apt-navy)]/85 z-10" />
@@ -22,7 +22,7 @@ function HeroSection() {
       <div className="relative z-20 max-w-[1350px] w-full mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
         <div className="max-w-[850px] space-y-6 sm:space-y-8">
           {/* Top Badge */}
-          <div className="inline-flex items-center bg-[var(--apt-red)] px-4 py-1.5 rounded-sm">
+          <div className="inline-flex items-center bg-[var(--apt-red)] px-4 py-2 rounded-sm">
             <span className="font-montserrat text-[10px] sm:text-xs font-black tracking-[0.2em] text-white uppercase">
               LET'S BUILD THE
             </span>

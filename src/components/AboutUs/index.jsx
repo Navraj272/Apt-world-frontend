@@ -3,8 +3,8 @@ import React from 'react';
 function AboutUs() {
   const stats = [
     { value: '25,000+', label: 'ITEMS IN INVENTORY' },
-    { value: '150+', label: 'RETAIL STORES' },
-    { value: '12', label: 'GLOBAL PARTNERS' },
+    // { value: '150+', label: 'RETAIL STORES' },
+    // { value: '12', label: 'GLOBAL PARTNERS' },
     { value: '25+', label: 'YEARS OF EXPERTISE' },
   ];
 
@@ -97,16 +97,6 @@ function AboutUs() {
             <p className="font-montserrat text-sm sm:text-base md:text-lg text-gray-300 leading-relaxed max-w-[620px] font-medium">
               For over two decades, APT WORLD has stood as a pillar of industrial excellence, bridging the gap between global innovation and local execution. We provide high-performance solutions for heavy manufacturing and construction.
             </p>
-
-            {/* Stat pills */}
-            <div className="flex flex-wrap gap-4 pt-2">
-              {[['25+', 'Years'], ['150+', 'Stores'], ['25K+', 'Products']].map(([val, label]) => (
-                <div key={label} className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2">
-                  <span className="font-outfit text-lg font-black text-[var(--apt-red)]">{val}</span>
-                  <span className="font-montserrat text-[10px] font-bold tracking-wider text-gray-400 uppercase">{label}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
@@ -118,30 +108,8 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* 2. Stats Bar Section */}
-      <section className="bg-white py-12 sm:py-16 border-b border-gray-100 relative z-20 shadow-sm">
-        <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-            {stats.map((stat, idx) => (
-              <div key={idx} className="flex items-start gap-4">
-                {/* Red Vertical Line Indicator */}
-                <div className="w-[3px] h-12 bg-[var(--apt-red)] shrink-0" />
-                <div className="space-y-1">
-                  <div className="font-outfit text-3xl sm:text-4xl font-extrabold tracking-tight text-[#1a1a1a] leading-none">
-                    {stat.value}
-                  </div>
-                  <div className="font-montserrat text-[9px] sm:text-[10px] font-bold tracking-widest text-gray-500 uppercase leading-snug">
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* 3. Infrastructure Section */}
-      <section className="relative bg-[var(--apt-offwhite)] py-20 sm:py-28 text-[#1a1a1a] overflow-hidden">
+      <section className="relative bg-[var(--apt-offwhite)] py-16 sm:py-20 text-[#1a1a1a] overflow-hidden">
         {/* Subtle industrial pattern background */}
         <div className="absolute inset-0 z-0 pointer-events-none select-none">
           <img
