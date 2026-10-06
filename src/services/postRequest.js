@@ -23,3 +23,9 @@ export const createFranchiseLocation = (data) =>
 
 export const createFranchiseProductEnquiry = (formData) =>
   unwrap(postRequest(`${API_URL}/enquiries`, formData));
+
+export const bulkCreateSubcategories = (items) =>
+  unwrap(postRequest(`${API_URL}/subcategories/bulk`, { items }));
+
+export const bulkCreateProducts = (items) =>
+  unwrap(postRequest(`${API_URL}/products/bulk`, { items }));

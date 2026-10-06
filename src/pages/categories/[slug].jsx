@@ -1,33 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { getAllSubcategories, getAllCategories, getAllProducts } from '@/services/getRequests';
-
-const slugify = (text) => {
-  if (!text) return '';
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-};
+import ProductCard from '@/components/product/ProductCard';
 
 const getName = (obj) => {
   if (!obj) return '';
   if (typeof obj === 'string') return obj;
   return obj.en || obj.EN || '';
-};
-
-const getProductImage = (product) => {
-  if (product.images && product.images.length > 0) return product.images[0];
-  if (product.thumbnail) return product.thumbnail;
-  return '/assets/png/products/rotary_hammer.png';
-};
-
-const getProductName = (product) => {
-  if (!product.name) return '';
-  if (typeof product.name === 'string') return product.name;
-  return product.name.en || product.name.EN || '';
-};
-
-const formatPrice = (price) => {
-  if (price === null || price === undefined || price === 0) return null;
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
 };
 
 function CategoryPage() {
@@ -273,51 +252,9 @@ function CategoryPage() {
           </div>
         ) : products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fadeIn">
-            {products.map((product) => {
-              const productName = getProductName(product);
-              const imageUrl = getProductImage(product);
-              const catName = product.category && (product.category.name?.en || product.category.name?.EN || '');
-              const subName = product.subcategory && (product.subcategory.name?.en || product.subcategory.name?.EN || '');
-              return (
-                <a
-                  key={product.id}
-                  href={`/products/${slugify(productName || product.baseCode)}/${product.id}`}
-                  className="bg-white rounded-2xl shadow-[0_2px_14px_rgba(6,15,30,0.06)] hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer border border-gray-200 hover:border-[var(--apt-red)]/30"
-                >
-                  <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden shrink-0">
-                    <img
-                      src={imageUrl}
-                      alt={productName}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="p-5 flex-grow flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <span className="font-montserrat text-[9px] sm:text-[10px] font-black tracking-widest text-[#404040] uppercase block">
-                        {subName || catName}
-                      </span>
-                      <h3 className="font-khand text-xl font-bold tracking-wide text-[#1a1a1a] group-hover:text-[var(--apt-red)] transition-colors duration-300 leading-snug uppercase">
-                        {productName}
-                      </h3>
-                      <span className="font-mono text-[10px] text-gray-400 block tracking-wider">
-                        {product.baseCode}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
-                      <span className="font-outfit text-base font-black text-[var(--apt-red)] tracking-tight">
-                        {formatPrice(product.price) || 'GET QUOTE'}
-                      </span>
-                      <button
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/products/${slugify(productName || product.baseCode)}/${product.id}`); }}
-                        className="bg-[var(--apt-navy)] text-white font-montserrat text-[9px] font-bold tracking-widest px-4 py-2.5 rounded-xl hover:bg-[var(--apt-red)] transition-colors duration-300 uppercase"
-                      >
-                        ENQUIRE
-                      </button>
-                    </div>
-                  </div>
-                </a>
-              );
-            })}
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         ) : (
           <div className="text-center py-20 bg-white rounded-2xl border border-gray-100">

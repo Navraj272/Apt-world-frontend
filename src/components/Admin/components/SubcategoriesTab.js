@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useSubcategory from '../hook/useSubcategory';
+import BulkImportModal from './BulkImportModal';
+import { bulkCreateSubcategories } from '@/services/postRequest';
 
 export default function SubcategoriesTab() {
   const {
@@ -12,6 +14,13 @@ export default function SubcategoriesTab() {
     totalItems,
     search,
     setSearch,
+    categoryFilter,
+    setCategoryFilter,
+    statusFilter,
+    setStatusFilter,
+    sort,
+    setSort,
+    refetch,
     isModalOpen,
     setIsModalOpen,
     editingSubcategory,
@@ -23,6 +32,7 @@ export default function SubcategoriesTab() {
     handleSubmit,
     handleDelete
   } = useSubcategory();
+  const [isBulkOpen, setIsBulkOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -32,20 +42,28 @@ export default function SubcategoriesTab() {
           <h2 className="text-xl font-bold tracking-tight text-[var(--apt-navy)]">Subcategories</h2>
           <p className="text-xs text-gray-500 mt-1">Manage hierarchical product subcategories</p>
         </div>
-        <button
-          onClick={handleCreateOpen}
-          className="flex items-center space-x-1.5 bg-[var(--apt-red)] hover:bg-[var(--apt-navy)] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all shadow-md shadow-[var(--apt-red)]/15"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Create Subcategory</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsBulkOpen(true)}
+            className="flex items-center space-x-1.5 bg-white border border-gray-200 hover:border-[var(--apt-navy)] text-[var(--apt-navy)] font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all"
+          >
+            <span>Bulk Import</span>
+          </button>
+          <button
+            onClick={handleCreateOpen}
+            className="flex items-center space-x-1.5 bg-[var(--apt-red)] hover:bg-[var(--apt-navy)] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all shadow-md shadow-[var(--apt-red)]/15"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Create Subcategory</span>
+          </button>
+        </div>
       </div>
 
       {/* Control bar */}
-      <div className="bg-white border border-gray-200 p-4 rounded-sm flex items-center">
-        <div className="relative w-full max-w-sm">
+      <div className="bg-white border border-gray-200 p-4 rounded-sm flex flex-wrap items-center gap-3">
+        <div className="relative w-full max-w-xs">
           <input
             type="text"
             placeholder="Search subcategories..."
@@ -57,8 +75,26 @@ export default function SubcategoriesTab() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="">All categories</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>{cat.name?.en || `Category #${cat.id}`}</option>
+          ))}
+        </select>
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="">All statuses</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+        <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="id:desc">Newest first</option>
+          <option value="id:asc">Oldest first</option>
+          <option value="name:asc">Name A-Z</option>
+          <option value="name:desc">Name Z-A</option>
+          <option value="slug:asc">Slug A-Z</option>
+        </select>
         <div className="ml-auto text-xs text-gray-500 font-medium">
-          Showing {subcategories.length} subcategories
+          Showing {subcategories.length} of {totalItems} subcategories
         </div>
       </div>
 
@@ -251,6 +287,25 @@ export default function SubcategoriesTab() {
             </form>
           </div>
         </div>
+      )}
+      {isBulkOpen && (
+        <BulkImportModal
+          title="Bulk Import Subcategories"
+          hint="Upload a CSV with one subcategory per row. 'category' can be the category name, slug or ID. Rows that fail are reported with their row number; the rest are still created."
+          templateFilename="subcategories-template.csv"
+          templateHeaders={['category', 'name', 'description', 'isActive']}
+          templateExample={[['Welding Machines', 'ARC Welding Machines', 'Optional description', 'true']]}
+          requiredHeaders={['category', 'name']}
+          mapRow={(row) => ({
+            category: row.category,
+            name: row.name,
+            description: row.description,
+            isActive: row.isactive,
+          })}
+          onImport={bulkCreateSubcategories}
+          onClose={() => setIsBulkOpen(false)}
+          onFinished={refetch}
+        />
       )}
     </div>
   );

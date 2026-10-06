@@ -15,6 +15,9 @@ export default function useSubcategory() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [sort, setSort] = useState('id:desc');
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +41,11 @@ export default function useSubcategory() {
     try {
       const params = { pageNo: page, limit: 10 };
       if (search.trim()) params.search = search.trim();
+      if (categoryFilter) params.categoryId = categoryFilter;
+      if (statusFilter) params.isActive = statusFilter;
+      const [sortBy, sortOrder] = sort.split(':');
+      params.sortBy = sortBy;
+      params.sortOrder = sortOrder;
       const response = await getAllSubcategories(params);
       if (response && response.subcategories) {
         setSubcategories(response.subcategories || []);
@@ -54,7 +62,7 @@ export default function useSubcategory() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, toast]);
+  }, [page, search, categoryFilter, statusFilter, sort, toast]);
 
   useEffect(() => {
     fetchSubcategories();
@@ -63,7 +71,7 @@ export default function useSubcategory() {
 
   useEffect(() => {
     setPage(1);
-  }, [search]);
+  }, [search, categoryFilter, statusFilter, sort]);
 
   const handleCreateOpen = () => {
     setEditingSubcategory(null);
@@ -148,6 +156,12 @@ export default function useSubcategory() {
     totalItems,
     search,
     setSearch,
+    categoryFilter,
+    setCategoryFilter,
+    statusFilter,
+    setStatusFilter,
+    sort,
+    setSort,
     isModalOpen,
     setIsModalOpen,
     editingSubcategory,

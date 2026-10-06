@@ -15,6 +15,12 @@ export default function useProduct() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [subcategoryFilter, setSubcategoryFilter] = useState('');
+  const [filterSubcategories, setFilterSubcategories] = useState([]);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [favouriteFilter, setFavouriteFilter] = useState('');
+  const [sort, setSort] = useState('id:desc');
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,7 +70,16 @@ export default function useProduct() {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getAllProducts({ pageNo: page, limit: 10 });
+      const params = { pageNo: page, limit: 10 };
+      if (search.trim()) params.search = search.trim();
+      if (categoryFilter) params.categoryId = categoryFilter;
+      if (subcategoryFilter) params.subcategoryId = subcategoryFilter;
+      if (statusFilter) params.isActive = statusFilter;
+      if (favouriteFilter) params.isFavourite = favouriteFilter;
+      const [sortBy, sortOrder] = sort.split(':');
+      params.sortBy = sortBy;
+      params.sortOrder = sortOrder;
+      const response = await getAllProducts(params);
       if (response && response.products) {
         setProducts(response.products || []);
         setTotalPages(response.totalPages || 1);
@@ -81,7 +96,23 @@ export default function useProduct() {
     } finally {
       setLoading(false);
     }
-  }, [page, toast]);
+  }, [page, search, categoryFilter, subcategoryFilter, statusFilter, favouriteFilter, sort, toast]);
+
+  // Filter dropdown: subcategories of the selected category
+  useEffect(() => {
+    setSubcategoryFilter('');
+    if (!categoryFilter) {
+      setFilterSubcategories([]);
+      return;
+    }
+    getAllSubcategories({ categoryId: categoryFilter, limit: 100 })
+      .then((response) => setFilterSubcategories((response && response.subcategories) || []))
+      .catch(() => setFilterSubcategories([]));
+  }, [categoryFilter]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, categoryFilter, subcategoryFilter, statusFilter, favouriteFilter, sort]);
 
   useEffect(() => {
     fetchProducts();
@@ -272,6 +303,20 @@ export default function useProduct() {
     }
   };
 
+  // Star/unstar a product; updates the row immediately and rolls back if the request fails
+  const toggleFavourite = async (product) => {
+    const next = !product.isFavourite;
+    const patch = (value) =>
+      setProducts((prev) => prev.map((p) => (p.id === product.id ? { ...p, isFavourite: value } : p)));
+    patch(next);
+    try {
+      await updateProduct(product.id, { isFavourite: next });
+    } catch {
+      patch(!next);
+      toast({ title: 'Error', description: 'Failed to update favourite.', variant: 'destructive' });
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
@@ -285,22 +330,9 @@ export default function useProduct() {
     }
   };
 
-  // Client side search filtering
-  const filteredProducts = products.filter(product => {
-    const name = product.name?.en || '';
-    const description = product.description?.en || '';
-    const code = product.baseCode || '';
-    const categoryName = product.category?.name?.en || '';
-    const subcategoryName = product.subcategory?.name?.en || '';
-    return name.toLowerCase().includes(search.toLowerCase()) ||
-           description.toLowerCase().includes(search.toLowerCase()) ||
-           code.toLowerCase().includes(search.toLowerCase()) ||
-           categoryName.toLowerCase().includes(search.toLowerCase()) ||
-           subcategoryName.toLowerCase().includes(search.toLowerCase());
-  });
 
   return {
-    products: filteredProducts,
+    products,
     categories,
     subcategories,
     loading,
@@ -310,6 +342,18 @@ export default function useProduct() {
     totalItems,
     search,
     setSearch,
+    categoryFilter,
+    setCategoryFilter,
+    subcategoryFilter,
+    setSubcategoryFilter,
+    filterSubcategories,
+    statusFilter,
+    setStatusFilter,
+    favouriteFilter,
+    setFavouriteFilter,
+    toggleFavourite,
+    sort,
+    setSort,
     isModalOpen,
     setIsModalOpen,
     editingProduct,

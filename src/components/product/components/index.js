@@ -2,28 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAllProducts, getAllCategories, getAllSubcategories } from '@/services/getRequests';
+import ProductCard from '../ProductCard';
 
-const slugify = (text) => {
-  if (!text) return '';
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)+/g, '');
-};
-
-const getProductName = (product) => {
-  if (!product.name) return '';
-  if (typeof product.name === 'string') return product.name;
-  return product.name.en || product.name.EN || '';
-};
-
-const getProductImage = (product) => {
-  if (product.images && product.images.length > 0) {
-    return product.images[0];
-  }
-  if (product.thumbnail) return product.thumbnail;
-  return '/assets/png/products/rotary_hammer.png';
-};
+const ALL_PRODUCTS_LIMIT = 30;
 
 function ProductPage() {
   const router = useRouter();
@@ -138,6 +119,11 @@ function ProductPage() {
       if (selectedSubcategory) params.subcategoryId = selectedSubcategory;
       else if (selectedCategory) params.categoryId = selectedCategory;
       if (debouncedSearch.trim()) params.search = debouncedSearch.trim();
+      // Plain "All Products" view is a curated top 30: featured first, then the newest, no further pages
+      if (!selectedSubcategory && !selectedCategory && !debouncedSearch.trim()) {
+        params.curated = true;
+        params.limit = ALL_PRODUCTS_LIMIT;
+      }
       if (sortBy === 'PRICE_LOW_HIGH') params.order = 'price_asc';
       if (sortBy === 'PRICE_HIGH_LOW') params.order = 'price_desc';
 
@@ -195,15 +181,6 @@ function ProductPage() {
       name: (c?.name && (c?.name?.en || c?.name?.EN)) || c?.slug || '',
     })),
   ];
-
-  const formatPrice = (price) => {
-    if (price === null || price === undefined || price === 0) return null;
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
 
   return (
     <div className="w-full min-h-screen bg-[var(--apt-offwhite)] text-[var(--apt-navy)] pt-24 font-montserrat">
@@ -462,7 +439,7 @@ function ProductPage() {
       {/* 4. PRODUCTS GRID */}
       <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.06)]">
                 <div className="aspect-[4/3] bg-gray-200" />
@@ -492,63 +469,9 @@ function ProductPage() {
                 transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
               >
-                {products.map((product) => {
-                  const productName = getProductName(product);
-                  const imageUrl = getProductImage(product);
-                  const catName = product.category && (product.category.name?.en || product.category.name?.EN || '');
-                  const subName = product.subcategory && (product.subcategory.name?.en || product.subcategory.name?.EN || '');
-                  return (
-                    <a
-                      key={product.id}
-                      href={`/products/${slugify(productName || product.baseCode)}/${product.id}`}
-                      className="bg-white rounded-2xl shadow-[0_2px_14px_rgba(6,15,30,0.06)] hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer border border-gray-200 hover:border-[var(--apt-red)]/30"
-                    >
-                      <div className="relative aspect-[4/3] w-full bg-gray-50 overflow-hidden shrink-0">
-                        <img
-                          src={imageUrl}
-                          alt={productName}
-                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-
-                      <div className="p-6 flex-grow flex flex-col justify-between">
-                        <div className="space-y-2">
-                          <span className="font-montserrat text-[9px] sm:text-[10px] font-black tracking-widest text-[#404040] uppercase block">
-                            {subName || catName}
-                          </span>
-                          <h3 className="font-khand text-xl font-bold tracking-wide text-[#1a1a1a] group-hover:text-[var(--apt-red)] transition-colors duration-300 leading-snug uppercase">
-                            {productName}
-                          </h3>
-                          <span className="font-mono text-[10px] text-gray-400 block tracking-wider">
-                            {product.baseCode}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-6 mt-4 border-t border-gray-100">
-                          <div className="space-y-0.5">
-                            <span className="font-montserrat text-[9px] font-bold text-gray-400 tracking-wider uppercase block">
-                              Price per Unit
-                            </span>
-                            <span className="font-outfit text-base sm:text-lg font-black text-[var(--apt-red)] tracking-tight">
-                              {formatPrice(product.price) || 'CONTACT FOR PRICE'}
-                            </span>
-                          </div>
-
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              router.push(`/products/${slugify(productName || product.baseCode)}/${product.id}`);
-                            }}
-                            className="bg-[var(--apt-navy)] text-white font-montserrat text-[9px] sm:text-[10px] font-bold tracking-widest px-4 py-2.5 rounded-xl hover:bg-[var(--apt-red)] transition-colors duration-300 uppercase shrink-0"
-                          >
-                            ENQUIRE
-                          </button>
-                        </div>
-                      </div>
-                    </a>
-                  );
-                })}
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
               </motion.div>
             ) : (
               <motion.div

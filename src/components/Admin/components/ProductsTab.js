@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useProduct from '../hook/useProduct';
+import BulkImportModal from './BulkImportModal';
+import BulkProductForm from './BulkProductForm';
+import { parseSpecsCell } from '../utils/csv';
+import { bulkCreateProducts } from '@/services/postRequest';
 
 export default function ProductsTab() {
   const {
@@ -13,6 +17,19 @@ export default function ProductsTab() {
     totalItems,
     search,
     setSearch,
+    categoryFilter,
+    setCategoryFilter,
+    subcategoryFilter,
+    setSubcategoryFilter,
+    filterSubcategories,
+    statusFilter,
+    setStatusFilter,
+    favouriteFilter,
+    setFavouriteFilter,
+    toggleFavourite,
+    sort,
+    setSort,
+    refetch,
     isModalOpen,
     setIsModalOpen,
     editingProduct,
@@ -29,6 +46,8 @@ export default function ProductsTab() {
     handleSubmit,
     handleDelete
   } = useProduct();
+  const [isBulkOpen, setIsBulkOpen] = useState(false);
+  const [isMultiOpen, setIsMultiOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -38,23 +57,37 @@ export default function ProductsTab() {
           <h2 className="text-xl font-bold tracking-tight text-[var(--apt-navy)]">Products</h2>
           <p className="text-xs text-gray-500 mt-1">Manage physical products and machinery options</p>
         </div>
-        <button
-          onClick={handleCreateOpen}
-          className="flex items-center space-x-1.5 bg-[var(--apt-red)] hover:bg-[var(--apt-navy)] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all shadow-md shadow-[var(--apt-red)]/15"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Create Product</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsBulkOpen(true)}
+            className="flex items-center space-x-1.5 bg-white border border-gray-200 hover:border-[var(--apt-navy)] text-[var(--apt-navy)] font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all"
+          >
+            <span>Import CSV</span>
+          </button>
+          <button
+            onClick={() => setIsMultiOpen(true)}
+            className="flex items-center space-x-1.5 bg-white border border-gray-200 hover:border-[var(--apt-navy)] text-[var(--apt-navy)] font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all"
+          >
+            <span>Create Multiple</span>
+          </button>
+          <button
+            onClick={handleCreateOpen}
+            className="flex items-center space-x-1.5 bg-[var(--apt-red)] hover:bg-[var(--apt-navy)] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all shadow-md shadow-[var(--apt-red)]/15"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Create Product</span>
+          </button>
+        </div>
       </div>
 
       {/* Control bar */}
-      <div className="bg-white border border-gray-200 p-4 rounded-sm flex items-center">
-        <div className="relative w-full max-w-sm">
+      <div className="bg-white border border-gray-200 p-4 rounded-sm flex flex-wrap items-center gap-3">
+        <div className="relative w-full max-w-xs">
           <input
             type="text"
-            placeholder="Search products by name, code, category..."
+            placeholder="Search by product name or code..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 pl-9 rounded-sm focus:outline-none focus:border-gray-300 transition"
@@ -63,8 +96,43 @@ export default function ProductsTab() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="">All categories</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>{cat.name?.en || `Category #${cat.id}`}</option>
+          ))}
+        </select>
+        <select
+          value={subcategoryFilter}
+          onChange={(e) => setSubcategoryFilter(e.target.value)}
+          disabled={!categoryFilter}
+          className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition disabled:opacity-50"
+        >
+          <option value="">{categoryFilter ? 'All subcategories' : 'Select a category first'}</option>
+          {filterSubcategories.map((sub) => (
+            <option key={sub.id} value={sub.id}>{sub.name?.en || `Subcategory #${sub.id}`}</option>
+          ))}
+        </select>
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="">All statuses</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+        <select value={favouriteFilter} onChange={(e) => setFavouriteFilter(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="">All products</option>
+          <option value="true">Favourites only</option>
+          <option value="false">Not favourites</option>
+        </select>
+        <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="id:desc">Newest first</option>
+          <option value="id:asc">Oldest first</option>
+          <option value="name:asc">Name A-Z</option>
+          <option value="name:desc">Name Z-A</option>
+          <option value="baseCode:asc">Code A-Z</option>
+          <option value="baseCode:desc">Code Z-A</option>
+        </select>
         <div className="ml-auto text-xs text-gray-500 font-medium">
-          Showing {products.length} products
+          Showing {products.length} of {totalItems} products
         </div>
       </div>
 
@@ -74,6 +142,7 @@ export default function ProductsTab() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-gray-200 text-gray-500 text-xs font-semibold uppercase tracking-wider bg-gray-50">
+                <th className="py-4 px-4 w-12 text-center" title="Favourite">&#9733;</th>
                 <th className="py-4 px-6 w-16">ID</th>
                 <th className="py-4 px-6">Name</th>
                 <th className="py-4 px-6 w-32">Base Code</th>
@@ -86,6 +155,7 @@ export default function ProductsTab() {
               {loading ? (
                 Array.from({ length: 3 }).map((_, idx) => (
                   <tr key={idx} className="animate-pulse">
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded w-4 mx-auto"></div></td>
                     <td className="py-4 px-6"><div className="h-4 bg-gray-200 rounded w-8"></div></td>
                     <td className="py-4 px-6"><div className="h-4 bg-gray-200 rounded w-32"></div></td>
                     <td className="py-4 px-6"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
@@ -96,13 +166,32 @@ export default function ProductsTab() {
                 ))
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="py-8 text-center text-gray-400 font-medium bg-white">
+                  <td colSpan="7" className="py-8 text-center text-gray-400 font-medium bg-white">
                     No products found.
                   </td>
                 </tr>
               ) : (
                 products.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-50 transition">
+                    <td className="py-4 px-4 text-center">
+                      <button
+                        type="button"
+                        onClick={() => toggleFavourite(product)}
+                        aria-pressed={!!product.isFavourite}
+                        title={product.isFavourite ? 'Remove from favourites' : 'Mark as favourite (shown first in All Products)'}
+                        className="p-1 rounded-sm transition-transform hover:scale-110"
+                      >
+                        <svg
+                          className={`w-5 h-5 ${product.isFavourite ? 'text-amber-400' : 'text-gray-300 hover:text-amber-300'}`}
+                          viewBox="0 0 24 24"
+                          fill={product.isFavourite ? 'currentColor' : 'none'}
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path strokeLinejoin="round" d="M11.48 3.5a.56.56 0 011.04 0l2.13 5.11a.56.56 0 00.48.35l5.52.44c.5.04.7.66.32.99l-4.2 3.6a.56.56 0 00-.18.56l1.28 5.39a.56.56 0 01-.84.61l-4.73-2.89a.56.56 0 00-.59 0l-4.73 2.89a.56.56 0 01-.84-.61l1.28-5.39a.56.56 0 00-.18-.56l-4.2-3.6a.56.56 0 01.32-.99l5.52-.44a.56.56 0 00.48-.35l2.13-5.11z" />
+                        </svg>
+                      </button>
+                    </td>
                     <td className="py-4 px-6 font-semibold text-gray-500">#{product.id}</td>
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
@@ -445,6 +534,38 @@ export default function ProductsTab() {
             </form>
           </div>
         </div>
+      )}
+      {isMultiOpen && (
+        <BulkProductForm
+          categories={categories}
+          onClose={() => setIsMultiOpen(false)}
+          onFinished={refetch}
+        />
+      )}
+      {isBulkOpen && (
+        <BulkImportModal
+          title="Bulk Import Products"
+          hint="Upload a CSV with one product per row. 'category' and 'subcategory' can be a name, slug or ID. 'specs' can be Key=Value pairs separated by ; (e.g. Power=2kW; Weight=50kg) or a JSON object. 'images' are URLs separated by |. Images can also be added later by editing the product."
+          templateFilename="products-template.csv"
+          templateHeaders={['category', 'subcategory', 'name', 'baseCode', 'description', 'specs', 'images', 'thumbnail', 'isActive', 'isFavourite']}
+          templateExample={[['Welding Machines', 'ARC Welding Machines', 'ARC 400 Welder', 'ARC-400', 'Heavy duty welder', 'Power=15kW; Weight=50kg', 'https://example.com/1.jpg|https://example.com/2.jpg', 'https://example.com/thumb.jpg', 'true', 'false']]}
+          requiredHeaders={['category', 'name', 'basecode']}
+          mapRow={(row) => ({
+            category: row.category,
+            subcategory: row.subcategory,
+            name: row.name,
+            baseCode: row.basecode,
+            description: row.description,
+            specs: parseSpecsCell(row.specs),
+            images: row.images,
+            thumbnail: row.thumbnail,
+            isActive: row.isactive,
+            isFavourite: row.isfavourite,
+          })}
+          onImport={bulkCreateProducts}
+          onClose={() => setIsBulkOpen(false)}
+          onFinished={refetch}
+        />
       )}
     </div>
   );
