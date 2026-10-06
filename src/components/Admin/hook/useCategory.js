@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getAllCategories } from '@/services/getRequests';
 import { createCategory } from '@/services/postRequest';
 import { updateCategory } from '@/services/putReguest';
+import { deleteCategory } from '@/services/deleteRequest';
 import { useToast } from '@/hooks/use-toast';
 
 export default function useCategory() {
@@ -24,12 +25,12 @@ export default function useCategory() {
     setLoading(true);
     try {
       const response = await getAllCategories({ pageNo: page, limit: 10 });
-      if (response && response.data) {
-        setCategories(response.data.categories || []);
-        setTotalPages(response.data.totalPages || 1);
+      if (response && response.categories) {
+        setCategories(response.categories || []);
+        setTotalPages(response.totalPages || 1);
         setTotalItems(
-          response.data.total ||
-            (response.data.categories ? response.data.categories.length : 0)
+          response.total ||
+            (response.categories ? response.categories.length : 0)
         );
       }
     } catch (error) {
@@ -117,6 +118,18 @@ export default function useCategory() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this category? This will also delete all subcategories and products associated with it.')) return;
+    try {
+      await deleteCategory(id);
+      toast({ title: 'Success', description: 'Category deleted successfully.' });
+      fetchCategories();
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      toast({ title: 'Error', description: 'Failed to delete category.', variant: 'destructive' });
+    }
+  };
+
   const filteredCategories = categories.filter((category) => {
     const name = category.name?.en || '';
     const description = category.description?.en || '';
@@ -147,6 +160,7 @@ export default function useCategory() {
     handleEditOpen,
     handleInputChange,
     handleSubmit,
+    handleDelete,
     refetch: fetchCategories,
   };
 }

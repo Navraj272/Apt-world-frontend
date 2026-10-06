@@ -1,14 +1,15 @@
-/* eslint-disable no-console */
 import { useState, useEffect, useCallback } from 'react';
-import { getAllProducts, getAllCategories } from '@/services/getRequests';
+import { getAllProducts, getAllCategories, getAllSubcategories } from '@/services/getRequests';
 import { createProduct } from '@/services/postRequest';
 import { updateProduct } from '@/services/putReguest';
+import { deleteProduct } from '@/services/deleteRequest';
 import { useToast } from '@/hooks/use-toast';
 
 export default function useProduct() {
   const { toast } = useToast();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -20,13 +21,13 @@ export default function useProduct() {
   const [editingProduct, setEditingProduct] = useState(null); // null means creating
   const [formData, setFormData] = useState({
     categoryId: '',
+    subcategoryId: '',
     nameEn: '',
     descriptionEn: '',
     baseCode: '',
-    powerSpec: '',
-    voltageSpec: '',
-    weightSpec: '',
-    customSpecs: [] // array of { key: '', value: '' }
+    specs: [{ key: '', value: '' }], // Array of { key, value }
+    images: [], // Selected files (as base64 or URLs)
+    thumbnail: null
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -34,11 +35,29 @@ export default function useProduct() {
   const fetchAllCategoriesList = useCallback(async () => {
     try {
       const response = await getAllCategories({ limit: 100 });
-      if (response && response.data) {
-        setCategories(response.data.categories || []);
+      if (response && response.categories) {
+        setCategories(response.categories || []);
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching categories for dropdown:', error);
+    }
+  }, []);
+
+  // Fetch subcategories for a specific category
+  const fetchSubcategoriesForCategory = useCallback(async (categoryId) => {
+    if (!categoryId) {
+      setSubcategories([]);
+      return;
+    }
+    try {
+      const response = await getAllSubcategories({ categoryId, limit: 100 });
+      if (response && response.subcategories) {
+        setSubcategories(response.subcategories || []);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching subcategories:', error);
     }
   }, []);
 
@@ -46,12 +65,13 @@ export default function useProduct() {
     setLoading(true);
     try {
       const response = await getAllProducts({ pageNo: page, limit: 10 });
-      if (response && response.data) {
-        setProducts(response.data.products || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalItems(response.data.total || (response.data.products ? response.data.products.length : 0));
+      if (response && response.products) {
+        setProducts(response.products || []);
+        setTotalPages(response.totalPages || 1);
+        setTotalItems(response.total || (response.products ? response.products.length : 0));
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error fetching products:', error);
       toast({
         title: 'Error',
@@ -68,18 +88,27 @@ export default function useProduct() {
     fetchAllCategoriesList();
   }, [fetchProducts, fetchAllCategoriesList]);
 
+  // Fetch subcategories whenever categoryId in formData changes
+  useEffect(() => {
+    if (formData.categoryId) {
+      fetchSubcategoriesForCategory(formData.categoryId);
+    } else {
+      setSubcategories([]);
+    }
+  }, [formData.categoryId, fetchSubcategoriesForCategory]);
+
   // Open modal for creating new product
   const handleCreateOpen = () => {
     setEditingProduct(null);
     setFormData({
-      categoryId: categories.length > 0 ? categories[0].id.toString() : '',
+      categoryId: '',
+      subcategoryId: '',
       nameEn: '',
       descriptionEn: '',
       baseCode: '',
-      powerSpec: '',
-      voltageSpec: '',
-      weightSpec: '',
-      customSpecs: []
+      specs: [{ key: '', value: '' }],
+      images: [],
+      thumbnail: null
     });
     setIsModalOpen(true);
   };
@@ -90,57 +119,79 @@ export default function useProduct() {
     
     // Parse specs
     const specs = product.specs || {};
-    const power = specs.power || '';
-    const voltage = specs.voltage || '';
-    const weight = specs.weight || '';
-    
-    // Parse any other custom specs
-    const custom = [];
-    Object.keys(specs).forEach(key => {
-      if (key !== 'power' && key !== 'voltage' && key !== 'weight') {
-        custom.push({ key, value: specs[key] });
-      }
-    });
+    const parsedSpecs = Object.entries(specs).map(([key, value]) => ({ key, value }));
+    if (parsedSpecs.length === 0) parsedSpecs.push({ key: '', value: '' });
 
     setFormData({
       categoryId: product.categoryId ? product.categoryId.toString() : '',
+      subcategoryId: product.subcategoryId ? product.subcategoryId.toString() : '',
       nameEn: product.name?.en || '',
       descriptionEn: product.description?.en || '',
       baseCode: product.baseCode || '',
-      powerSpec: power,
-      voltageSpec: voltage,
-      weightSpec: weight,
-      customSpecs: custom
+      specs: parsedSpecs,
+      images: product.images || [],
+      thumbnail: product.thumbnail || null
     });
     setIsModalOpen(true);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  // Custom spec handlers
-  const addCustomSpec = () => {
-    setFormData(prev => ({
-      ...prev,
-      customSpecs: [...prev.customSpecs, { key: '', value: '' }]
-    }));
-  };
-
-  const removeCustomSpec = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      customSpecs: prev.customSpecs.filter((_, idx) => idx !== index)
-    }));
-  };
-
-  const handleCustomSpecChange = (index, field, value) => {
     setFormData(prev => {
-      const newSpecs = [...prev.customSpecs];
-      newSpecs[index] = { ...newSpecs[index], [field]: value };
-      return { ...prev, customSpecs: newSpecs };
+      const newData = { ...prev, [name]: value };
+      // Reset subcategory if category changes
+      if (name === 'categoryId') {
+        newData.subcategoryId = '';
+      }
+      return newData;
     });
+  };
+
+  // Spec handlers
+  const addSpec = () => {
+    setFormData(prev => ({
+      ...prev,
+      specs: [...prev.specs, { key: '', value: '' }]
+    }));
+  };
+
+  const removeSpec = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      specs: prev.specs.filter((_, idx) => idx !== index)
+    }));
+  };
+
+  const handleSpecChange = (index, field, value) => {
+    setFormData(prev => {
+      const newSpecs = [...prev.specs];
+      newSpecs[index] = { ...newSpecs[index], [field]: value };
+      return { ...prev, specs: newSpecs };
+    });
+  };
+
+  const handleImageChange = async (e, isThumbnail = false) => {
+    const files = Array.from(e.target.files);
+    const base64Files = await Promise.all(files.map(file => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }));
+
+    if (isThumbnail) {
+      setFormData(prev => ({ ...prev, thumbnail: base64Files[0] }));
+    } else {
+      setFormData(prev => ({ ...prev, images: [...prev.images, ...base64Files] }));
+    }
+  };
+
+  const removeImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, idx) => idx !== index)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -173,27 +224,22 @@ export default function useProduct() {
     setSubmitting(true);
     try {
       // Build specs object
-      const specs = {};
-      if (formData.powerSpec.trim()) specs.power = formData.powerSpec.trim();
-      if (formData.voltageSpec.trim()) specs.voltage = formData.voltageSpec.trim();
-      if (formData.weightSpec.trim()) specs.weight = formData.weightSpec.trim();
-      
-      formData.customSpecs.forEach(spec => {
+      const finalSpecs = {};
+      formData.specs.forEach(spec => {
         if (spec.key.trim() && spec.value.trim()) {
-          specs[spec.key.trim()] = spec.value.trim();
+          finalSpecs[spec.key.trim()] = spec.value.trim();
         }
       });
 
       const payload = {
         categoryId: parseInt(formData.categoryId, 10),
-        name: {
-          en: formData.nameEn.trim()
-        },
-        description: {
-          en: formData.descriptionEn.trim()
-        },
+        subcategoryId: formData.subcategoryId ? parseInt(formData.subcategoryId, 10) : null,
+        name: { en: formData.nameEn.trim() },
+        description: { en: formData.descriptionEn.trim() },
         baseCode: formData.baseCode.trim(),
-        specs: specs
+        specs: finalSpecs,
+        images: formData.images,
+        thumbnail: formData.thumbnail
       };
 
       if (editingProduct) {
@@ -214,6 +260,7 @@ export default function useProduct() {
       setIsModalOpen(false);
       fetchProducts();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error submitting product:', error);
       toast({
         title: 'Error',
@@ -225,21 +272,37 @@ export default function useProduct() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await deleteProduct(id);
+      toast({ title: 'Success', description: 'Product deleted successfully.' });
+      fetchProducts();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error deleting product:', error);
+      toast({ title: 'Error', description: 'Failed to delete product.', variant: 'destructive' });
+    }
+  };
+
   // Client side search filtering
   const filteredProducts = products.filter(product => {
     const name = product.name?.en || '';
     const description = product.description?.en || '';
     const code = product.baseCode || '';
     const categoryName = product.category?.name?.en || '';
+    const subcategoryName = product.subcategory?.name?.en || '';
     return name.toLowerCase().includes(search.toLowerCase()) ||
            description.toLowerCase().includes(search.toLowerCase()) ||
            code.toLowerCase().includes(search.toLowerCase()) ||
-           categoryName.toLowerCase().includes(search.toLowerCase());
+           categoryName.toLowerCase().includes(search.toLowerCase()) ||
+           subcategoryName.toLowerCase().includes(search.toLowerCase());
   });
 
   return {
     products: filteredProducts,
     categories,
+    subcategories,
     loading,
     page,
     setPage,
@@ -256,10 +319,13 @@ export default function useProduct() {
     handleCreateOpen,
     handleEditOpen,
     handleInputChange,
-    addCustomSpec,
-    removeCustomSpec,
-    handleCustomSpecChange,
+    addSpec,
+    removeSpec,
+    handleSpecChange,
+    handleImageChange,
+    removeImage,
     handleSubmit,
+    handleDelete,
     refetch: fetchProducts
   };
 }

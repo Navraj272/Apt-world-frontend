@@ -21,10 +21,10 @@ export default function useEnquiry() {
     setLoading(true);
     try {
       const response = await getEnquiryList({ pageNo: page, limit: 10 });
-      if (response && response.data) {
-        setEnquiries(response.data.enquiries || []);
-        setTotalPages(response.data.totalPages || 1);
-        setTotalItems(response.data.total || (response.data.enquiries ? response.data.enquiries.length : 0));
+      if (response && response.enquiries) {
+        setEnquiries(response.enquiries || []);
+        setTotalPages(response.totalPages || 1);
+        setTotalItems(response.total || (response.enquiries ? response.enquiries.length : 0));
       }
     } catch (error) {
       console.error('Error fetching enquiries:', error);

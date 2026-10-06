@@ -3,7 +3,11 @@ import HomePage from '@/components/Home/components';
 import React from 'react';
 
 const page = () => {
-    return <HomePage />;
+    return (
+        <>
+            <HomePage />
+        </>
+    );
 };
 
 export default page;

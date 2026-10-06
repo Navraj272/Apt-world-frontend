@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { createEnquiry } from '@/services/postRequest';
+import { useToast } from '@/hooks/use-toast';
 
 function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal = false, onSuccess }) {
   const { title, subtitle, modelOptions } = data;
+  const { toast } = useToast();
 
   const [form, setForm] = useState({
     fullName: '',
@@ -15,7 +18,6 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Sync selectedModel from props when user selects from models cards
   useEffect(() => {
     if (selectedModel) {
       setForm((prev) => ({ ...prev, anticipatedModel: selectedModel }));
@@ -29,30 +31,39 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
       [name]: type === 'checkbox' ? checked : value
     }));
 
-    // If changing the model dropdown manually, sync back to parent
     if (name === 'anticipatedModel' && setSelectedModel) {
       setSelectedModel(value);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.agreeTerms) {
-      alert('Please agree to the terms and privacy policy to submit.');
+      toast({
+        title: 'Consent Required',
+        description: 'Please agree to the terms and privacy policy to submit.',
+        variant: 'destructive',
+      });
       return;
     }
-    
+
     setIsSubmitting(true);
 
-    // Mock API Submission - Easily replaceable with standard fetch/axios call
-    setTimeout(() => {
-      alert(
-        `Application Submitted Successfully!\n\nThank you, ${form.fullName}. Our franchise expansion team will contact you in ${form.cityOfInterest} within 24 business hours.\nReference ID: APT-FRAN-${Math.floor(
-          100000 + Math.random() * 900000
-        )}`
-      );
+    try {
+      const message = `Franchise Inquiry - City: ${form.cityOfInterest}, Model: ${form.anticipatedModel}, Experience: ${form.experience}`;
+      await createEnquiry({
+        name: form.fullName,
+        email: form.emailAddress,
+        phone: form.phoneNumber,
+        message,
+        type: 'distributor',
+      });
 
-      // Reset form
+      toast({
+        title: 'Application Submitted',
+        description: `Thank you, ${form.fullName}. Our franchise expansion team will contact you in ${form.cityOfInterest} within 24 business hours.`,
+      });
+
       setForm({
         fullName: '',
         phoneNumber: '',
@@ -60,25 +71,26 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
         cityOfInterest: '',
         anticipatedModel: '',
         experience: '',
-        agreeTerms: false
+        agreeTerms: false,
       });
-      
-      if (setSelectedModel) {
-        setSelectedModel('');
-      }
-      setIsSubmitting(false);
 
-      if (onSuccess) {
-        onSuccess();
-      }
-    }, 1500);
+      if (setSelectedModel) setSelectedModel('');
+      if (onSuccess) onSuccess();
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to submit application. Please try again later.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formContent = (
     <>
-      {/* Header */}
       <div className="text-center space-y-2 mb-10">
-        <h2 className="font-khand text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-gray-900 leading-none">
+        <h2 className="font-khand text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-[var(--apt-navy)] leading-none">
           {title}
         </h2>
         <p className="font-montserrat text-xs sm:text-sm text-gray-500 font-medium">
@@ -86,13 +98,11 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
         </p>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         
-        {/* Full Name & Phone Number */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1.5">
-            <label className="font-montserrat text-[10px] font-black tracking-wider text-gray-400 uppercase">
+            <label className="block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5">
               Full Name *
             </label>
             <input
@@ -102,12 +112,12 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
               placeholder="John Doe"
               value={form.fullName}
               onChange={handleChange}
-              className="w-full bg-[#F8F9FA] text-[#050D1A] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-sm px-4 py-3.5 text-xs font-medium placeholder-gray-400 transition-all"
+              className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="font-montserrat text-[10px] font-black tracking-wider text-gray-400 uppercase">
+            <label className="block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5">
               Phone Number *
             </label>
             <input
@@ -117,15 +127,14 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
               placeholder="1234567890"
               value={form.phoneNumber}
               onChange={handleChange}
-              className="w-full bg-[#F8F9FA] text-[#050D1A] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-sm px-4 py-3.5 text-xs font-medium placeholder-gray-400 transition-all"
+              className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             />
           </div>
         </div>
 
-        {/* Email Address & City of Interest */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1.5">
-            <label className="font-montserrat text-[10px] font-black tracking-wider text-gray-400 uppercase">
+            <label className="block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5">
               Email Address *
             </label>
             <input
@@ -135,12 +144,12 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
               placeholder="john@example.com"
               value={form.emailAddress}
               onChange={handleChange}
-              className="w-full bg-[#F8F9FA] text-[#050D1A] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-sm px-4 py-3.5 text-xs font-medium placeholder-gray-400 transition-all"
+              className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="font-montserrat text-[10px] font-black tracking-wider text-gray-400 uppercase">
+            <label className="block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5">
               City of Interest *
             </label>
             <input
@@ -150,14 +159,13 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
               placeholder="Enter City Name"
               value={form.cityOfInterest}
               onChange={handleChange}
-              className="w-full bg-[#F8F9FA] text-[#050D1A] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-sm px-4 py-3.5 text-xs font-medium placeholder-gray-400 transition-all"
+              className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             />
           </div>
         </div>
 
-        {/* Anticipated Model Dropdown */}
         <div className="space-y-1.5 relative">
-          <label className="font-montserrat text-[10px] font-black tracking-wider text-gray-400 uppercase">
+          <label className="block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5">
             Anticipated Model *
           </label>
           <select
@@ -165,7 +173,7 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
             required
             value={form.anticipatedModel}
             onChange={handleChange}
-            className="w-full bg-[#F8F9FA] text-[#050D1A] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-sm px-4 py-3.5 text-xs font-bold tracking-wide transition-all appearance-none cursor-pointer"
+            className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-bold tracking-wide transition-all appearance-none cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           >
             {modelOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -173,15 +181,13 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
               </option>
             ))}
           </select>
-          {/* Dropdown Chevron */}
-          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-10 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <svg className="w-4 h-4 text-gray-500 absolute right-4 top-[2.35rem] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </div>
 
-        {/* Commercial Space / Experience Textarea */}
         <div className="space-y-1.5">
-          <label className="font-montserrat text-[10px] font-black tracking-wider text-gray-400 uppercase">
+          <label className="block font-montserrat text-[10px] font-bold tracking-wider text-gray-500 uppercase mb-1.5">
             Commercial Space / Experience
           </label>
           <textarea
@@ -190,12 +196,11 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
             placeholder="Briefly describe your background, business experience, or available commercial properties..."
             value={form.experience}
             onChange={handleChange}
-            className="w-full bg-[#F8F9FA] text-[#050D1A] border border-gray-200 focus:border-gray-400 focus:bg-white focus:outline-none rounded-sm px-4 py-3.5 text-xs font-medium placeholder-gray-400 transition-all resize-none"
+            className="w-full bg-white text-[var(--apt-navy)] border border-[#dfd9ce] focus:border-[var(--apt-red)] focus:ring-1 focus:ring-[var(--apt-red)] focus:outline-none rounded-xl px-4 py-3 text-xs font-montserrat font-medium placeholder-gray-400 transition-all resize-none shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           />
         </div>
 
-        {/* Terms and Conditions Checkbox */}
-        <div className="flex items-start gap-3 py-2">
+        <div className="flex items-start gap-3 py-2 cursor-pointer select-none">
           <input
             type="checkbox"
             name="agreeTerms"
@@ -203,19 +208,18 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
             required
             checked={form.agreeTerms}
             onChange={handleChange}
-            className="mt-0.5 w-4 h-4 accent-[#E11922] cursor-pointer rounded-sm border-gray-300"
+            className="mt-0.5 w-4 h-4 rounded border-[#dfd9ce] text-[var(--apt-red)] focus:ring-[var(--apt-red)] accent-[var(--apt-red)] cursor-pointer"
           />
-          <label htmlFor="agreeTerms" className="font-montserrat text-[10px] sm:text-xs font-medium text-gray-500 select-none cursor-pointer leading-tight">
+          <label htmlFor="agreeTerms" className="font-montserrat text-[10px] sm:text-xs font-medium text-gray-500 cursor-pointer leading-tight">
             I agree to the terms and privacy policy for franchise evaluation.
           </label>
         </div>
 
-        {/* Submit Button */}
-        <div className="pt-2 mx-auto w-full items-center">
+        <div className="pt-2 flex justify-center">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-[50%] bg-[#E11922] text-white font-montserrat text-xs sm:text-sm font-bold tracking-widest py-2 rounded-sm border border-transparent hover:bg-[#050D1A] hover:shadow-2xl transition-all duration-300 shadow-md shadow-[#E11922]/15 uppercase"
+            className="w-full sm:w-auto min-w-[220px] bg-[var(--apt-red)] text-white font-montserrat text-xs font-bold tracking-widest py-3.5 px-8 rounded-xl border border-transparent hover:bg-[var(--apt-navy)] hover:shadow-lg hover:shadow-[var(--apt-red)]/15 active:scale-[0.98] transition-all duration-300 uppercase"
           >
             {isSubmitting ? 'SUBMITTING APPLICATION...' : 'SUBMIT APPLICATION'}
           </button>
@@ -227,18 +231,16 @@ function FranchiseInquiryForm({ data, selectedModel, setSelectedModel, isModal =
 
   if (isModal) {
     return (
-      <div className="bg-white text-[#050D1A]">
+      <div className="bg-white text-[var(--apt-navy)]">
         {formContent}
       </div>
     );
   }
 
   return (
-    <section id="franchise-inquiry-form" className="bg-white py-16 sm:py-24 text-[#050D1A]">
+    <section id="franchise-inquiry-form" className="bg-white py-16 sm:py-24 text-[var(--apt-navy)]">
       <div className="max-w-[850px] mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Form Container Card */}
-        <div className="bg-white border border-gray-100 shadow-2xl rounded-sm overflow-hidden border-t-[5px] border-t-[#E11922] p-8 sm:p-12">
+        <div className="bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden border-t-[5px] border-t-[var(--apt-red)] p-8 sm:p-12">
           {formContent}
         </div>
       </div>
