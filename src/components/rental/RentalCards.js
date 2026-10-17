@@ -11,7 +11,6 @@ export default function RentalCards() {
       key={`rental-${eq.slug}`}
       product={{ id: `rental-${eq.slug}`, name: { en: eq.title }, images: [eq.image], category: { name: { en: 'Aerial Work Platforms' } } }}
       href={`/rental/${eq.slug}`}
-      tag="For Rental"
       footerText="Available for rent"
       ctaLabel="View details"
     />
