@@ -4,6 +4,18 @@ function CatalogueSection() {
   const sectors = [
     {
       id: 1,
+      title: 'AERIAL WORK PLATFORM',
+      count: '150+ ITEMS',
+      description: 'Scissor lifts, boom lifts, and aerial platforms for elevated industrial operations.',
+      link: '/categories/aerial-work-platforms',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+      )
+    },
+    {
+      id: 2,
       title: 'MHE EQUIPMENT',
       count: '380+ ITEMS',
       description: 'Battery pallet trucks, forklifts, and stackers for high-velocity logistics.',
@@ -15,7 +27,7 @@ function CatalogueSection() {
       )
     },
     {
-      id: 2,
+      id: 3,
       title: 'LIFTING PRODUCTS',
       count: '420+ ITEMS',
       description: 'Chain hoists, winches, and heavy-duty cranes for safe and efficient material handling.',
@@ -28,43 +40,7 @@ function CatalogueSection() {
       )
     },
     {
-      id: 3,
-      title: 'CONSTRUCTION',
-      count: '1,800+ ITEMS',
-      description: 'Bar bending, cutting, and leveling machines for large-scale infrastructure projects.',
-      link: '/categories/construction',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      )
-    },
-    {
       id: 4,
-      title: 'CLEANING SOLUTIONS',
-      count: '1,200+ ITEMS',
-      description: 'High-pressure washers, industrial vacuums, and advanced floor care machinery.',
-      link: '/categories/cleaning-solutions',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a7 7 0 10-14 0v2m7-7v2" />
-        </svg>
-      )
-    },
-    {
-      id: 5,
-      title: 'PACKAGING',
-      count: '700+ ITEMS',
-      description: 'Capping, sealing, and labeling machines designed for automated production lines.',
-      link: '/categories/packaging',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14v14m0-14L4 7m0 0v10l8 4" />
-        </svg>
-      )
-    },
-    {
-      id: 6,
       title: 'WELDING MACHINES',
       count: '550+ ITEMS',
       description: 'Precision ARC, MIG, TIG, and laser welding solutions for metal fabrication.',
@@ -76,7 +52,43 @@ function CatalogueSection() {
       )
     },
     {
-      id: 7,
+      id: 5,
+      title: 'PACKAGING EQUIPMENTS',
+      count: '700+ ITEMS',
+      description: 'Capping, sealing, and labeling machines designed for automated production lines.',
+      link: '/categories/packaging',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14v14m0-14L4 7m0 0v10l8 4" />
+        </svg>
+      )
+    },
+    {
+      id: 5,
+      title: 'CLEANING SOLUTIONS',
+      count: '1,200+ ITEMS',
+      description: 'High-pressure washers, industrial vacuums, and advanced floor care machinery.',
+      link: '/categories/cleaning-solutions',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a7 7 0 10-14 0v2m7-7v2" />
+        </svg>
+      )
+    },
+    {
+      id: 6,
+      title: 'CONSTRUCTION PRODUCTS',
+      count: '1,800+ ITEMS',
+      description: 'Bar bending, cutting, and leveling machines for large-scale infrastructure projects.',
+      link: '/categories/construction',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      )
+    },
+    {
+      id: 8,
       title: 'POWER TOOLS',
       count: '2,500+ ITEMS',
       description: 'Dynamic range of grinders, drills, and specialized hammers for intense industrial work.',
@@ -88,7 +100,7 @@ function CatalogueSection() {
       )
     },
     {
-      id: 8,
+      id: 9,
       title: 'AGRICULTURE MACHINES',
       count: '950+ ITEMS',
       description: 'Power sprayers, tillers, and specialized harvesters for modern farming.',
@@ -100,26 +112,14 @@ function CatalogueSection() {
       )
     },
     {
-      id: 9,
-      title: 'CORDLESS',
+      id: 10,
+      title: 'CORDLESS TOOLS',
       count: '850+ ITEMS',
       description: 'Next-gen battery-powered tools including impact drills, wrenches, and chainsaws.',
       link: '/categories/cordless',
       icon: (
         <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      )
-    },
-    {
-      id: 10,
-      title: 'AERIAL WORK',
-      count: '150+ ITEMS',
-      description: 'Scissor lifts, boom lifts, and aerial platforms for elevated industrial operations.',
-      link: '/categories/aerial-work-platforms',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
       )
     },

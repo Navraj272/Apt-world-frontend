@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { getAllSubcategories, getAllCategories, getAllProducts } from '@/services/getRequests';
 import ProductCard from '@/components/product/ProductCard';
+import RentalCards, { isRentalCategory } from '@/components/rental/RentalCards';
 import { SITE_NAME, apiGet, nameOf, truncate } from '@/common/SEOTags/seo';
 
 const getName = (obj) => {
@@ -30,6 +31,9 @@ function CategoryPage() {
   const [sortBy, setSortBy] = useState('PRICE_LOW_HIGH');
 
   const dropdownRef = useRef(null);
+
+  // Whole Aerial Work Platforms category (first page, no sub-filter, no search): show rental items as cards too
+  const showRentalCards = isRentalCategory(slug) && !selectedSub && !debouncedSearch.trim() && currentPage === 1;
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchQuery), 400);
@@ -251,8 +255,9 @@ function CategoryPage() {
               </div>
             ))}
           </div>
-        ) : products.length > 0 ? (
+        ) : products.length > 0 || showRentalCards ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-fadeIn">
+            {showRentalCards && <RentalCards />}
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

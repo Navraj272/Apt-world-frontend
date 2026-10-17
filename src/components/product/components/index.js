@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAllProducts, getAllCategories, getAllSubcategories } from '@/services/getRequests';
 import ProductCard from '../ProductCard';
+import RentalCards, { isRentalCategory } from '@/components/rental/RentalCards';
 
 const ALL_PRODUCTS_LIMIT = 30;
 
@@ -32,6 +33,10 @@ function ProductPage() {
         : null;
     return { selectedCategory: cat?.id || null, selectedSubcategory: sub?.id || null };
   }, [categorySlug, subcategorySlug, allCategories, allSubcategories]);
+
+  // Whole Aerial Work Platforms category (first page, no search): list the rental items as cards too
+  const showRentalCards =
+    isRentalCategory(categorySlug) && !subcategorySlug && !debouncedSearch.trim() && currentPage === 1;
 
   // Block the first fetch until a slug in the URL can be resolved to an id
   const filtersReady =
@@ -205,7 +210,7 @@ function ProductPage() {
           </div>
         ) : (
           <AnimatePresence mode="wait">
-            {products.length > 0 ? (
+            {products.length > 0 || showRentalCards ? (
               <motion.div
                 key={`${selectedCategory}-${selectedSubcategory}-${debouncedSearch}-${currentPage}`}
                 initial={{ opacity: 0, y: 10 }}
@@ -214,6 +219,7 @@ function ProductPage() {
                 transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
               >
+                {showRentalCards && <RentalCards />}
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

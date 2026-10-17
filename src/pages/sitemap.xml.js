@@ -1,3 +1,4 @@
+import { equipmentData } from '@/components/rental/data/equipmentData';
 import { SITE_URL, STATIC_SEO, apiGet, nameOf, slugify } from '@/common/SEOTags/seo';
 
 const escapeXml = (value) =>
@@ -19,6 +20,7 @@ export async function getServerSideProps({ res }) {
     ...Object.entries(STATIC_SEO)
       .filter(([, meta]) => !meta.noindex)
       .map(([path]) => urlEntry(path)),
+    ...equipmentData.map((eq) => urlEntry(`/rental/${eq.slug}`)),
     ...((categories && categories.categories) || []).map((c) => urlEntry(`/categories/${c.slug}`, c.updatedAt)),
     ...((subcategories && subcategories.subcategories) || []).map((s) => urlEntry(`/categories/${s.slug}`, s.updatedAt)),
     ...((products && products.products) || []).map((p) =>

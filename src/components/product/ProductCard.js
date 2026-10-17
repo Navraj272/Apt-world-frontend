@@ -28,10 +28,10 @@ const isNew = (product) =>
  * The image fills the whole card; the details sit on a translucent glass panel
  * at the bottom so the product stays visible behind the text.
  */
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, href: hrefOverride, tag, footerText, ctaLabel = 'Enquire' }) {
   const productName = getName(product.name);
   const label = getName(product.subcategory?.name) || getName(product.category?.name);
-  const href = `/products/${slugify(productName || product.baseCode)}/${product.id}`;
+  const href = hrefOverride || `/products/${slugify(productName || product.baseCode)}/${product.id}`;
 
   return (
     <a
@@ -48,7 +48,13 @@ export default function ProductCard({ product }) {
         />
       </div>
 
-      {product.isFavourite && (
+      {tag && (
+        <span className="absolute top-3 left-3 z-10 rounded-full bg-[var(--apt-navy)] px-2.5 py-1 font-montserrat text-[9px] font-black tracking-widest text-white uppercase shadow-sm">
+          {tag}
+        </span>
+      )}
+
+      {!tag && product.isFavourite && (
         <span className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-white/80 backdrop-blur-md px-2.5 py-1 shadow-sm">
           <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M11.48 3.5a.56.56 0 011.04 0l2.13 5.11a.56.56 0 00.48.35l5.52.44c.5.04.7.66.32.99l-4.2 3.6a.56.56 0 00-.18.56l1.28 5.39a.56.56 0 01-.84.61l-4.73-2.89a.56.56 0 00-.59 0l-4.73 2.89a.56.56 0 01-.84-.61l1.28-5.39a.56.56 0 00-.18-.56l-4.2-3.6a.56.56 0 01.32-.99l5.52-.44a.56.56 0 00.48-.35l2.13-5.11z" />
@@ -73,9 +79,9 @@ export default function ProductCard({ product }) {
           {productName}
         </h3>
         <div className="mt-2 flex items-center justify-between gap-3">
-          <span className="font-mono text-[10px] text-gray-600 tracking-wider truncate">{product.baseCode}</span>
+          <span className="font-mono text-[10px] text-gray-600 tracking-wider truncate">{footerText ?? product.baseCode}</span>
           <span className="shrink-0 bg-[var(--apt-navy)] text-white font-montserrat text-[9px] font-bold tracking-widest px-3.5 py-2 rounded-lg group-hover:bg-[var(--apt-red)] transition-colors duration-300 uppercase">
-            Enquire
+            {ctaLabel}
           </span>
         </div>
       </div>
