@@ -34,14 +34,14 @@ export default function ProductCard({ product }) {
   return (
     <a
       href={href}
-      className="group relative block aspect-square overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.08)] hover:shadow-2xl hover:border-[var(--apt-red)]/40 transition-all duration-300"
+      className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.08)] hover:shadow-2xl hover:border-[var(--apt-red)]/40 transition-all duration-300"
     >
-      {/* object-contain shows the whole product (no cropping) on white; the glass panel overlaps only the bottom edge */}
+      {/* Same full-card image box as before; object-contain shows the whole image (zoomed out, no cropping) on white */}
       <img
         src={getProductImage(product)}
         alt={productName}
         loading="lazy"
-        className="absolute inset-0 w-full h-full object-contain object-center p-2 pb-14 group-hover:scale-[1.03] transition-transform duration-700"
+        className="absolute inset-0 w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-700"
       />
 
       {product.isFavourite && (
