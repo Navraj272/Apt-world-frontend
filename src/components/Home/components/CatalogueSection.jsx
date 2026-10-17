@@ -4,54 +4,18 @@ function CatalogueSection() {
   const sectors = [
     {
       id: 1,
-      title: 'POWER TOOLS',
-      count: '2,500+ ITEMS',
-      description: 'Dynamic range of grinders, drills, and specialized hammers for intense industrial work.',
-      link: '/categories/power-tools',
+      title: 'MHE EQUIPMENT',
+      count: '380+ ITEMS',
+      description: 'Battery pallet trucks, forklifts, and stackers for high-velocity logistics.',
+      link: '/categories/mhe-material-handling-equipment',
       icon: (
         <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       )
     },
     {
       id: 2,
-      title: 'CLEANING SOLUTIONS',
-      count: '1,200+ ITEMS',
-      description: 'High-pressure washers, industrial vacuums, and advanced floor care machinery.',
-      link: '/categories/cleaning-solutions',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a7 7 0 10-14 0v2m7-7v2" />
-        </svg>
-      )
-    },
-    {
-      id: 3,
-      title: 'CORDLESS',
-      count: '850+ ITEMS',
-      description: 'Next-gen battery-powered tools including impact drills, wrenches, and chainsaws.',
-      link: '/categories/cordless',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      )
-    },
-    {
-      id: 4,
-      title: 'AGRICULTURE MACHINES',
-      count: '950+ ITEMS',
-      description: 'Power sprayers, tillers, and specialized harvesters for modern farming.',
-      link: '/categories/agriculture-machines',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l9-5-9-5-9 5 9 5zm0 0v8m-4-4h8" />
-        </svg>
-      )
-    },
-    {
-      id: 5,
       title: 'LIFTING PRODUCTS',
       count: '420+ ITEMS',
       description: 'Chain hoists, winches, and heavy-duty cranes for safe and efficient material handling.',
@@ -64,19 +28,7 @@ function CatalogueSection() {
       )
     },
     {
-      id: 6,
-      title: 'AERIAL WORK',
-      count: '150+ ITEMS',
-      description: 'Scissor lifts, boom lifts, and aerial platforms for elevated industrial operations.',
-      link: '/categories/aerial-work-platforms',
-      icon: (
-        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-        </svg>
-      )
-    },
-    {
-      id: 7,
+      id: 3,
       title: 'CONSTRUCTION',
       count: '1,800+ ITEMS',
       description: 'Bar bending, cutting, and leveling machines for large-scale infrastructure projects.',
@@ -88,7 +40,19 @@ function CatalogueSection() {
       )
     },
     {
-      id: 8,
+      id: 4,
+      title: 'CLEANING SOLUTIONS',
+      count: '1,200+ ITEMS',
+      description: 'High-pressure washers, industrial vacuums, and advanced floor care machinery.',
+      link: '/categories/cleaning-solutions',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a7 7 0 10-14 0v2m7-7v2" />
+        </svg>
+      )
+    },
+    {
+      id: 5,
       title: 'PACKAGING',
       count: '700+ ITEMS',
       description: 'Capping, sealing, and labeling machines designed for automated production lines.',
@@ -100,7 +64,7 @@ function CatalogueSection() {
       )
     },
     {
-      id: 9,
+      id: 6,
       title: 'WELDING MACHINES',
       count: '550+ ITEMS',
       description: 'Precision ARC, MIG, TIG, and laser welding solutions for metal fabrication.',
@@ -112,17 +76,53 @@ function CatalogueSection() {
       )
     },
     {
-      id: 10,
-      title: 'MHE EQUIPMENT',
-      count: '380+ ITEMS',
-      description: 'Battery pallet trucks, forklifts, and stackers for high-velocity logistics.',
-      link: '/categories/mhe-material-handling-equipment',
+      id: 7,
+      title: 'POWER TOOLS',
+      count: '2,500+ ITEMS',
+      description: 'Dynamic range of grinders, drills, and specialized hammers for intense industrial work.',
+      link: '/categories/power-tools',
       icon: (
         <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
         </svg>
       )
-    }
+    },
+    {
+      id: 8,
+      title: 'AGRICULTURE MACHINES',
+      count: '950+ ITEMS',
+      description: 'Power sprayers, tillers, and specialized harvesters for modern farming.',
+      link: '/categories/agriculture-machines',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l9-5-9-5-9 5 9 5zm0 0v8m-4-4h8" />
+        </svg>
+      )
+    },
+    {
+      id: 9,
+      title: 'CORDLESS',
+      count: '850+ ITEMS',
+      description: 'Next-gen battery-powered tools including impact drills, wrenches, and chainsaws.',
+      link: '/categories/cordless',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      )
+    },
+    {
+      id: 10,
+      title: 'AERIAL WORK',
+      count: '150+ ITEMS',
+      description: 'Scissor lifts, boom lifts, and aerial platforms for elevated industrial operations.',
+      link: '/categories/aerial-work-platforms',
+      icon: (
+        <svg className="w-6 h-6 text-[var(--apt-red)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+      )
+    },
   ];
 
   return (
