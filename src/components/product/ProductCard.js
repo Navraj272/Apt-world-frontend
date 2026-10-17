@@ -36,7 +36,7 @@ export default function ProductCard({ product }) {
   return (
     <a
       href={href}
-      className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.08)] hover:shadow-2xl hover:border-[var(--apt-red)]/40 transition-all duration-300"
+      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.08)] hover:shadow-2xl hover:border-[var(--apt-red)]/40 transition-all duration-300"
     >
       {/* Photo is fitted whole (object-contain), then enlarged by IMAGE_ZOOM from the top edge, so the product sits high in the card; 1 = whole photo, higher = closer crop */}
       <div className="absolute inset-0" style={{ transform: `translateY(${IMAGE_SHIFT_DOWN}%) scale(${IMAGE_ZOOM})`, transformOrigin: '50% 0%' }}>

@@ -123,7 +123,7 @@ function CategoryPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--apt-navy)]/95 via-[var(--apt-navy)]/85 to-[var(--apt-navy)]/95 z-10" />
         </div>
-        <div className="relative z-20 max-w-[1350px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+        <div className="relative z-20 max-w-[1500px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
           <div className="flex items-center gap-2 text-gray-500 font-montserrat text-[10px] sm:text-xs font-bold tracking-wider">
             <a href="/" className="hover:text-white transition-colors">HOME</a>
             <span>/</span>
@@ -144,7 +144,7 @@ function CategoryPage() {
 
       {/* FILTER BAR */}
       <section className="bg-white border-b border-gray-200 sticky top-[69px] z-30 shadow-sm">
-        <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
             {/* Subcategory dropdown */}
@@ -232,7 +232,7 @@ function CategoryPage() {
       </section>
 
       {/* PRODUCTS GRID */}
-      <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16">
+      <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16">
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -269,7 +269,7 @@ function CategoryPage() {
 
       {/* PAGINATION */}
       {totalPages > 1 && (
-        <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
           <div className="flex items-center justify-center gap-2">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}

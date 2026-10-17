@@ -196,7 +196,7 @@ function ProductPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--apt-navy)]/95 via-[var(--apt-navy)]/85 to-[var(--apt-navy)]/95 z-10" />
         </div>
 
-        <div className="relative z-20 max-w-[1350px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+        <div className="relative z-20 max-w-[1500px] w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
           <span className="font-montserrat text-xs sm:text-sm font-black tracking-[0.25em] text-[var(--apt-red)] uppercase block">
             INDUSTRIAL CATALOGUE 2026
           </span>
@@ -211,7 +211,7 @@ function ProductPage() {
 
       {/* 2. FILTER CATEGORIES BAR */}
       <section className="bg-white border-b border-gray-100 sticky top-[69px] z-30 shadow-sm py-3">
-        <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative flex items-center bg-[#F3EFE9] rounded-2xl border border-[#E5DFD5] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.03)] p-1.5 h-14 overflow-hidden">
 
             {/* Left arrow */}
@@ -305,7 +305,7 @@ function ProductPage() {
       {/* 2b. SUBCATEGORY FILTER ROW */}
       {subcategoriesForCat.length > 0 && (
         <section className="bg-[var(--apt-offwhite)] border-b border-gray-200 sticky top-[113px] z-20">
-          <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative flex items-center">
 
               {/* Left arrow */}
@@ -401,7 +401,7 @@ function ProductPage() {
       )}
 
       {/* 3. CURRENT INVENTORY SUB-HEADER */}
-      <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
+      <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-gray-200">
 
           <div className="relative pb-2">
@@ -437,7 +437,7 @@ function ProductPage() {
       </section>
 
       {/* 4. PRODUCTS GRID */}
-      <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -502,7 +502,7 @@ function ProductPage() {
 
       {/* 5. PAGINATION CONTROLS */}
       {totalPages > 1 && (
-        <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
           <div className="flex items-center justify-center gap-2">
 
             <button
@@ -550,7 +550,7 @@ function ProductPage() {
 
       {/* 6. DIAGONAL CTA BANNER */}
       <section className="bg-white py-16 sm:py-24 border-t border-gray-100">
-        <div className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
 
           <div
             className="relative bg-[var(--apt-navy)] text-white p-8 sm:p-12 md:p-16 border border-white/5 shadow-2xl overflow-hidden rounded-sm"
