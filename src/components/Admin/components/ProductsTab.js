@@ -4,6 +4,7 @@ import BulkImportModal from './BulkImportModal';
 import BulkProductForm from './BulkProductForm';
 import { parseSpecsCell } from '../utils/csv';
 import { bulkCreateProducts } from '@/services/postRequest';
+import OrderModal from './OrderModal';
 
 export default function ProductsTab() {
   const {
@@ -48,9 +49,11 @@ export default function ProductsTab() {
   } = useProduct();
   const [isBulkOpen, setIsBulkOpen] = useState(false);
   const [isMultiOpen, setIsMultiOpen] = useState(false);
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
 
   return (
     <div className="space-y-6">
+      <OrderModal mode="products" initialCategoryId={categoryFilter} initialSubcategoryId={subcategoryFilter} isOpen={isOrderOpen} onClose={() => setIsOrderOpen(false)} onSaved={refetch} />
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -58,6 +61,12 @@ export default function ProductsTab() {
           <p className="text-xs text-gray-500 mt-1">Manage physical products and machinery options</p>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={() => setIsOrderOpen(true)}
+            className="flex items-center space-x-1.5 bg-white border border-gray-200 hover:border-[var(--apt-navy)] text-[var(--apt-navy)] font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all"
+          >
+            <span>Order Products</span>
+          </button>
           <button
             onClick={() => setIsBulkOpen(true)}
             className="flex items-center space-x-1.5 bg-white border border-gray-200 hover:border-[var(--apt-navy)] text-[var(--apt-navy)] font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all"
@@ -120,10 +129,11 @@ export default function ProductsTab() {
         </select>
         <select value={favouriteFilter} onChange={(e) => setFavouriteFilter(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
           <option value="">All products</option>
-          <option value="true">Favourites only</option>
-          <option value="false">Not favourites</option>
+          <option value="true">Hot Sell only</option>
+          <option value="false">Not Hot Sell</option>
         </select>
         <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition">
+          <option value="sortOrder:asc">Display order</option>
           <option value="id:desc">Newest first</option>
           <option value="id:asc">Oldest first</option>
           <option value="name:asc">Name A-Z</option>
@@ -178,7 +188,7 @@ export default function ProductsTab() {
                         type="button"
                         onClick={() => toggleFavourite(product)}
                         aria-pressed={!!product.isFavourite}
-                        title={product.isFavourite ? 'Remove from favourites' : 'Mark as favourite (shown first in All Products)'}
+                        title={product.isFavourite ? 'Remove from Hot Sell' : 'Mark as Hot Sell (shown first in All Products)'}
                         className="p-1 rounded-sm transition-transform hover:scale-110"
                       >
                         <svg

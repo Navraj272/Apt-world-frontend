@@ -44,3 +44,7 @@ export const updateFranchiseLocation = (id, data) => {
   }
   return putRequest(`${API_URL}/franchise-locations/${id}`, data);
 };
+// ids[0] is shown first; only the listed rows are renumbered
+export const reorderCategories = (ids) => putRequest(`${API_URL}/categories/reorder`, { ids });
+export const reorderSubcategories = (ids) => putRequest(`${API_URL}/subcategories/reorder`, { ids });
+export const reorderProducts = (ids) => putRequest(`${API_URL}/products/reorder`, { ids });

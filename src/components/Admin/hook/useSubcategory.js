@@ -17,7 +17,7 @@ export default function useSubcategory() {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [sort, setSort] = useState('id:desc');
+  const [sort, setSort] = useState('sortOrder:asc');
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);

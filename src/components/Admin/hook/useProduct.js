@@ -20,7 +20,7 @@ export default function useProduct() {
   const [filterSubcategories, setFilterSubcategories] = useState([]);
   const [statusFilter, setStatusFilter] = useState('');
   const [favouriteFilter, setFavouriteFilter] = useState('');
-  const [sort, setSort] = useState('id:desc');
+  const [sort, setSort] = useState('sortOrder:asc');
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);

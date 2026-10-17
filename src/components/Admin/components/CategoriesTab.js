@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useCategory from '../hook/useCategory';
+import OrderModal from './OrderModal';
 
 export default function CategoriesTab() {
   const {
@@ -20,17 +21,27 @@ export default function CategoriesTab() {
     handleEditOpen,
     handleInputChange,
     handleSubmit,
-    handleDelete
+    handleDelete,
+    refetch
   } = useCategory();
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
 
   return (
     <div className="space-y-6">
+      <OrderModal mode="categories" isOpen={isOrderOpen} onClose={() => setIsOrderOpen(false)} onSaved={refetch} />
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-[var(--apt-navy)]">Categories</h2>
           <p className="text-xs text-gray-500 mt-1">Manage and organize product categories</p>
         </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsOrderOpen(true)}
+            className="flex items-center space-x-1.5 bg-white border border-gray-200 hover:border-[var(--apt-navy)] text-[var(--apt-navy)] font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all"
+          >
+            <span>Set Order</span>
+          </button>
         <button
           onClick={handleCreateOpen}
           className="flex items-center space-x-1.5 bg-[var(--apt-red)] hover:bg-[var(--apt-navy)] text-white font-bold text-xs uppercase px-4 py-2.5 rounded-sm transition-all shadow-md shadow-[var(--apt-red)]/15"
@@ -40,6 +51,7 @@ export default function CategoriesTab() {
           </svg>
           <span>Create Category</span>
         </button>
+        </div>
       </div>
 
       {/* Control bar */}
