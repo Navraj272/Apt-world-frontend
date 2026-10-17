@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAllProducts, getAllCategories, getAllSubcategories } from '@/services/getRequests';
@@ -8,67 +8,39 @@ const ALL_PRODUCTS_LIMIT = 30;
 
 function ProductPage() {
   const router = useRouter();
-  const { subcategory: subcategorySlug, search: urlSearch } = router.query;
+  const { category: categorySlug, subcategory: subcategorySlug, search: urlSearch } = router.query;
 
   const [allCategories, setAllCategories] = useState([]);
   const [allSubcategories, setAllSubcategories] = useState([]);
-  const [subcategoriesForCat, setSubcategoriesForCat] = useState([]);
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const sortBy = 'PRICE_LOW_HIGH';
   const [searchQuery, setSearchQuery] = useState(urlSearch || '');
   const [debouncedSearch, setDebouncedSearch] = useState(urlSearch || '');
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Scroll refs for category bar
-  const catScrollRef = useRef(null);
-  const [catCanScrollLeft, setCatCanScrollLeft] = useState(false);
-  const [catCanScrollRight, setCatCanScrollRight] = useState(false);
+  // Category / subcategory selection comes from the URL (set by the header mega-menu)
+  const { selectedCategory, selectedSubcategory } = useMemo(() => {
+    const sub = subcategorySlug
+      ? allSubcategories.find((x) => x.slug === subcategorySlug)
+      : null;
+    const cat = sub
+      ? null
+      : categorySlug
+        ? allCategories.find((x) => x.slug === categorySlug)
+        : null;
+    return { selectedCategory: cat?.id || null, selectedSubcategory: sub?.id || null };
+  }, [categorySlug, subcategorySlug, allCategories, allSubcategories]);
 
-  // Scroll refs for subcategory bar
-  const subScrollRef = useRef(null);
-  const [subCanScrollLeft, setSubCanScrollLeft] = useState(false);
-  const [subCanScrollRight, setSubCanScrollRight] = useState(false);
-
-  const checkCatScroll = () => {
-    const el = catScrollRef.current;
-    if (!el) return;
-    setCatCanScrollLeft(el.scrollLeft > 4);
-    setCatCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
-  };
-
-  const checkSubScroll = () => {
-    const el = subScrollRef.current;
-    if (!el) return;
-    setSubCanScrollLeft(el.scrollLeft > 4);
-    setSubCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
-  };
+  // Block the first fetch until a slug in the URL can be resolved to an id
+  const filtersReady =
+    !router.isReady ||
+    ((!categorySlug || allCategories.length > 0) && (!subcategorySlug || allSubcategories.length > 0));
 
   useEffect(() => {
-    checkCatScroll();
-    window.addEventListener('resize', checkCatScroll);
-    return () => window.removeEventListener('resize', checkCatScroll);
-  }, [allCategories]);
-
-  useEffect(() => {
-    checkSubScroll();
-  }, [subcategoriesForCat]);
-
-  const scrollCat = (dir) => {
-    const el = catScrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * 220, behavior: 'smooth' });
-  };
-
-  const scrollSub = (dir) => {
-    const el = subScrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * 220, behavior: 'smooth' });
-  };
-
+    setCurrentPage(1);
+  }, [categorySlug, subcategorySlug]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -87,21 +59,6 @@ function ProductPage() {
   }, []);
 
   useEffect(() => {
-    if (subcategorySlug) {
-      getAllSubcategories().then((res) => {
-        if (res && res.subcategories) {
-          const found = res.subcategories.find(
-            (s) => s.slug === subcategorySlug
-          );
-          if (found) {
-            setSelectedCategory(found.categoryId);
-          }
-        }
-      }).catch(() => { });
-    }
-  }, [subcategorySlug]);
-
-  useEffect(() => {
     if (urlSearch) {
       setSearchQuery(urlSearch);
       setDebouncedSearch(urlSearch);
@@ -109,6 +66,7 @@ function ProductPage() {
   }, [urlSearch]);
 
   const fetchProducts = useCallback(async () => {
+    if (!filtersReady) return;
     setLoading(true);
     try {
       const params = {
@@ -142,30 +100,11 @@ function ProductPage() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, selectedCategory, selectedSubcategory, debouncedSearch, sortBy]);
+  }, [currentPage, selectedCategory, selectedSubcategory, debouncedSearch, sortBy, filtersReady]);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      const subs = allSubcategories.filter((s) => s.categoryId === selectedCategory);
-      setSubcategoriesForCat(subs);
-    } else {
-      setSubcategoriesForCat([]);
-    }
-    setSelectedSubcategory(null);
-  }, [selectedCategory, allSubcategories]);
-
-  const handleCategoryChange = (catId) => {
-    setSelectedCategory(catId);
-    setSelectedSubcategory(null);
-    setSearchQuery('');
-    setDebouncedSearch('');
-    setCurrentPage(1);
-    router.replace('/products', undefined, { shallow: true });
-  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -174,13 +113,10 @@ function ProductPage() {
 
 
 
-  const categories = [
-    { id: null, name: 'ALL PRODUCTS' },
-    ...(allCategories || []).map((c) => ({
-      id: c?.id,
-      name: (c?.name && (c?.name?.en || c?.name?.EN)) || c?.slug || '',
-    })),
-  ];
+  const activeSub = allSubcategories.find((x) => x.id === selectedSubcategory);
+  const activeCat = allCategories.find((x) => x.id === selectedCategory);
+  const activeLabel = activeSub || activeCat;
+  const activeName = activeLabel ? (activeLabel.name?.en || activeLabel.name?.EN || activeLabel.slug || '') : '';
 
   return (
     <div className="w-full min-h-screen bg-[var(--apt-offwhite)] text-[var(--apt-navy)] pt-24 font-montserrat">
@@ -209,204 +145,13 @@ function ProductPage() {
         </div>
       </section>
 
-      {/* 2. FILTER CATEGORIES BAR */}
-      <section className="bg-white border-b border-gray-100 sticky top-[69px] z-30 shadow-sm py-3">
-        <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative flex items-center bg-[#F3EFE9] rounded-2xl border border-[#E5DFD5] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.03)] p-1.5 h-14 overflow-hidden">
-
-            {/* Left arrow */}
-            <button
-              onClick={() => scrollCat(-1)}
-              aria-label="Scroll categories left"
-              style={{
-                opacity: catCanScrollLeft ? 1 : 0,
-                pointerEvents: catCanScrollLeft ? 'auto' : 'none',
-                transition: 'opacity 0.25s',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-              className="absolute left-1.5 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white border border-[#E5DFD5] shadow-md hover:bg-[var(--apt-red)] hover:border-[var(--apt-red)] hover:text-white text-[var(--apt-navy)] transition-all duration-200 shrink-0"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            {/* Left fade gradient matching the warm cream track bg */}
-            <div
-              style={{
-                opacity: catCanScrollLeft ? 1 : 0,
-                transition: 'opacity 0.25s',
-                pointerEvents: 'none',
-                background: 'linear-gradient(to right, #F3EFE9 45%, transparent)',
-              }}
-              className="absolute left-1.5 top-1.5 bottom-1.5 w-16 z-[5] rounded-l-2xl"
-            />
-
-            {/* Scrollable row with minimal padding to utilize full container width */}
-            <div
-              ref={catScrollRef}
-              onScroll={checkCatScroll}
-              className="flex items-center gap-2.5 overflow-x-auto py-1 scrollbar-hide w-full px-2"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {categories?.map((cat) => {
-                const isActive = selectedCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id || 'all'}
-                    onClick={() => handleCategoryChange(cat.id)}
-                    className={`shrink-0 font-montserrat text-[10px] sm:text-xs font-bold tracking-widest px-5 py-2 rounded-xl transition-all duration-300 border ${isActive
-                        ? 'bg-[var(--apt-red)] text-white border-[var(--apt-red)] shadow-md shadow-[var(--apt-red)]/20'
-                        : 'bg-white text-[var(--apt-navy)] border-[#DFD9CE] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:bg-white/80 hover:text-[var(--apt-red)] hover:border-[var(--apt-red)]/40'
-                      }`}
-                  >
-                    {cat.name.toUpperCase()}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Right fade gradient matching the warm cream track bg */}
-            <div
-              style={{
-                opacity: catCanScrollRight ? 1 : 0,
-                transition: 'opacity 0.25s',
-                pointerEvents: 'none',
-                background: 'linear-gradient(to left, #F3EFE9 45%, transparent)',
-              }}
-              className="absolute right-1.5 top-1.5 bottom-1.5 w-16 z-[5] rounded-r-2xl"
-            />
-
-            {/* Right arrow */}
-            <button
-              onClick={() => scrollCat(1)}
-              aria-label="Scroll categories right"
-              style={{
-                opacity: catCanScrollRight ? 1 : 0,
-                pointerEvents: catCanScrollRight ? 'auto' : 'none',
-                transition: 'opacity 0.25s',
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
-              className="absolute right-1.5 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white border border-[#E5DFD5] shadow-md hover:bg-[var(--apt-red)] hover:border-[var(--apt-red)] hover:text-white text-[var(--apt-navy)] transition-all duration-200 shrink-0"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* 2b. SUBCATEGORY FILTER ROW */}
-      {subcategoriesForCat.length > 0 && (
-        <section className="bg-[var(--apt-offwhite)] border-b border-gray-200 sticky top-[113px] z-20">
-          <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative flex items-center">
-
-              {/* Left arrow */}
-              <button
-                onClick={() => scrollSub(-1)}
-                aria-label="Scroll subcategories left"
-                style={{
-                  opacity: subCanScrollLeft ? 1 : 0,
-                  pointerEvents: subCanScrollLeft ? 'auto' : 'none',
-                  transition: 'opacity 0.25s',
-                }}
-                className="absolute left-0 z-10 flex items-center justify-center w-7 h-7 rounded-full bg-white border border-gray-200 shadow-md hover:bg-[var(--apt-navy)] hover:border-[var(--apt-navy)] hover:text-white text-gray-500 transition-all duration-200 shrink-0"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              {/* Left fade */}
-              <div
-                style={{
-                  opacity: subCanScrollLeft ? 1 : 0,
-                  transition: 'opacity 0.25s',
-                  pointerEvents: 'none',
-                }}
-                className="absolute left-0 top-0 h-full w-12 z-[5] bg-gradient-to-r from-[var(--apt-offwhite)] to-transparent"
-              />
-
-              {/* Scrollable row */}
-              <div
-                ref={subScrollRef}
-                onScroll={checkSubScroll}
-                className="flex items-center gap-2 overflow-x-auto py-3 scrollbar-hide w-full px-2"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                <span className="font-montserrat text-[9px] font-black tracking-widest text-[#404040] uppercase shrink-0">SUBCATEGORY:</span>
-                <button
-                  onClick={() => { setSelectedSubcategory(null); setSearchQuery(''); setDebouncedSearch(''); setCurrentPage(1); router.replace('/products', undefined, { shallow: true }); }}
-                  className={`shrink-0 font-montserrat text-[10px] font-bold tracking-widest px-4 py-2 rounded-full transition-all duration-200 border ${selectedSubcategory === null
-                    ? 'bg-[var(--apt-navy)] text-white border-[var(--apt-navy)]'
-                    : 'bg-white text-[#404040] border-gray-200 hover:border-[#404040]'
-                    }`}
-                >
-                  ALL
-                </button>
-                {subcategoriesForCat.map((sub) => {
-                  const subName = (sub.name && (sub.name.en || sub.name.EN)) || sub.slug || '';
-                  const isActive = selectedSubcategory === sub.id;
-                  return (
-                    <button
-                      key={sub.id}
-                      onClick={() => { setSelectedSubcategory(sub.id); setSearchQuery(''); setDebouncedSearch(''); setCurrentPage(1); router.replace('/products', undefined, { shallow: true }); }}
-                      className={`shrink-0 font-montserrat text-[10px] font-bold tracking-widest px-4 py-2 rounded-full transition-all duration-200 border ${isActive
-                        ? 'bg-[var(--apt-red)] text-white border-[var(--apt-red)] shadow-sm shadow-[var(--apt-red)]/20'
-                        : 'bg-white text-[#404040] border-gray-200 hover:border-[var(--apt-red)]/40 hover:text-[var(--apt-red)]'
-                        }`}
-                    >
-                      {subName.toUpperCase()}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Right fade */}
-              <div
-                style={{
-                  opacity: subCanScrollRight ? 1 : 0,
-                  transition: 'opacity 0.25s',
-                  pointerEvents: 'none',
-                }}
-                className="absolute right-0 top-0 h-full w-12 z-[5] bg-gradient-to-l from-[var(--apt-offwhite)] to-transparent"
-              />
-
-              {/* Right arrow */}
-              <button
-                onClick={() => scrollSub(1)}
-                aria-label="Scroll subcategories right"
-                style={{
-                  opacity: subCanScrollRight ? 1 : 0,
-                  pointerEvents: subCanScrollRight ? 'auto' : 'none',
-                  transition: 'opacity 0.25s',
-                }}
-                className="absolute right-0 z-10 flex items-center justify-center w-7 h-7 rounded-full bg-white border border-gray-200 shadow-md hover:bg-[var(--apt-navy)] hover:border-[var(--apt-navy)] hover:text-white text-gray-500 transition-all duration-200 shrink-0"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* 3. CURRENT INVENTORY SUB-HEADER */}
       <section className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-gray-200">
 
           <div className="relative pb-2">
             <h2 className="font-khand text-2xl sm:text-3xl font-black uppercase tracking-wider text-[#1a1a1a]">
-              CURRENT INVENTORY
+              {activeName ? activeName.toUpperCase() : 'CURRENT INVENTORY'}
             </h2>
             <div className="absolute bottom-0 left-0 w-24 h-[3px] bg-[var(--apt-red)]" />
           </div>

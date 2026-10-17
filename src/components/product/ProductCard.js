@@ -17,7 +17,7 @@ const getProductImage = (product) => {
   return '/assets/png/products/rotary_hammer.png';
 };
 
-const IMAGE_ZOOM = 1.25;
+const IMAGE_ZOOM = 1.12;
 const IMAGE_SHIFT_DOWN = 5; // % of card height the photo is moved down from the top edge
 const NEW_BADGE_DAYS = 14;
 const isNew = (product) =>

@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import GlobalSearch from '@/components/GlobalSearch';
+import { getAllCategories, getAllSubcategories } from '@/services/getRequests';
+
+const nameOf = (item) => (item?.name && (item.name.en || item.name.EN)) || item?.slug || '';
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +12,13 @@ function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isFranchiseDropdownOpen, setIsFranchiseDropdownOpen] = useState(false);
   const [isMobileFranchiseOpen, setIsMobileFranchiseOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
+  const [hoveredCategoryId, setHoveredCategoryId] = useState(null);
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
+  const [mobileCategoryId, setMobileCategoryId] = useState(null);
+  const productsCloseTimer = useRef(null);
   const router = useRouter();
   const franchiseDropdownRef = useRef(null);
 
@@ -26,7 +36,31 @@ function Header() {
 
   useEffect(() => {
     setIsOpen(false);
+    setIsProductsMenuOpen(false);
   }, [router.asPath]);
+
+  useEffect(() => {
+    getAllCategories().then((res) => {
+      if (res?.categories) setCategories(res.categories);
+    }).catch(() => {});
+    getAllSubcategories({ limit: 500 }).then((res) => {
+      if (res?.subcategories) setSubcategories(res.subcategories);
+    }).catch(() => {});
+    return () => clearTimeout(productsCloseTimer.current);
+  }, []);
+
+  const openProductsMenu = () => {
+    clearTimeout(productsCloseTimer.current);
+    setIsProductsMenuOpen(true);
+    setHoveredCategoryId((prev) => prev || categories[0]?.id || null);
+  };
+  const closeProductsMenu = () => {
+    clearTimeout(productsCloseTimer.current);
+    productsCloseTimer.current = setTimeout(() => setIsProductsMenuOpen(false), 160);
+  };
+  const subsOf = (catId) => subcategories.filter((s) => s.categoryId === catId);
+  const activeCategory = categories.find((c) => c.id === hoveredCategoryId) || categories[0];
+  const activeSubs = activeCategory ? subsOf(activeCategory.id) : [];
 
   useEffect(() => {
     document.body.style.overflow = isSearchOpen ? 'hidden' : '';
@@ -88,15 +122,110 @@ function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-6">
-            <Link
-              href="/products"
-              className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
-                isProducts ? 'text-[var(--apt-red)]' : 'text-[#404040] hover:text-[var(--apt-navy)]'
-              }`}
+            {/* Products mega dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={openProductsMenu}
+              onMouseLeave={closeProductsMenu}
+              onFocus={openProductsMenu}
+              onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) closeProductsMenu(); }}
             >
-              PRODUCTS
-              {isProducts && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />}
-            </Link>
+              <Link
+                href="/products"
+                aria-haspopup="true"
+                aria-expanded={isProductsMenuOpen}
+                className={`flex items-center gap-1 font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
+                  isProducts || isProductsMenuOpen ? 'text-[var(--apt-red)]' : 'text-[#404040] hover:text-[var(--apt-navy)]'
+                }`}
+              >
+                PRODUCTS
+                <svg
+                  className={`w-3 h-3 transition-transform duration-200 ${isProductsMenuOpen ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+                {(isProducts || isProductsMenuOpen) && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--apt-red)] rounded-full" />}
+              </Link>
+
+              {/* hover bridge + panel */}
+              <div
+                className={`absolute top-full left-0 pt-4 z-50 transition-all duration-200 ease-out ${
+                  isProductsMenuOpen && categories.length > 0
+                    ? 'opacity-100 translate-y-0 pointer-events-auto visible'
+                    : 'opacity-0 -translate-y-2 pointer-events-none invisible'
+                }`}
+              >
+                <div className="flex w-[820px] min-h-[420px] max-h-[75vh] rounded-2xl border border-white/60 bg-white/75 backdrop-blur-xl shadow-[0_20px_50px_rgba(6,15,30,0.18)] overflow-hidden">
+                  {/* Categories */}
+                  <ul className="w-[320px] shrink-0 overflow-y-auto py-4 bg-white/40 border-r border-gray-200/60">
+                    {categories.map((cat) => {
+                      const isHovered = activeCategory?.id === cat.id;
+                      return (
+                        <li key={cat.id}>
+                          <Link
+                            href={`/products?category=${cat.slug}`}
+                            onMouseEnter={() => setHoveredCategoryId(cat.id)}
+                            onFocus={() => setHoveredCategoryId(cat.id)}
+                            onClick={() => setIsProductsMenuOpen(false)}
+                            className={`group flex items-center justify-between gap-3 mx-3 px-4 py-3 rounded-xl font-montserrat text-[13px] font-semibold tracking-wide transition-all duration-200 ${
+                              isHovered
+                                ? 'bg-[var(--apt-red)]/10 text-[var(--apt-red)] translate-x-0.5'
+                                : 'text-[#404040] hover:text-[var(--apt-navy)]'
+                            }`}
+                          >
+                            <span>{nameOf(cat).toUpperCase()}</span>
+                            <svg className={`w-3 h-3 shrink-0 transition-opacity ${isHovered ? 'opacity-100' : 'opacity-30'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {/* Subcategories */}
+                  <div className="flex-1 overflow-y-auto p-7">
+                    {activeCategory && (
+                      <div key={activeCategory.id} className="animate-[fadeIn_0.2s_ease-out]">
+                        <Link
+                          href={`/products?category=${activeCategory.slug}`}
+                          onClick={() => setIsProductsMenuOpen(false)}
+                          className="inline-block font-khand text-2xl font-bold tracking-wider text-[var(--apt-navy)] hover:text-[var(--apt-red)] transition-colors"
+                        >
+                          {nameOf(activeCategory).toUpperCase()}
+                        </Link>
+                        <div className="h-[2px] w-10 bg-[var(--apt-red)] rounded-full mt-1.5 mb-4" />
+                        {activeSubs.length > 0 ? (
+                          <ul className="space-y-0.5">
+                            {activeSubs.map((sub) => (
+                              <li key={sub.id}>
+                                <Link
+                                  href={`/products?subcategory=${sub.slug}`}
+                                  onClick={() => setIsProductsMenuOpen(false)}
+                                  className="block px-4 py-2.5 rounded-lg font-montserrat text-sm font-medium text-[#404040] hover:bg-[var(--apt-red)]/10 hover:text-[var(--apt-red)] hover:translate-x-1 transition-all duration-200"
+                                >
+                                  {nameOf(sub)}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="font-montserrat text-sm text-gray-400">No subcategories yet.</p>
+                        )}
+                        <Link
+                          href={`/products?category=${activeCategory.slug}`}
+                          onClick={() => setIsProductsMenuOpen(false)}
+                          className="inline-block mt-5 font-montserrat text-xs font-bold tracking-widest text-[var(--apt-red)] hover:underline"
+                        >
+                          VIEW ALL →
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
             <Link
               href="/rental"
               className={`font-montserrat text-xs font-semibold tracking-wider relative py-2 transition-colors duration-300 ${
@@ -229,7 +358,56 @@ function Header() {
               SEARCH PRODUCTS
             </button>
 
-            {navLinks.slice(0, 2).map((link) => (
+            {/* Mobile Products accordion */}
+            <button
+              onClick={() => setIsMobileProductsOpen((prev) => !prev)}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-montserrat text-sm font-medium tracking-wider transition-colors ${
+                isProducts ? 'bg-[var(--apt-red)]/10 text-[var(--apt-red)]' : 'text-[#404040] hover:bg-gray-50 hover:text-[var(--apt-navy)]'
+              }`}
+            >
+              PRODUCTS
+              <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${isMobileProductsOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {isMobileProductsOpen && (
+              <div className="pl-4 space-y-1 max-h-[50vh] overflow-y-auto">
+                <Link href="/products" onClick={() => setIsOpen(false)} className="block px-3 py-2 rounded-xl font-montserrat text-xs font-medium tracking-wider text-[#697486] hover:bg-gray-50">
+                  ALL PRODUCTS
+                </Link>
+                {categories.map((cat) => {
+                  const subs = subsOf(cat.id);
+                  const expanded = mobileCategoryId === cat.id;
+                  return (
+                    <div key={cat.id}>
+                      <div className="flex items-center">
+                        <Link href={`/products?category=${cat.slug}`} onClick={() => setIsOpen(false)} className="flex-1 px-3 py-2 rounded-xl font-montserrat text-xs font-semibold tracking-wider text-[#404040] hover:bg-gray-50">
+                          {nameOf(cat).toUpperCase()}
+                        </Link>
+                        {subs.length > 0 && (
+                          <button onClick={() => setMobileCategoryId(expanded ? null : cat.id)} aria-label="Toggle subcategories" className="p-2 text-[#404040]">
+                            <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                      {expanded && (
+                        <div className="pl-4 space-y-0.5">
+                          {subs.map((sub) => (
+                            <Link key={sub.id} href={`/products?subcategory=${sub.slug}`} onClick={() => setIsOpen(false)} className="block px-3 py-1.5 rounded-lg font-montserrat text-xs text-[#697486] hover:text-[var(--apt-red)]">
+                              {nameOf(sub)}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {navLinks.slice(1, 2).map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
