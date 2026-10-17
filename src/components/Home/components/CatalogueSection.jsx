@@ -64,7 +64,7 @@ function CatalogueSection() {
       )
     },
     {
-      id: 5,
+      id: 6,
       title: 'CLEANING SOLUTIONS',
       count: '1,200+ ITEMS',
       description: 'High-pressure washers, industrial vacuums, and advanced floor care machinery.',
@@ -76,8 +76,8 @@ function CatalogueSection() {
       )
     },
     {
-      id: 6,
-      title: 'CONSTRUCTION PRODUCTS',
+      id: 7,
+      title: 'CONSTRUCTION MACHINES',
       count: '1,800+ ITEMS',
       description: 'Bar bending, cutting, and leveling machines for large-scale infrastructure projects.',
       link: '/categories/construction',
