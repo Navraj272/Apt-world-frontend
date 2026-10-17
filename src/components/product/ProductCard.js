@@ -34,13 +34,13 @@ export default function ProductCard({ product }) {
   return (
     <a
       href={href}
-      className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-gray-100 border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.08)] hover:shadow-2xl hover:border-[var(--apt-red)]/40 transition-all duration-300"
+      className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.08)] hover:shadow-2xl hover:border-[var(--apt-red)]/40 transition-all duration-300"
     >
       <img
         src={getProductImage(product)}
         alt={productName}
         loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+        className="absolute inset-0 w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-700"
       />
 
       {product.isFavourite && (
