@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <SEOTags />
+      <SEOTags seo={pageProps && pageProps.seo} />
 
       <LayoutWrapper>
         <Component {...pageProps} />

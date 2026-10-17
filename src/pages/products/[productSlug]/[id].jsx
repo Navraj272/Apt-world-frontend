@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getProduct } from '@/services/getRequests';
 import { createEnquiry } from '@/services/postRequest';
 import { useToast } from '@/hooks/use-toast';
+import { SITE_NAME, SITE_URL, absoluteUrl, apiGet, nameOf, slugify, truncate } from '@/common/SEOTags/seo';
 
 const getProductName = (product) => {
   if (!product.name) return '';
@@ -341,4 +342,42 @@ export default function ProductDetailPage() {
       )}
     </div>
   );
+}
+
+
+export async function getServerSideProps({ params }) {
+  const product = await apiGet(`/products/${encodeURIComponent(params.id)}`);
+  if (!product || !product.id) return { props: {} };
+
+  const name = nameOf(product.name) || product.baseCode;
+  const category = nameOf(product.category && product.category.name);
+  const image = (product.images && product.images[0]) || product.thumbnail || '';
+  const description = truncate(
+    nameOf(product.description) ||
+      `${name}${category ? ` - ${category}` : ''} from ${SITE_NAME}. Request specifications and pricing online.`
+  );
+  const path = `/products/${slugify(name)}/${product.id}`;
+
+  return {
+    props: {
+      seo: {
+        title: `${name}${category ? ` - ${category}` : ''} | ${SITE_NAME}`,
+        description,
+        image,
+        path,
+        ogType: 'product',
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name,
+          sku: product.baseCode,
+          description,
+          image: image ? [absoluteUrl(image)] : undefined,
+          brand: { '@type': 'Brand', name: SITE_NAME },
+          category: category || undefined,
+          url: `${SITE_URL}${path}`,
+        },
+      },
+    },
+  };
 }

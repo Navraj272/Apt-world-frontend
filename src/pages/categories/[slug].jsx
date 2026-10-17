@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { getAllSubcategories, getAllCategories, getAllProducts } from '@/services/getRequests';
 import ProductCard from '@/components/product/ProductCard';
+import { SITE_NAME, apiGet, nameOf, truncate } from '@/common/SEOTags/seo';
 
 const getName = (obj) => {
   if (!obj) return '';
@@ -306,3 +307,27 @@ function CategoryPage() {
 }
 
 export default CategoryPage;
+
+
+export async function getServerSideProps({ params }) {
+  const [subs, cats] = await Promise.all([apiGet('/subcategories?limit=1000'), apiGet('/categories?limit=500')]);
+  const sub = ((subs && subs.subcategories) || []).find((s) => s.slug === params.slug);
+  const cat = ((cats && cats.categories) || []).find((c) => c.slug === params.slug);
+  const match = sub || cat;
+  if (!match) return { props: {} };
+
+  const name = nameOf(match.name);
+  const parent = sub ? nameOf(((cats && cats.categories) || []).find((c) => c.id === sub.categoryId)?.name) : '';
+  return {
+    props: {
+      seo: {
+        title: `${name}${parent ? ` - ${parent}` : ''} | ${SITE_NAME}`,
+        description: truncate(
+          nameOf(match.description) || `Browse ${name} from ${SITE_NAME}. Industrial tools and equipment with online enquiry.`
+        ),
+        image: match.image || '',
+        path: `/categories/${match.slug}`,
+      },
+    },
+  };
+}
