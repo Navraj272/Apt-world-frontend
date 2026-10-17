@@ -29,6 +29,11 @@ const nextConfig = {
         headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
       },
       {
+        // Old /m/... URLs from the previous version of the site still linger in Google
+        source: '/m/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
         source: '/(.*)',
         headers: [
           {
