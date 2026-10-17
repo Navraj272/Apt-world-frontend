@@ -1,4 +1,5 @@
 import React from 'react';
+import { CONTACT_PHONE, CONTACT_PHONE_HREF } from '@/common/siteContact';
 
 function ContactHero() {
   return (
@@ -50,13 +51,13 @@ function ContactHero() {
         {/* Quick contact info pills — the single canonical place these details appear */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
           <a
-            href="tel:9699429699"
+            href={CONTACT_PHONE_HREF}
             className="flex items-center gap-2.5 bg-white/10 border border-white/20 hover:border-[var(--apt-red)] hover:bg-[var(--apt-red)]/15 rounded-full px-5 py-2.5 transition-all duration-200 shadow-lg shadow-black/10"
           >
             <svg className="w-4 h-4 text-[var(--apt-red)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
-            <span className="font-montserrat text-xs font-bold text-white">9699429699</span>
+            <span className="font-montserrat text-xs font-bold text-white">{CONTACT_PHONE}</span>
           </a>
           <a
             href="mailto:info.aptworld@gmail.com"

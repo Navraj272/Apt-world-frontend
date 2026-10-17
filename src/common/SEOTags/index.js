@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { CONTACT_PHONE_E164 } from '../siteContact';
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, DEFAULT_IMAGE, STATIC_SEO, absoluteUrl } from './seo';
 
 /**
@@ -22,9 +23,19 @@ export default function SEOTags({ seo }) {
   const jsonLd = [
     router.pathname === '/' && {
       '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE_NAME,
+      alternateName: ['Apt World', 'aptworld.in'],
+      url: `${SITE_URL}/`,
+    },
+    router.pathname === '/' && {
+      '@context': 'https://schema.org',
       '@type': 'Organization',
       name: SITE_NAME,
       url: SITE_URL,
+      logo: `${SITE_URL}/icon-192.png`,
+      telephone: CONTACT_PHONE_E164,
+      contactPoint: { '@type': 'ContactPoint', telephone: CONTACT_PHONE_E164, contactType: 'customer service', areaServed: 'IN' },
       description: DEFAULT_DESCRIPTION,
     },
     meta.jsonLd,

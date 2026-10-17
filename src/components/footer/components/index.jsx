@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { CONTACT_PHONE_HREF } from '@/common/siteContact';
 
 const Footer = () => {
   return (
@@ -38,7 +39,7 @@ const Footer = () => {
                 </svg>
               </a>
               <a
-                href="tel:+919999999999"
+                href={CONTACT_PHONE_HREF}
                 className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-[var(--apt-red)] hover:border-[var(--apt-red)] text-gray-300 hover:text-white transition-all duration-300"
                 aria-label="Phone Support"
               >
