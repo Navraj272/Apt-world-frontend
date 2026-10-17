@@ -6,7 +6,7 @@
 
 :root {
   --apt-red: #dc2626;
-  --apt-offwhite: #fffbeb;
+  --apt-offwhite: #ffffff;
   --apt-navy: #404040;
   --apt-slate: #525252;
 }
@@ -37,7 +37,7 @@ button {
 
 @layer base {
   :root {
-    --background: 48 100% 96%;
+    --background: 0 0% 100%;
     --foreground: 0 0% 10%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 10%;

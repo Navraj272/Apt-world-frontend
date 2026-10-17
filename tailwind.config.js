@@ -65,11 +65,11 @@ module.exports = {
       },
       colors: {
         'apt-red': '#dc2626',
-        'apt-offwhite': '#fffbeb',
+        'apt-offwhite': '#ffffff',
         'apt-slate': '#404040',
         'apt-navy': '#404040',
         'apt-dark': '#404040',
-        white: '#fffbeb',
+        white: '#ffffff',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         vipPopupText: 'var(--vip-popup-text)',

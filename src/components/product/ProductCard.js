@@ -18,6 +18,7 @@ const getProductImage = (product) => {
 };
 
 const IMAGE_ZOOM = 1.25;
+const IMAGE_SHIFT_DOWN = 5; // % of card height the photo is moved down from the top edge
 const NEW_BADGE_DAYS = 14;
 const isNew = (product) =>
   product.createdAt && Date.now() - new Date(product.createdAt).getTime() < NEW_BADGE_DAYS * 24 * 60 * 60 * 1000;
@@ -37,13 +38,13 @@ export default function ProductCard({ product }) {
       href={href}
       className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_2px_14px_rgba(6,15,30,0.08)] hover:shadow-2xl hover:border-[var(--apt-red)]/40 transition-all duration-300"
     >
-      {/* Photo is fitted whole (object-contain), then enlarged by IMAGE_ZOOM so the product stays big; 1 = whole photo, higher = closer crop */}
-      <div className="absolute inset-0" style={{ transform: `scale(${IMAGE_ZOOM})` }}>
+      {/* Photo is fitted whole (object-contain), then enlarged by IMAGE_ZOOM from the top edge, so the product sits high in the card; 1 = whole photo, higher = closer crop */}
+      <div className="absolute inset-0" style={{ transform: `translateY(${IMAGE_SHIFT_DOWN}%) scale(${IMAGE_ZOOM})`, transformOrigin: '50% 0%' }}>
         <img
           src={getProductImage(product)}
           alt={productName}
           loading="lazy"
-          className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-700"
+          className="w-full h-full object-contain object-top group-hover:scale-105 transition-transform duration-700"
         />
       </div>
 
