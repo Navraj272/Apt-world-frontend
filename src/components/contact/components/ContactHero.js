@@ -1,5 +1,5 @@
 import React from 'react';
-import { CONTACT_PHONE, CONTACT_PHONE_HREF } from '@/common/siteContact';
+import { CONTACT_PHONE, CONTACT_PHONE_HREF, CONTACT_PHONE_2, CONTACT_PHONE_2_HREF, OFFICE_MAP_URL } from '@/common/siteContact';
 
 function ContactHero() {
   return (
@@ -60,6 +60,15 @@ function ContactHero() {
             <span className="font-montserrat text-xs font-bold text-white">{CONTACT_PHONE}</span>
           </a>
           <a
+            href={CONTACT_PHONE_2_HREF}
+            className="flex items-center gap-2.5 bg-white/10 border border-white/20 hover:border-[var(--apt-red)] hover:bg-[var(--apt-red)]/15 rounded-full px-5 py-2.5 transition-all duration-200 shadow-lg shadow-black/10"
+          >
+            <svg className="w-4 h-4 text-[var(--apt-red)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <span className="font-montserrat text-xs font-bold text-white">{CONTACT_PHONE_2}</span>
+          </a>
+          <a
             href="mailto:info.aptworld@gmail.com"
             className="flex items-center gap-2.5 bg-white/10 border border-white/20 hover:border-[var(--apt-red)] hover:bg-[var(--apt-red)]/15 rounded-full px-5 py-2.5 transition-all duration-200 shadow-lg shadow-black/10"
           >
@@ -68,13 +77,13 @@ function ContactHero() {
             </svg>
             <span className="font-montserrat text-xs font-bold text-white">info.aptworld@gmail.com</span>
           </a>
-          <div className="flex items-center gap-2.5 bg-white/10 border border-white/20 rounded-full px-5 py-2.5 shadow-lg shadow-black/10">
+          <a href={OFFICE_MAP_URL} target="_blank" rel="noopener noreferrer" title="Open in Google Maps" className="flex items-center gap-2.5 bg-white/10 border border-white/20 hover:border-[var(--apt-red)] hover:bg-[var(--apt-red)]/15 transition-all duration-200 rounded-full px-5 py-2.5 shadow-lg shadow-black/10">
             <svg className="w-4 h-4 text-[var(--apt-red)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span className="font-montserrat text-xs font-bold text-white">Indore, MP, India</span>
-          </div>
+          </a>
           <div className="flex items-center gap-2.5 bg-white/10 border border-white/20 rounded-full px-5 py-2.5 shadow-lg shadow-black/10">
             <svg className="w-4 h-4 text-[var(--apt-red)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -416,6 +416,18 @@ function FranchiseLocator() {
                 <p className="text-xs text-[#4B5563] leading-relaxed mb-3 flex-1">{f.address}</p>
                 {f.contactName && <p className="text-[11px] font-bold text-gray-700 mb-0.5">{f.contactName}</p>}
                 <p className="text-[11px] text-gray-400 mb-4">{f.phone}</p>
+                <a
+                  href={f.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${f.address}, ${f.city}, ${f.state}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full mb-2 inline-flex items-center justify-center gap-2 font-montserrat text-[10px] font-bold tracking-widest text-[var(--apt-navy)] border border-[var(--apt-navy)]/20 hover:border-[var(--apt-red)] hover:text-[var(--apt-red)] px-4 py-3 rounded-xl transition-all duration-300 uppercase"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Get Directions
+                </a>
                 <button
                   onClick={() => openEnquiry(f)}
                   className="w-full font-montserrat text-[10px] font-bold tracking-widest text-white bg-[var(--apt-red)] hover:bg-[var(--apt-navy)] px-4 py-3 rounded-xl transition-all duration-300 uppercase"

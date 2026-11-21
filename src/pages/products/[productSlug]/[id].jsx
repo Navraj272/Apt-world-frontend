@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { getProduct } from '@/services/getRequests';
+import { getProduct, getAllProducts } from '@/services/getRequests';
 import { createEnquiry } from '@/services/postRequest';
 import { useToast } from '@/hooks/use-toast';
 import { SITE_NAME, SITE_URL, absoluteUrl, apiGet, nameOf, slugify, truncate } from '@/common/SEOTags/seo';
@@ -28,6 +28,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [siblings, setSiblings] = useState([]);
 
   const [enquiryType, setEnquiryType] = useState('product');
   const [formData, setFormData] = useState({
@@ -65,6 +66,56 @@ export default function ProductDetailPage() {
 
     fetchProduct();
   }, [id]);
+
+  // Load the other products in this category so the user can step through them.
+  // If the category has no other product, fall back to the whole catalogue.
+  useEffect(() => {
+    if (!product) return undefined;
+    let cancelled = false;
+    const base = { isActive: true, limit: 1000, pageNo: 1 };
+    const load = async () => {
+      try {
+        let list = [];
+        if (product.categoryId) {
+          const res = await getAllProducts({ ...base, categoryId: product.categoryId });
+          list = res?.products || [];
+        }
+        if (list.length < 2) {
+          const res = await getAllProducts(base);
+          list = res?.products || [];
+        }
+        if (!cancelled) setSiblings(list);
+      } catch {
+        if (!cancelled) setSiblings([]);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [product?.id, product?.categoryId]);
+
+  const currentIndex = siblings.findIndex((p) => String(p.id) === String(id));
+  const hasSiblings = siblings.length > 1 && currentIndex !== -1;
+  const prevProduct = hasSiblings ? siblings[(currentIndex - 1 + siblings.length) % siblings.length] : null;
+  const nextProduct = hasSiblings ? siblings[(currentIndex + 1) % siblings.length] : null;
+
+  const goToProduct = (p) => {
+    if (!p) return;
+    setLoading(true);
+    router.push(`/products/${slugify(getProductName(p) || p.baseCode)}/${p.id}`);
+  };
+
+  useEffect(() => {
+    const onKey = (e) => {
+      const tag = (e.target && e.target.tagName) || '';
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) return;
+      if (e.key === 'ArrowLeft') goToProduct(prevProduct);
+      if (e.key === 'ArrowRight') goToProduct(nextProduct);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [prevProduct, nextProduct]);
 
   if (loading) {
     return (
@@ -198,6 +249,32 @@ export default function ProductDetailPage() {
                 alt={productName}
                 className="max-h-full max-w-full object-contain animate-fade-in"
               />
+              {prevProduct && (
+                <button
+                  type="button"
+                  onClick={() => goToProduct(prevProduct)}
+                  aria-label="Previous product"
+                  title={`Previous: ${getProductName(prevProduct)}`}
+                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 border border-gray-200 shadow-md flex items-center justify-center text-gray-700 hover:bg-[var(--apt-red)] hover:text-white hover:border-[var(--apt-red)] transition-colors duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              )}
+              {nextProduct && (
+                <button
+                  type="button"
+                  onClick={() => goToProduct(nextProduct)}
+                  aria-label="Next product"
+                  title={`Next: ${getProductName(nextProduct)}`}
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 border border-gray-200 shadow-md flex items-center justify-center text-gray-700 hover:bg-[var(--apt-red)] hover:text-white hover:border-[var(--apt-red)] transition-colors duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
 
@@ -366,7 +443,8 @@ export async function getServerSideProps({ params }) {
         image,
         path,
         ogType: 'product',
-        jsonLd: {
+        // JSON round-trip drops undefined values, which getServerSideProps cannot serialize
+        jsonLd: JSON.parse(JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Product',
           name,
@@ -376,7 +454,7 @@ export async function getServerSideProps({ params }) {
           brand: { '@type': 'Brand', name: SITE_NAME },
           category: category || undefined,
           url: `${SITE_URL}${path}`,
-        },
+        })),
       },
     },
   };

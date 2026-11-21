@@ -4,6 +4,8 @@ function CatalogueSection() {
   const sectors = [
     {
       id: 1,
+      image: '/assets/images/catalogue/aerial-work-platforms.png',
+      fit: 'contain',
       title: 'AERIAL WORK PLATFORM',
       count: '150+ ITEMS',
       description: 'Scissor lifts, boom lifts, and aerial platforms for elevated industrial operations.',
@@ -16,6 +18,8 @@ function CatalogueSection() {
     },
     {
       id: 2,
+      image: '/assets/images/catalogue/mhe.png',
+      fit: 'contain',
       title: 'MHE EQUIPMENT',
       count: '380+ ITEMS',
       description: 'Battery pallet trucks, forklifts, and stackers for high-velocity logistics.',
@@ -28,6 +32,8 @@ function CatalogueSection() {
     },
     {
       id: 3,
+      image: '/assets/images/catalogue/lifting-products.png',
+      fit: 'contain',
       title: 'LIFTING PRODUCTS',
       count: '420+ ITEMS',
       description: 'Chain hoists, winches, and heavy-duty cranes for safe and efficient material handling.',
@@ -41,6 +47,8 @@ function CatalogueSection() {
     },
     {
       id: 4,
+      image: '/assets/images/catalogue/welding-machines.png',
+      fit: 'contain',
       title: 'WELDING MACHINES',
       count: '550+ ITEMS',
       description: 'Precision ARC, MIG, TIG, and laser welding solutions for metal fabrication.',
@@ -53,6 +61,8 @@ function CatalogueSection() {
     },
     {
       id: 5,
+      image: '/assets/images/catalogue/packaging.png',
+      fit: 'contain',
       title: 'PACKAGING EQUIPMENTS',
       count: '700+ ITEMS',
       description: 'Capping, sealing, and labeling machines designed for automated production lines.',
@@ -65,6 +75,8 @@ function CatalogueSection() {
     },
     {
       id: 6,
+      image: '/assets/images/catalogue/cleaning-solutions.png',
+      fit: 'contain',
       title: 'CLEANING SOLUTIONS',
       count: '1,200+ ITEMS',
       description: 'High-pressure washers, industrial vacuums, and advanced floor care machinery.',
@@ -77,6 +89,8 @@ function CatalogueSection() {
     },
     {
       id: 7,
+      image: '/assets/images/catalogue/construction.png',
+      fit: 'contain',
       title: 'CONSTRUCTION MACHINES',
       count: '1,800+ ITEMS',
       description: 'Bar bending, cutting, and leveling machines for large-scale infrastructure projects.',
@@ -89,6 +103,8 @@ function CatalogueSection() {
     },
     {
       id: 8,
+      image: '/assets/images/catalogue/power-tools.png',
+      fit: 'contain',
       title: 'POWER TOOLS',
       count: '2,500+ ITEMS',
       description: 'Dynamic range of grinders, drills, and specialized hammers for intense industrial work.',
@@ -101,6 +117,8 @@ function CatalogueSection() {
     },
     {
       id: 9,
+      image: '/assets/images/catalogue/agriculture-machines.png',
+      fit: 'contain',
       title: 'AGRICULTURE MACHINES',
       count: '950+ ITEMS',
       description: 'Power sprayers, tillers, and specialized harvesters for modern farming.',
@@ -113,6 +131,8 @@ function CatalogueSection() {
     },
     {
       id: 10,
+      image: '/assets/images/catalogue/cordless.png',
+      fit: 'contain',
       title: 'CORDLESS TOOLS',
       count: '850+ ITEMS',
       description: 'Next-gen battery-powered tools including impact drills, wrenches, and chainsaws.',
@@ -151,6 +171,16 @@ function CatalogueSection() {
               key={sector.id}
               className="group relative flex flex-col justify-between p-5 sm:p-6 bg-white border border-gray-100 rounded-2xl transition-all duration-300 hover:border-[var(--apt-red)]/40 hover:shadow-xl hover:shadow-[var(--apt-red)]/5 hover:-translate-y-1 w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]"
             >
+              {/* Product Image */}
+              <div className="w-full aspect-[4/3] mb-4 overflow-hidden rounded-xl bg-white border border-gray-100">
+                <img
+                  src={sector.image}
+                  alt={sector.title}
+                  loading="lazy"
+                  className={`w-full h-full ${sector.fit === 'contain' ? 'object-contain p-2' : 'object-cover'} transition-transform duration-500 group-hover:scale-105`}
+                />
+              </div>
+
               {/* Card Header (Icon & Count) */}
               <div className="flex items-center justify-between">
                 <div className="p-2.5 bg-[var(--apt-offwhite)] rounded-xl group-hover:bg-[var(--apt-red)]/10 transition-colors duration-300">

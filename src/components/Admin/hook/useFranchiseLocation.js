@@ -13,6 +13,7 @@ const EMPTY_FORM = {
   contactName: '',
   email: '',
   phone: '',
+  mapUrl: '',
   isActive: true,
 };
 
@@ -70,6 +71,7 @@ export default function useFranchiseLocation() {
       contactName: franchiseLocation.contactName || '',
       email: franchiseLocation.email || '',
       phone: franchiseLocation.phone || '',
+      mapUrl: franchiseLocation.mapUrl || '',
       isActive: franchiseLocation.isActive !== false,
     });
     setIsModalOpen(true);
@@ -100,6 +102,7 @@ export default function useFranchiseLocation() {
         contactName: formData.contactName.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
+        mapUrl: (formData.mapUrl || '').trim(),
         isActive: formData.isActive,
       };
 

@@ -272,6 +272,18 @@ export default function FranchiseLocationsTab() {
                 </div>
               </div>
 
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Google Maps Link</label>
+                <input
+                  type="url"
+                  name="mapUrl"
+                  value={formData.mapUrl || ''}
+                  onChange={handleInputChange}
+                  placeholder="https://maps.app.goo.gl/..."
+                  className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-xs px-3 py-2.5 rounded-sm focus:outline-none focus:border-gray-300 transition"
+                />
+              </div>
+
               <div className="flex items-center gap-2 pt-1">
                 <input
                   type="checkbox"
