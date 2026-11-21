@@ -41,10 +41,26 @@ function ContactMain() {
   const [productSubcategoryId, setProductSubcategoryId] = useState('');
   const [productPhotos, setProductPhotos] = useState([]);
 
+  const [network, setNetwork] = useState({ live: [], upcoming: [] });
+
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isRental = form.subject === 'Equipment Rental';
   const isProductEnquiry = form.subject === 'Product Enquiry';
+
+  useEffect(() => {
+    Promise.all([
+      getAllFranchiseLocations({ isActive: true, limit: 50 }),
+      getAllFranchiseLocations({ isActive: false, limit: 50 }),
+    ])
+      .then(([live, upcoming]) =>
+        setNetwork({
+          live: live?.franchiseLocations || [],
+          upcoming: upcoming?.franchiseLocations || [],
+        })
+      )
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     getAllCategories({ limit: 100 })
@@ -218,7 +234,7 @@ function ContactMain() {
             </div>
 
             {/* Industrial Background Card */}
-            <div className="relative w-full aspect-[4/3] bg-[var(--apt-navy)] rounded-2xl overflow-hidden shadow-inner group flex items-center justify-center">
+            <div className="relative w-full min-h-[300px] py-8 bg-[var(--apt-navy)] rounded-2xl overflow-hidden shadow-inner group flex items-center justify-center">
               <div className="absolute inset-0 z-0">
                 <img
                   src="/assets/png/hero_industrial_bg.png"
@@ -237,6 +253,52 @@ function ContactMain() {
                 <p className="font-montserrat text-[10px] sm:text-xs text-gray-400 font-medium max-w-[250px] mx-auto">
                   Serving industrial excellence across India since 1999
                 </p>
+                {(network.live.length > 0 || network.upcoming.length > 0) && (
+                  <div className="pt-4 mt-2 border-t border-white/10 space-y-3">
+                    {network.live.length > 0 && (
+                      <div className="space-y-2">
+                        <span className="font-montserrat text-[9px] font-black tracking-[0.2em] text-green-400 uppercase block">
+                          OUR FRANCHISES
+                        </span>
+                        <div className="flex flex-wrap justify-center gap-2">
+                  {network.live.map((f) => (
+                    <a
+                      key={f.id}
+                      href={f.mapUrl || '/franchise/locator'}
+                      {...(f.mapUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      title={`${f.city}, ${f.state}`}
+                      className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 hover:border-[var(--apt-red)] hover:bg-[var(--apt-red)]/20 rounded-full px-3 py-1 font-montserrat text-[10px] font-bold text-white uppercase tracking-wider transition-colors"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                      {f.city}
+                    </a>
+                  ))}
+                        </div>
+                      </div>
+                    )}
+                    {network.upcoming.length > 0 && (
+                      <div className="space-y-2">
+                        <span className="font-montserrat text-[9px] font-black tracking-[0.2em] text-amber-400 uppercase block">
+                          UPCOMING
+                        </span>
+                        <div className="flex flex-wrap justify-center gap-2">
+                  {network.upcoming.map((f) => (
+                    <a
+                      key={f.id}
+                      href={f.mapUrl || '/franchise/locator'}
+                      {...(f.mapUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      title={`${f.city}, ${f.state}`}
+                      className="inline-flex items-center gap-1.5 border border-dashed border-white/30 hover:border-amber-300 rounded-full px-3 py-1 font-montserrat text-[10px] font-bold text-gray-300 uppercase tracking-wider transition-colors"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      {f.city}
+                    </a>
+                  ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

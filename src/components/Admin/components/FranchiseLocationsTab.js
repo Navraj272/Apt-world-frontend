@@ -294,7 +294,7 @@ export default function FranchiseLocationsTab() {
                   className="w-4 h-4 accent-red-600 cursor-pointer"
                 />
                 <label htmlFor="isActive" className="text-xs text-gray-600 cursor-pointer select-none">
-                  Active (visible in the public Franchise Locator)
+                  Active franchise (visible in the Franchise Locator). Untick to list it as “Upcoming” on the Contact page
                 </label>
               </div>
 
