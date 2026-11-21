@@ -2,14 +2,47 @@ import React, { useState } from 'react';
 import { equipmentData } from '../data/equipmentData';
 
 
+function SpecTable({ head, rows, noMargin }) {
+  return (
+    <div className={`${noMargin ? '' : 'mt-10 '}rounded-2xl border border-gray-100 overflow-hidden shadow-sm`}>
+      <div className="max-h-[420px] overflow-y-auto overflow-x-auto">
+        <table className="min-w-full border-collapse">
+          <thead className="sticky top-0 z-10">
+            <tr className="bg-[var(--apt-navy)]">
+              {head.map((h, i) => (
+                <th key={i} className="font-montserrat text-[10px] sm:text-xs font-bold tracking-wider text-white px-4 py-3.5 text-left uppercase whitespace-nowrap border-r border-white/5 last:border-r-0">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, ri) => (
+              <tr key={ri} className={`${ri % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-red-50/30 transition-colors`}>
+                {row.map((cell, ci) => (
+                  <td key={ci} className="font-montserrat text-[11px] sm:text-xs font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 whitespace-nowrap">
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function RentalPage({ initialSlug }) {
   const initial = equipmentData.find((eq) => eq.slug === initialSlug) || equipmentData[0];
   const [activeId, setActiveId] = useState(initial.id);
+  const [shownImage, setShownImage] = useState(null);
   const active = equipmentData.find((eq) => eq.id === activeId) || equipmentData[0];
 
   // Keep the address bar pointing at the item being viewed so it can be shared
   const selectItem = (eq) => {
     setActiveId(eq.id);
+    setShownImage(null);
     if (typeof window !== 'undefined') window.history.replaceState(window.history.state, '', `/rental/${eq.slug}`);
   };
 
@@ -61,17 +94,38 @@ function RentalPage({ initialSlug }) {
         {/* Active equipment panel */}
         <div key={active.id} className="animate-fadeIn">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-            <div className="w-full h-[320px] sm:h-[420px] relative overflow-hidden rounded-2xl bg-gray-100 shadow-lg group flex items-center justify-center">
-              <img
-                src={active.image}
-                alt={active.title}
-                className="max-w-full max-h-full w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute bottom-3 right-3 bg-[var(--apt-navy)]/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10 select-none pointer-events-none">
-                <span className="font-khand text-xs sm:text-sm font-bold tracking-wider text-white leading-none">
-                  APT <span className="text-[var(--apt-red)]">WORLD</span>
-                </span>
+            <div className="space-y-3">
+              <div className="w-full h-[320px] sm:h-[420px] relative overflow-hidden rounded-2xl bg-white group flex items-center justify-center">
+                <img
+                  src={shownImage || active.image}
+                  alt={active.title}
+                  className="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute bottom-3 right-3 bg-[var(--apt-navy)]/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10 select-none pointer-events-none">
+                  <span className="font-khand text-xs sm:text-sm font-bold tracking-wider text-white leading-none">
+                    APT <span className="text-[var(--apt-red)]">WORLD</span>
+                  </span>
+                </div>
               </div>
+
+              {active.gallery && active.gallery.length > 0 && (
+                <div className="flex gap-3 flex-wrap">
+                  {[{ src: active.image, label: 'Product' }, ...active.gallery].map((g) => {
+                    const current = shownImage || active.image;
+                    return (
+                      <button
+                        key={g.src}
+                        type="button"
+                        onClick={() => setShownImage(g.src)}
+                        aria-label={`Show ${g.label} image`}
+                        className={`w-24 h-20 rounded-lg overflow-hidden border-2 bg-white flex items-center justify-center transition-colors ${current === g.src ? 'border-[var(--apt-red)]' : 'border-gray-200 hover:border-gray-400'}`}
+                      >
+                        <img src={g.src} alt={g.label} className="max-w-full max-h-full object-contain rounded-md" />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="space-y-5">
@@ -91,32 +145,14 @@ function RentalPage({ initialSlug }) {
             </div>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-            <div className="max-h-[420px] overflow-y-auto overflow-x-auto">
-              <table className="min-w-full border-collapse">
-                <thead className="sticky top-0 z-10">
-                  <tr className="bg-[var(--apt-navy)]">
-                    {active.specs.head.map((h, i) => (
-                      <th key={i} className="font-montserrat text-[10px] sm:text-xs font-bold tracking-wider text-white px-4 py-3.5 text-left uppercase whitespace-nowrap border-r border-white/5 last:border-r-0">
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {active.specs.rows.map((row, ri) => (
-                    <tr key={ri} className={`${ri % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-red-50/30 transition-colors`}>
-                      {row.map((cell, ci) => (
-                        <td key={ci} className="font-montserrat text-[11px] sm:text-xs font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 whitespace-nowrap">
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {active.specs && <SpecTable head={active.specs.head} rows={active.specs.rows} />}
+
+          {(active.extraTables || []).map((t, ti) => (
+            <div key={ti} className="mt-10 space-y-3">
+              <h3 className="font-khand text-lg sm:text-xl font-bold uppercase tracking-wide text-[#1a1a1a]">{t.title}</h3>
+              <SpecTable head={t.head} rows={t.rows} noMargin />
             </div>
-          </div>
+          ))}
 
           {active.note && (
             <p className="mt-4 font-montserrat text-[11px] sm:text-xs text-gray-500 italic font-medium">

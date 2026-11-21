@@ -9,7 +9,7 @@ export default function RentalCards() {
   return equipmentData.map((eq) => (
     <ProductCard
       key={`rental-${eq.slug}`}
-      product={{ id: `rental-${eq.slug}`, name: { en: eq.title }, images: [eq.image], category: { name: { en: 'Aerial Work Platforms' } } }}
+      product={{ id: `rental-${eq.slug}`, name: { en: eq.title }, images: [eq.image], category: { name: { en: eq.categoryLabel || 'Aerial Work Platforms' } } }}
       href={`/rental/${eq.slug}`}
       footerText="Available for rent"
       ctaLabel="View details"
