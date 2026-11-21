@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { equipmentData } from '../data/equipmentData';
 
 
@@ -37,6 +37,25 @@ function RentalPage({ initialSlug }) {
   const initial = equipmentData.find((eq) => eq.slug === initialSlug) || equipmentData[0];
   const [activeId, setActiveId] = useState(initial.id);
   const [shownImage, setShownImage] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close the dropdown on outside click or Escape
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
   const active = equipmentData.find((eq) => eq.id === activeId) || equipmentData[0];
 
   // Keep the address bar pointing at the item being viewed so it can be shared
@@ -74,21 +93,72 @@ function RentalPage({ initialSlug }) {
       </section>
 
       <section className="max-w-[1350px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative">
-        {/* Equipment tab bar */}
-        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 mb-10 scrollbar-hide border-b border-gray-100">
-          {equipmentData.map((eq) => (
+        {/* Equipment selector: dropdown styled like the Products menu in the navigation bar */}
+        <div className="mb-10 pb-8 border-b border-gray-100">
+          <p className="font-montserrat text-[10px] sm:text-xs font-black tracking-[0.2em] text-gray-400 uppercase mb-3">
+            Select equipment ({equipmentData.length} available)
+          </p>
+          <div ref={menuRef} className="relative inline-block w-full sm:w-auto">
             <button
-              key={eq.id}
-              onClick={() => selectItem(eq)}
-              className={`shrink-0 font-montserrat text-[10px] sm:text-xs font-bold tracking-widest px-5 py-3 rounded-t-xl transition-all duration-200 border-b-2 uppercase ${
-                activeId === eq.id
-                  ? 'text-[var(--apt-red)] border-[var(--apt-red)]'
-                  : 'text-gray-400 border-transparent hover:text-[var(--apt-navy)]'
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-haspopup="listbox"
+              aria-expanded={menuOpen}
+              className={`w-full sm:min-w-[320px] flex items-center justify-between gap-4 rounded-2xl border px-5 py-3.5 font-montserrat text-xs sm:text-[13px] font-bold tracking-wider uppercase bg-white/75 backdrop-blur-xl shadow-[0_10px_30px_rgba(6,15,30,0.08)] transition-colors duration-200 ${
+                menuOpen ? 'border-[var(--apt-red)] text-[var(--apt-red)]' : 'border-gray-200 text-[var(--apt-navy)] hover:border-[var(--apt-red)]'
               }`}
             >
-              {eq.title}
+              <span className="flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--apt-red)]" />
+                {active.title}
+              </span>
+              <svg
+                className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`}
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
-          ))}
+
+            <div
+              className={`absolute top-full left-0 pt-3 z-40 w-full sm:w-[620px] max-w-[calc(100vw-2rem)] transition-all duration-200 ease-out ${
+                menuOpen ? 'opacity-100 translate-y-0 pointer-events-auto visible' : 'opacity-0 -translate-y-2 pointer-events-none invisible'
+              }`}
+            >
+              <ul
+                role="listbox"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-x-1 max-h-[70vh] overflow-y-auto py-3 px-2 rounded-2xl border border-white/60 bg-white/75 backdrop-blur-xl shadow-[0_20px_50px_rgba(6,15,30,0.18)]"
+              >
+                {equipmentData.map((eq) => {
+                  const isActive = activeId === eq.id;
+                  return (
+                    <li key={eq.id} role="option" aria-selected={isActive}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          selectItem(eq);
+                          setMenuOpen(false);
+                        }}
+                        className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left font-montserrat text-[13px] font-semibold tracking-wide transition-all duration-200 ${
+                          isActive
+                            ? 'bg-[var(--apt-red)]/10 text-[var(--apt-red)]'
+                            : 'text-[#404040] hover:bg-white/70 hover:text-[var(--apt-navy)]'
+                        }`}
+                      >
+                        <span className="w-10 h-10 shrink-0 rounded-lg overflow-hidden bg-white border border-gray-100 flex items-center justify-center">
+                          <img src={eq.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+                        </span>
+                        <span className="flex-1 uppercase">{eq.title}</span>
+                        <svg className={`w-3 h-3 shrink-0 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
         </div>
 
         {/* Active equipment panel */}
